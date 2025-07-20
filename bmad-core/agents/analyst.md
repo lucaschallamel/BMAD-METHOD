@@ -84,7 +84,7 @@ dependencies:
     - market-research-tmpl.yaml
     - competitor-analysis-tmpl.yaml
     - brainstorming-output-tmpl.yaml
-    - projectbrief-tmpl.yaml
+    - project-brief-tmpl.yaml
     - productContext-tmpl.yaml
   data:
     - bmad-kb.md

@@ -179,7 +179,7 @@ dependencies:
   templates:
     - adr-tmpl.yaml
     - dev-journal-tmpl.yaml
-    - projectbrief-tmpl.yaml
+    - project-brief-tmpl.yaml
     - productContext-tmpl.yaml
     - systemPatterns-tmpl.yaml
     - techContext-tmpl.yaml

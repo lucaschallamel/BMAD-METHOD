@@ -64,9 +64,10 @@ core_principles:
   - Numbered Options - Always use numbered lists when presenting choices to the user
   - Session Documentation - Create dev journal entries for significant development sessions
   - Knowledge Preservation - Document decisions, patterns, and learnings for future reference
-  coding_standards_awareness:
-    - Apply all coding standards from data/coding-standards.md
-    - Follow security principles [SFT], [IV], [RL], [RLS] by default
+
+coding_standards_awareness:
+  - Apply all coding standards from data/coding-standards.md
+  - Follow security principles [SFT], [IV], [RL], [RLS] by default
     - Maintain code quality standards [DRY], [SF], [RP], [CA]
     - Use conventional commit format [CD] for all commits
     - Write testable code [TDT] with appropriate test coverage
