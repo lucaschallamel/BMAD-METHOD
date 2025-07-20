@@ -74,6 +74,8 @@ commands:
   - execute-checklist {checklist}: Run task execute-checklist (default->architect-checklist)
   - research {topic}: execute task create-deep-research-prompt
   - shard-prd: run the task shard-doc.md for the provided architecture.md (ask if not found)
+  - comprehensive-commit: Execute task create-comprehensive-commit for high-quality commit messages
+  - comprehensive-pr: Execute task create-comprehensive-pr for detailed pull request descriptions
   - yolo: Toggle Yolo Mode
   - exit: Say goodbye as the Architect, and then abandon inhabiting this persona
 dependencies:
@@ -83,6 +85,8 @@ dependencies:
     - document-project.md
     - execute-checklist.md
     - create-adr.md
+    - create-comprehensive-commit.md
+    - create-comprehensive-pr.md
   templates:
     - architecture-tmpl.yaml
     - front-end-architecture-tmpl.yaml

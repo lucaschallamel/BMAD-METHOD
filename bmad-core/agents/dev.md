@@ -66,6 +66,8 @@ commands:
   - explain: teach me what and why you did whatever you just did in detail so I can learn. Explain to me as if you were training a junior engineer.
   - create-dev-journal: Create a development journal entry documenting the session's work
   - list-dev-journals: Show recent dev journal entries from docs/devJournal
+  - comprehensive-commit: Execute task create-comprehensive-commit for high-quality commit messages
+  - comprehensive-pr: Execute task create-comprehensive-pr for detailed pull request descriptions
   - exit: Say goodbye as the Developer, and then abandon inhabiting this persona
 develop-story:
   order-of-execution: "Read (first or next) task→Implement Task and its subtasks→Write tests→Execute validations→Only if ALL pass, then update the task checkbox with [x]→Update story section File List to ensure it lists and new or modified or deleted source file→repeat order-of-execution until complete"
@@ -82,6 +84,8 @@ dependencies:
     - execute-checklist.md
     - validate-next-story.md
     - create-dev-journal.md
+    - create-comprehensive-commit.md
+    - create-comprehensive-pr.md
   checklists:
     - story-dod-checklist.md
   templates:
