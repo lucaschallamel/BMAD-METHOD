@@ -314,6 +314,16 @@ Ask the user if they want to work through the checklist:
 - [ ] System diagrams and visualizations are included
 - [ ] Decision records for key choices are included
 
+### 7.6 Architectural Decision Records (ADRs)
+
+- [ ] ADR process is established for the project
+- [ ] Significant architecture decisions are documented in ADRs
+- [ ] Technology stack choices have corresponding ADRs
+- [ ] Integration approach decisions are captured in ADRs
+- [ ] ADRs follow consistent format and numbering
+- [ ] Superseded decisions are properly tracked
+- [ ] ADR index is maintained and accessible
+
 ## 8. DEPENDENCY & INTEGRATION MANAGEMENT
 
 [[LLM: Dependencies are often the source of production issues. For each dependency, consider: What happens if it's unavailable? Is there a newer version with security patches? Are we locked into a vendor? What's our contingency plan? Verify specific versions and fallback strategies.]]

@@ -1,0 +1,194 @@
+name: ADR Management Workflow
+description: Workflow for creating, reviewing, and managing Architectural Decision Records
+version: "1.0.0"
+type: architectural-decision
+
+stages:
+  - name: Problem Identification
+    description: Identify and document the architectural problem or decision needed
+    agent: architect
+    tasks:
+      - task: identify-architectural-issue
+        description: Document the problem requiring an architectural decision
+        checklist:
+          - Define the problem statement clearly
+          - Identify stakeholders affected
+          - Determine urgency and impact
+          - Check for existing ADRs addressing similar issues
+        output:
+          - Problem statement document
+          - Stakeholder analysis
+          - Impact assessment
+
+  - name: Context Gathering
+    description: Research and gather all relevant context for the decision
+    agent: analyst
+    tasks:
+      - task: research-context
+        description: Gather technical, business, and operational context
+        checklist:
+          - Review existing system architecture
+          - Analyze technical constraints
+          - Identify business requirements
+          - Research industry best practices
+          - Document compliance requirements
+        output:
+          - Context analysis document
+          - Constraints list
+          - Requirements summary
+
+  - name: Solution Design
+    description: Design potential solutions and evaluate alternatives
+    agent: architect
+    tasks:
+      - task: design-alternatives
+        description: Create multiple solution alternatives
+        checklist:
+          - Design at least 3 viable alternatives
+          - Document pros and cons for each
+          - Estimate implementation effort
+          - Assess risks and mitigation strategies
+          - Consider long-term implications
+        output:
+          - Solution alternatives document
+          - Comparison matrix
+          - Risk assessment
+
+  - name: Decision Making
+    description: Make the architectural decision with stakeholder input
+    agent: architect
+    collaboration:
+      - pm
+      - dev
+      - qa
+    tasks:
+      - task: facilitate-decision
+        description: Lead decision-making process with stakeholders
+        checklist:
+          - Present alternatives to stakeholders
+          - Facilitate discussion and feedback
+          - Document concerns and objections
+          - Reach consensus or escalate if needed
+          - Record final decision and rationale
+        output:
+          - Decision record
+          - Stakeholder feedback
+          - Meeting notes
+
+  - name: ADR Creation
+    description: Create the formal ADR document
+    agent: architect
+    tasks:
+      - task: create-adr
+        description: Write the ADR following the standard template
+        template: adr-template.md
+        checklist:
+          - Use proper ADR numbering sequence
+          - Complete all template sections
+          - Include all alternatives considered
+          - Document clear consequences
+          - Add relevant references
+        output:
+          - ADR document (markdown)
+          - Supporting diagrams (if applicable)
+
+  - name: Review and Approval
+    description: Review the ADR for completeness and accuracy
+    agent: pm
+    collaboration:
+      - architect
+      - dev
+      - qa
+    tasks:
+      - task: review-adr
+        description: Review ADR for quality and completeness
+        checklist:
+          - Verify technical accuracy
+          - Check business alignment
+          - Validate risk assessment
+          - Ensure clarity and completeness
+          - Confirm stakeholder representation
+        output:
+          - Review feedback
+          - Approval status
+
+  - name: Communication
+    description: Communicate the decision to all affected parties
+    agent: pm
+    tasks:
+      - task: communicate-decision
+        description: Share ADR and ensure understanding
+        checklist:
+          - Add ADR to project documentation
+          - Update architecture diagrams if needed
+          - Notify all affected teams
+          - Schedule implementation planning if required
+          - Create tracking items for consequences
+        output:
+          - Communication plan
+          - Updated documentation
+          - Tracking items
+
+  - name: Implementation Planning
+    description: Plan the implementation of the decision
+    agent: sm
+    collaboration:
+      - architect
+      - dev
+    tasks:
+      - task: create-implementation-plan
+        description: Break down decision into actionable items
+        checklist:
+          - Create epic for implementation
+          - Define user stories
+          - Estimate effort
+          - Identify dependencies
+          - Plan rollout strategy
+        output:
+          - Implementation epic
+          - User stories
+          - Timeline estimate
+
+templates:
+  - name: adr-problem-statement
+    format: |
+      # Architectural Problem Statement
+      
+      ## Problem
+      [Clear description of the architectural problem]
+      
+      ## Impact
+      - Business Impact: [Description]
+      - Technical Impact: [Description]
+      - User Impact: [Description]
+      
+      ## Urgency
+      [Critical | High | Medium | Low]
+      
+      ## Stakeholders
+      - [Stakeholder 1]: [Their interest/concern]
+      - [Stakeholder 2]: [Their interest/concern]
+      
+      ## Success Criteria
+      - [What would a successful solution look like]
+      
+  - name: adr-review-checklist
+    format: |
+      # ADR Review Checklist
+      
+      - [ ] Problem clearly stated
+      - [ ] Context is comprehensive and neutral
+      - [ ] Decision is explicit and actionable
+      - [ ] All significant alternatives considered
+      - [ ] Consequences (positive and negative) documented
+      - [ ] Risks identified with mitigation strategies
+      - [ ] References and links included
+      - [ ] Follows standard ADR format
+      - [ ] Technically accurate
+      - [ ] Business aligned
+      
+tags:
+  - architecture
+  - decision-making
+  - documentation
+  - governance
