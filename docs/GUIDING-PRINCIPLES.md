@@ -24,6 +24,13 @@ The BMad Method is a natural language framework for AI-assisted software develop
 - **Templates are outputs**: Structured documents with embedded instructions for generation
 - **Dependencies matter**: Explicitly declare only what's needed
 
+### 4. Context Persistence and Knowledge Management
+
+- **Memory Bank Pattern**: Maintain persistent AI context across development sessions to eliminate context loss
+- **Decision Documentation**: Use Architecture Decision Records (ADRs) to preserve institutional knowledge and decision rationale
+- **Session Documentation**: Capture development progress and insights through development journals
+- **Standardized Organization**: Follow consistent project scaffolding to support knowledge systems and agent workflows
+
 ## Practical Guidelines
 
 ### When to Add to Core

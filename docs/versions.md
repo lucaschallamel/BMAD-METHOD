@@ -16,6 +16,13 @@ Guiding Principles of V4:
 - Helpers for installers and web builders that will work with any OS and IDE easily
 - Align all agents to be the same for IDE and Web, without losing the power of the web versions, or the leanness of the files in the IDE to reduce context
 - Further improvements to the two most important agents - the SM and DEV
+- Memory Bank pattern for persistent AI context across sessions
+- Architecture Decision Records (ADRs) for tracking technical decisions
+- Development Journal system for session documentation
+- Project scaffolding preferences for standardized directory structures
+- Enhanced agent capabilities with comprehensive commit and PR workflows
+- Sprint review and retrospective tasks
+- Session kickoff protocol for proper initialization
 
 ## V3
 
