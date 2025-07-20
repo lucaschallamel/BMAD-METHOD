@@ -332,6 +332,17 @@ Apply the advanced elicitation task after major sections to refine based on user
 - Document enables AI agents to navigate and understand the actual codebase
 - Technical constraints and "gotchas" are clearly documented
 
+## Memory Bank Integration
+
+After documenting a project:
+1. Consider initializing Memory Bank if not exists (`initialize-memory-bank` task)
+2. Use the brownfield architecture document to populate:
+   - `projectbrief.md` - Extract project goals and constraints
+   - `systemPatterns.md` - Document architecture and patterns
+   - `techContext.md` - Capture technology stack and environment
+   - `progress.md` - Note current state and technical debt
+3. This provides AI agents with both detailed architecture docs and quick-reference Memory Bank
+
 ## Notes
 
 - This task creates ONE document that captures the TRUE state of the system
@@ -339,3 +350,4 @@ Apply the advanced elicitation task after major sections to refine based on user
 - Documents technical debt, workarounds, and constraints honestly
 - For brownfield projects with PRD: Provides clear enhancement impact analysis
 - The goal is PRACTICAL documentation for AI agents doing real work
+- Memory Bank provides quick context; architecture doc provides deep detail

@@ -79,3 +79,11 @@ If this decision:
 - [ ] Proper numbering and naming
 - [ ] Index updated
 - [ ] Related ADRs linked
+
+## Memory Bank Integration
+
+After creating an ADR:
+1. Update `docs/memory-bank/systemPatterns.md` with the architectural decision
+2. If technology stack changed, update `docs/memory-bank/techContext.md`
+3. Update `docs/memory-bank/activeContext.md` with the decision context
+4. Consider running `update-memory-bank` task for comprehensive update

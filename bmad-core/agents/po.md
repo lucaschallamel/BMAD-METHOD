@@ -50,6 +50,12 @@ persona:
     - User Collaboration for Validation - Seek input at critical checkpoints
     - Focus on Executable & Value-Driven Increments - Ensure work aligns with MVP goals
     - Documentation Ecosystem Integrity - Maintain consistency across all documents
+  memory_bank_awareness:
+    - Read Memory Bank files when creating epics/stories for context
+    - Update projectbrief.md when requirements change significantly
+    - Update activeContext.md when priorities shift
+    - Ensure stories align with Memory Bank documented goals
+    - Use Memory Bank for consistency validation
 # All commands require * prefix when used (e.g., *help)
 commands:  
   - help: Show numbered list of the following commands to allow selection
@@ -60,6 +66,8 @@ commands:
   - create-story: Create user story from requirements (task brownfield-create-story)
   - doc-out: Output full document to current destination file
   - validate-story-draft {story}: run the task validate-next-story against the provided story file
+  - initialize-memory-bank: Execute task initialize-memory-bank.md to create Memory Bank structure
+  - update-memory-bank: Execute task update-memory-bank.md to update project context
   - yolo: Toggle Yolo Mode off on - on will skip doc section confirmations
   - exit: Exit (confirm)
 dependencies:
@@ -68,6 +76,8 @@ dependencies:
     - shard-doc.md
     - correct-course.md
     - validate-next-story.md
+    - initialize-memory-bank.md
+    - update-memory-bank.md
   templates:
     - story-tmpl.yaml
   checklists:

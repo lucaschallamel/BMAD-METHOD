@@ -229,3 +229,11 @@ After verification:
 - **Future Developer Focus**: Context over implementation details
 - **Comprehensive Coverage**: No significant work left undocumented
 - **Quality Standards**: Clear, complete, conventional
+
+## Memory Bank Integration
+
+Consider updating Memory Bank after significant commits:
+- For feature additions: Update `progress.md` and `activeContext.md`
+- For architectural changes: Update `systemPatterns.md`
+- For tech stack changes: Update `techContext.md`
+- Run `update-memory-bank` task if changes are substantial

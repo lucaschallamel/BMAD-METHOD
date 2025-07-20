@@ -307,3 +307,12 @@ Verify before finalizing:
 - **Visual Evidence**: Screenshots/GIFs for UI changes
 - **Reproducible Testing**: Clear, step-by-step instructions
 - **Future Reference**: Context for why decisions were made
+
+## Memory Bank Integration
+
+After PR is merged:
+- Major features: Update `progress.md` with completed features
+- Architecture changes: Update `systemPatterns.md`
+- Tech updates: Update `techContext.md`
+- Breaking changes: Update relevant Memory Bank files
+- Consider comprehensive `update-memory-bank` for significant PRs

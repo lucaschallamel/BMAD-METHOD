@@ -68,3 +68,13 @@ Before finalizing, ensure:
 - Include enough detail for context without overwhelming
 - Cross-reference related stories, ADRs, or PRs
 - Use British English for consistency
+
+## Memory Bank Integration
+
+After creating a dev journal entry:
+1. Update `docs/memory-bank/activeContext.md` with current work and decisions
+2. Update `docs/memory-bank/progress.md` with completed features and status
+3. If patterns or insights discovered, update `docs/memory-bank/systemPatterns.md`
+4. Consider running `update-memory-bank` task for comprehensive update
+
+This ensures AI agents in future sessions have access to session context and learnings.
