@@ -103,6 +103,12 @@ dependencies:
     - fullstack-architecture-tmpl.yaml
     - brownfield-architecture-tmpl.yaml
     - adr-tmpl.yaml
+    - project-brief-tmpl.yaml
+    - productContext-tmpl.yaml
+    - systemPatterns-tmpl.yaml
+    - techContext-tmpl.yaml
+    - activeContext-tmpl.yaml
+    - progress-tmpl.yaml
   checklists:
     - architect-checklist.md
   data:

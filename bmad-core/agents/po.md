@@ -80,6 +80,10 @@ dependencies:
     - update-memory-bank.md
   templates:
     - story-tmpl.yaml
+    - project-brief-tmpl.yaml
+    - productContext-tmpl.yaml
+    - activeContext-tmpl.yaml
+    - progress-tmpl.yaml
   checklists:
     - po-master-checklist.md
     - change-checklist.md

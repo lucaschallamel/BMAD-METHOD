@@ -1,17 +1,35 @@
 template:
-  id: project-brief-template-v2
-  name: Project Brief
-  version: 2.0
+  id: unified-project-brief-v3
+  name: Unified Project Brief
+  version: 3.0
   output:
     format: markdown
-    filename: docs/brief.md
+    filename: "{{output_path}}"
     title: "Project Brief: {{project_name}}"
+  description: |
+    Comprehensive project brief template supporting multiple workflows:
+    - Product development with elicitation and MVP planning
+    - Memory bank foundation document for AI context
+    - Rapid project documentation for quick starts
 
 workflow:
-  mode: interactive
+  mode_selection:
+    instruction: |
+      Choose the workflow mode that best fits your needs:
+      
+      1. **Comprehensive Mode** - Full product development brief with guided elicitation
+         Output: docs/brief.md
+         
+      2. **Memory Bank Mode** - Foundation document for Memory Bank system
+         Output: docs/memory-bank/projectbrief.md
+         
+      3. **Rapid Mode** - Quick project documentation with structured prompts
+         Output: docs/brief.md
+  
   elicitation: advanced-elicitation
   custom_elicitation:
-    title: "Project Brief Elicitation Actions"
+    title: "Project Brief Enhancement Actions"
+    condition: "mode == 'comprehensive'"
     options:
       - "Expand section with more specific details"
       - "Validate against similar successful products"
@@ -26,196 +44,322 @@ workflow:
 
 sections:
   - id: introduction
+    condition: "mode == 'comprehensive'"
     instruction: |
-      This template guides creation of a comprehensive Project Brief that serves as the foundational input for product development.
-      
-      Start by asking the user which mode they prefer:
-      
-      1. **Interactive Mode** - Work through each section collaboratively
-      2. **YOLO Mode** - Generate complete draft for review and refinement
-      
-      Before beginning, understand what inputs are available (brainstorming results, market research, competitive analysis, initial ideas) and gather project context.
+      This template guides creation of a comprehensive Project Brief for product development.
+      Understand what inputs are available (brainstorming results, market research, competitive analysis) 
+      and gather project context before beginning.
 
-  - id: executive-summary
-    title: Executive Summary
-    instruction: |
-      Create a concise overview that captures the essence of the project. Include:
-      - Product concept in 1-2 sentences
-      - Primary problem being solved
-      - Target market identification
-      - Key value proposition
-    template: "{{executive_summary_content}}"
+  - id: project-overview
+    title: Project Overview
+    instruction: Capture essential project information and core purpose
+    template: |
+      {{#if is_memory_bank_mode}}
+      **Project Name**: {{project_name}}  
+      **Version**: {{version | default: "1.0"}}  
+      **Last Updated**: {{current_date}}  
+      **Status**: {{status | options: "Active, Planning, On Hold"}}
+      {{else}}
+      ## Executive Summary
+      {{executive_summary_content}}
+      {{/if}}
+
+      ## Core Purpose
+      {{core_purpose_description}}
 
   - id: problem-statement
     title: Problem Statement
     instruction: |
-      Articulate the problem with clarity and evidence. Address:
-      - Current state and pain points
-      - Impact of the problem (quantify if possible)
-      - Why existing solutions fall short
-      - Urgency and importance of solving this now
-    template: "{{detailed_problem_description}}"
+      {{#if is_comprehensive_mode}}
+      Articulate the problem with clarity and evidence. Address current state, impact, 
+      why existing solutions fall short, and urgency of solving this now.
+      {{else}}
+      Describe the main problem this project solves and its impact.
+      {{/if}}
+    template: |
+      {{#if is_comprehensive_mode}}
+      {{detailed_problem_description}}
+      {{else}}
+      {{problem_description}}
+      {{/if}}
 
   - id: proposed-solution
     title: Proposed Solution
-    instruction: |
-      Describe the solution approach at a high level. Include:
-      - Core concept and approach
-      - Key differentiators from existing solutions
-      - Why this solution will succeed where others haven't
-      - High-level vision for the product
-    template: "{{solution_description}}"
+    condition: "mode != 'memory_bank'"
+    instruction: Describe the solution approach and key differentiators
+    template: |
+      {{solution_description}}
 
   - id: target-users
     title: Target Users
-    instruction: |
-      Define and characterize the intended users with specificity. For each user segment include:
-      - Demographic/firmographic profile
-      - Current behaviors and workflows
-      - Specific needs and pain points
-      - Goals they're trying to achieve
-    sections:
-      - id: primary-segment
-        title: "Primary User Segment: {{segment_name}}"
-        template: "{{primary_user_description}}"
-      - id: secondary-segment
-        title: "Secondary User Segment: {{segment_name}}"
-        condition: Has secondary user segment
-        template: "{{secondary_user_description}}"
+    instruction: Define and characterize the intended users
+    template: |
+      ### Primary Users
+      {{#if is_memory_bank_mode}}
+      - **User Type**: {{primary_user_type}}
+      - **Needs**: {{primary_user_needs}}
+      - **Volume**: {{primary_user_volume}}
+      {{else}}
+      {{primary_user_description}}
+      {{/if}}
 
-  - id: goals-metrics
-    title: Goals & Success Metrics
-    instruction: Establish clear objectives and how to measure success. Make goals SMART (Specific, Measurable, Achievable, Relevant, Time-bound)
-    sections:
-      - id: business-objectives
-        title: Business Objectives
-        type: bullet-list
-        template: "- {{objective_with_metric}}"
-      - id: user-success-metrics
-        title: User Success Metrics
-        type: bullet-list
-        template: "- {{user_metric}}"
-      - id: kpis
-        title: Key Performance Indicators (KPIs)
-        type: bullet-list
-        template: "- {{kpi}}: {{definition_and_target}}"
+      {{#if secondary_users}}
+      ### Secondary Users
+      {{#if is_memory_bank_mode}}
+      - **User Type**: {{secondary_user_type}}
+      - **Needs**: {{secondary_user_needs}}
+      {{else}}
+      {{secondary_user_description}}
+      {{/if}}
+      {{/if}}
 
-  - id: mvp-scope
-    title: MVP Scope
-    instruction: Define the minimum viable product clearly. Be specific about what's in and what's out. Help user distinguish must-haves from nice-to-haves.
-    sections:
-      - id: core-features
-        title: Core Features (Must Have)
-        type: bullet-list
-        template: "- **{{feature}}:** {{description_and_rationale}}"
-      - id: out-of-scope
-        title: Out of Scope for MVP
-        type: bullet-list
-        template: "- {{feature_or_capability}}"
-      - id: mvp-success-criteria
-        title: MVP Success Criteria
-        template: "{{mvp_success_definition}}"
+  - id: goals-objectives
+    title: Goals & Objectives
+    instruction: Define primary goals and measurable success criteria
+    template: |
+      ### Primary Goals
+      {{#each primary_goals}}
+      {{@index + 1}}. {{this}}
+      {{/each}}
 
-  - id: post-mvp-vision
-    title: Post-MVP Vision
-    instruction: Outline the longer-term product direction without overcommitting to specifics
-    sections:
-      - id: phase-2-features
-        title: Phase 2 Features
-        template: "{{next_priority_features}}"
-      - id: long-term-vision
-        title: Long-term Vision
-        template: "{{one_two_year_vision}}"
-      - id: expansion-opportunities
-        title: Expansion Opportunities
-        template: "{{potential_expansions}}"
+      ### Success Criteria
+      {{#each success_criteria}}
+      - [ ] {{this}}
+      {{/each}}
 
-  - id: technical-considerations
-    title: Technical Considerations
-    instruction: Document known technical constraints and preferences. Note these are initial thoughts, not final decisions.
-    sections:
-      - id: platform-requirements
-        title: Platform Requirements
-        template: |
-          - **Target Platforms:** {{platforms}}
-          - **Browser/OS Support:** {{specific_requirements}}
-          - **Performance Requirements:** {{performance_specs}}
-      - id: technology-preferences
-        title: Technology Preferences
-        template: |
-          - **Frontend:** {{frontend_preferences}}
-          - **Backend:** {{backend_preferences}}
-          - **Database:** {{database_preferences}}
-          - **Hosting/Infrastructure:** {{infrastructure_preferences}}
-      - id: architecture-considerations
-        title: Architecture Considerations
-        template: |
-          - **Repository Structure:** {{repo_thoughts}}
-          - **Service Architecture:** {{service_thoughts}}
-          - **Integration Requirements:** {{integration_needs}}
-          - **Security/Compliance:** {{security_requirements}}
+      {{#if is_comprehensive_mode}}
+      ### Key Performance Indicators (KPIs)
+      {{#each kpis}}
+      - {{this}}
+      {{/each}}
+      {{/if}}
 
-  - id: constraints-assumptions
-    title: Constraints & Assumptions
-    instruction: Clearly state limitations and assumptions to set realistic expectations
-    sections:
-      - id: constraints
-        title: Constraints
-        template: |
-          - **Budget:** {{budget_info}}
-          - **Timeline:** {{timeline_info}}
-          - **Resources:** {{resource_info}}
-          - **Technical:** {{technical_constraints}}
-      - id: key-assumptions
-        title: Key Assumptions
-        type: bullet-list
-        template: "- {{assumption}}"
+  - id: scope
+    title: Scope
+    instruction: Clearly define what's in and out of scope
+    template: |
+      ### In Scope
+      {{#each in_scope}}
+      - {{this}}
+      {{/each}}
 
-  - id: risks-questions
-    title: Risks & Open Questions
-    instruction: Identify unknowns and potential challenges proactively
-    sections:
-      - id: key-risks
-        title: Key Risks
-        type: bullet-list
-        template: "- **{{risk}}:** {{description_and_impact}}"
-      - id: open-questions
-        title: Open Questions
-        type: bullet-list
-        template: "- {{question}}"
-      - id: research-areas
-        title: Areas Needing Further Research
-        type: bullet-list
-        template: "- {{research_topic}}"
+      ### Out of Scope
+      {{#each out_scope}}
+      - {{this}}
+      {{/each}}
+
+      {{#if is_comprehensive_mode}}
+      ### MVP Scope
+      {{#each mvp_scope}}
+      - {{this}}
+      {{/each}}
+      {{/if}}
+
+  - id: constraints
+    title: Constraints
+    instruction: Document constraints affecting the project
+    template: |
+      ### Technical Constraints
+      {{#each technical_constraints}}
+      - {{this}}
+      {{/each}}
+
+      ### Business Constraints
+      {{#each business_constraints}}
+      - {{this}}
+      {{/each}}
+
+      {{#if regulatory_constraints}}
+      ### Regulatory/Compliance
+      {{#each regulatory_constraints}}
+      - {{this}}
+      {{/each}}
+      {{/if}}
+
+  - id: requirements
+    title: Key Requirements
+    condition: "mode != 'rapid'"
+    instruction: List functional and non-functional requirements
+    template: |
+      ### Functional Requirements
+      {{#each functional_requirements}}
+      {{@index + 1}}. {{this}}
+      {{/each}}
+
+      ### Non-Functional Requirements
+      - **Performance**: {{performance_requirements}}
+      - **Security**: {{security_requirements}}
+      - **Scalability**: {{scalability_requirements}}
+      - **Reliability**: {{reliability_requirements}}
+
+  - id: stakeholders
+    title: Stakeholders
+    condition: "mode == 'memory_bank' || mode == 'comprehensive'"
+    instruction: Identify stakeholders and decision makers
+    template: |
+      ### Primary Stakeholders
+      {{#each stakeholders}}
+      - **{{this.role}}**: {{this.name}} - {{this.interest}}
+      {{/each}}
+
+      ### Key Decision Makers
+      {{#each decision_makers}}
+      - **{{this.role}}**: {{this.name}} - {{this.decisions}}
+      {{/each}}
+
+  - id: timeline
+    title: Timeline & Milestones
+    condition: "mode != 'rapid'"
+    instruction: Define timeline and major milestones
+    template: |
+      ### Major Milestones
+      | Milestone | Target Date | Description |
+      |-----------|-------------|-------------|
+      {{#each milestones}}
+      | {{this.name}} | {{this.date}} | {{this.description}} |
+      {{/each}}
+
+      ### Current Phase
+      {{current_phase_description}}
+
+  - id: technology-considerations
+    title: Technology Considerations
+    condition: "mode == 'comprehensive'"
+    instruction: Document technology stack preferences and constraints
+    template: |
+      ### Technology Preferences
+      {{#each tech_preferences}}
+      - **{{this.category}}**: {{this.preference}} - {{this.rationale}}
+      {{/each}}
+
+      ### Technical Architecture
+      {{technical_architecture_notes}}
+
+  - id: risks-assumptions
+    title: Risks & Assumptions
+    condition: "mode == 'comprehensive'"
+    instruction: Document key risks and assumptions
+    template: |
+      ### Key Assumptions
+      {{#each assumptions}}
+      {{@index + 1}}. {{this}}
+      {{/each}}
+
+      ### Primary Risks
+      {{#each risks}}
+      - **Risk**: {{this.risk}}
+      - **Impact**: {{this.impact}}
+      - **Mitigation**: {{this.mitigation}}
+      {{/each}}
+
+  - id: post-mvp
+    title: Post-MVP Planning
+    condition: "mode == 'comprehensive'"
+    instruction: Plan beyond MVP for future development
+    template: |
+      ### Phase 2 Features
+      {{#each phase2_features}}
+      - {{this}}
+      {{/each}}
+
+      ### Long-term Vision
+      {{long_term_vision}}
+
+  - id: references
+    title: References
+    condition: "mode != 'rapid'"
+    instruction: Link to supporting documentation
+    template: |
+      {{#each references}}
+      - {{this}}
+      {{/each}}
 
   - id: appendices
     title: Appendices
-    sections:
-      - id: research-summary
-        title: A. Research Summary
-        condition: Has research findings
-        instruction: |
-          If applicable, summarize key findings from:
-          - Market research
-          - Competitive analysis
-          - User interviews
-          - Technical feasibility studies
-      - id: stakeholder-input
-        title: B. Stakeholder Input
-        condition: Has stakeholder feedback
-        template: "{{stakeholder_feedback}}"
-      - id: references
-        title: C. References
-        template: "{{relevant_links_and_docs}}"
+    condition: "mode == 'comprehensive'"
+    instruction: Include supporting research and analysis
+    template: |
+      {{#if research_summary}}
+      ### Research Summary
+      {{research_summary}}
+      {{/if}}
 
-  - id: next-steps
-    title: Next Steps
-    sections:
-      - id: immediate-actions
-        title: Immediate Actions
-        type: numbered-list
-        template: "{{action_item}}"
-      - id: pm-handoff
-        title: PM Handoff
-        content: |
-          This Project Brief provides the full context for {{project_name}}. Please start in 'PRD Generation Mode', review the brief thoroughly to work with the user to create the PRD section by section as the template indicates, asking for any necessary clarification or suggesting improvements.
+      {{#if competitive_analysis}}
+      ### Competitive Analysis
+      {{competitive_analysis}}
+      {{/if}}
+
+validation:
+  required_fields:
+    - project_name
+    - core_purpose_description
+    - primary_goals
+    - in_scope
+    - primary_user_type
+  comprehensive_required:
+    - executive_summary_content
+    - detailed_problem_description
+    - solution_description
+    - mvp_scope
+  memory_bank_required:
+    - stakeholders
+    - milestones
+    - current_phase_description
+
+prompts:
+  # Core prompts (all modes)
+  project_name: "What is the project name?"
+  core_purpose_description: "Describe in one paragraph what this project is and why it exists"
+  primary_goals: "List 3-5 primary goals for this project"
+  success_criteria: "Define 3-5 measurable success criteria"
+  in_scope: "What is IN scope for this project?"
+  out_scope: "What is explicitly OUT of scope?"
+  
+  # User-related prompts
+  primary_user_type: "Describe the primary user type"
+  primary_user_needs: "What do primary users need from this system?"
+  primary_user_volume: "Expected number of primary users"
+  primary_user_description: "Detailed description of primary users (comprehensive mode)"
+  secondary_user_type: "Describe secondary user types (if any)"
+  secondary_user_needs: "What do secondary users need?"
+  secondary_user_description: "Detailed description of secondary users"
+  
+  # Comprehensive mode prompts
+  executive_summary_content: "Create executive summary (product concept, problem, target market, value proposition)"
+  detailed_problem_description: "Detailed problem statement with evidence and impact"
+  solution_description: "Describe the solution approach and key differentiators"
+  mvp_scope: "Define MVP scope - what's the minimum viable product?"
+  kpis: "List key performance indicators"
+  
+  # Technical prompts
+  technical_constraints: "List technical constraints"
+  business_constraints: "List business constraints"
+  regulatory_constraints: "List regulatory/compliance requirements"
+  functional_requirements: "List core functional requirements"
+  performance_requirements: "Define performance targets"
+  security_requirements: "Define security requirements"
+  scalability_requirements: "Define scalability expectations"
+  reliability_requirements: "Define reliability/uptime requirements"
+  
+  # Stakeholder prompts (memory bank mode)
+  stakeholders: "List primary stakeholders with roles and interests"
+  decision_makers: "List key decision makers and what they decide"
+  milestones: "Define major milestones with dates and descriptions"
+  current_phase_description: "Describe the current project phase"
+  
+  # Risk and planning prompts (comprehensive mode)
+  assumptions: "List key assumptions"
+  risks: "List primary risks with impact and mitigation"
+  tech_preferences: "List technology preferences by category"
+  technical_architecture_notes: "Technical architecture considerations"
+  phase2_features: "Features planned for Phase 2"
+  long_term_vision: "Long-term vision for the product"
+  
+  # Support prompts
+  references: "List links to supporting documentation"
+  research_summary: "Summary of research conducted"
+  competitive_analysis: "Competitive analysis findings"
+  
+  # Mode selection
+  workflow_mode: "Choose workflow mode: comprehensive, memory_bank, or rapid"
+  output_path: "Output file path (auto-set based on mode if not specified)"

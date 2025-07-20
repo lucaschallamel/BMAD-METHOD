@@ -98,4 +98,6 @@ dependencies:
     - story-dod-checklist.md
   templates:
     - dev-journal-tmpl.md
+    - activeContext-tmpl.yaml
+    - progress-tmpl.yaml
 ```

@@ -37,6 +37,8 @@ Foundation document - the source of truth for project scope:
 - Success criteria
 - Constraints and boundaries
 
+**Note**: Use `project-brief-tmpl.yaml` template in **Memory Bank mode** to generate this file. This ensures compatibility with both standalone project briefs and Memory Bank integration.
+
 #### 3.2 Product Context (`productContext.md`)
 The "why" behind the project:
 - Problems being solved
@@ -129,8 +131,8 @@ After creating initial files:
 
 ## Templates
 
-Use the memory bank templates from `bmad-core/templates/memory-bank/`:
-- `projectbrief-tmpl.yaml`
+Use the memory bank templates from `bmad-core/templates/`:
+- `project-brief-tmpl.yaml` (use Memory Bank mode)
 - `productContext-tmpl.yaml`
 - `systemPatterns-tmpl.yaml`
 - `techContext-tmpl.yaml`
