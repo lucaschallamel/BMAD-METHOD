@@ -16,3 +16,9 @@ workflows:
   - greenfield-fullstack.yaml
   - greenfield-service.yaml
   - greenfield-ui.yaml
+  - sprint-execution.yaml
+  - quick-fix.yaml
+  - technical-debt.yaml
+  - documentation-update.yaml
+  - system-migration.yaml
+  - performance-optimization.yaml

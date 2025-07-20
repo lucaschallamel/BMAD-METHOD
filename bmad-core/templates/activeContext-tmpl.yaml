@@ -102,7 +102,7 @@ sections:
         - Example: {{this.example}}
         {{/if}}
         - When to use: {{this.usage_guidance}}
-      
+
       {{/each}}
 
       ### Team Preferences

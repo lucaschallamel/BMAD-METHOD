@@ -18,3 +18,32 @@ devLoadAlwaysFiles:
 devDebugLog: .ai/debug-log.md
 devStoryLocation: docs/stories
 slashPrefix: BMad
+# Memory Bank configuration
+memoryBank:
+  location: docs/memory-bank
+  autoLoadOnSessionStart: true
+  files:
+    - projectbrief.md
+    - productContext.md
+    - systemPatterns.md
+    - techContext.md
+    - activeContext.md
+    - progress.md
+# Development Journal configuration
+devJournal:
+  location: docs/devJournal
+  namePattern: YYYYMMDD-NN.md
+  autoCreateAfterSession: true
+  includeInMemoryBank: true
+# Architectural Decision Records configuration
+adr:
+  location: docs/adr
+  namePattern: adr-NNNN.md
+  templateFile: templates/adr-tmpl.md
+  autoLinkToMemoryBank: true
+# Sprint Management configuration
+sprint:
+  reviewChecklistPath: checklists/sprint-review-checklist.md
+  sessionKickoffChecklistPath: checklists/session-kickoff-checklist.md
+  enableSprintPlanning: true
+  sprintPlanningTemplate: templates/sprint-planning-tmpl.yaml

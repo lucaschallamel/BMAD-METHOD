@@ -1,0 +1,340 @@
+workflow:
+  id: system-migration
+  name: System Migration Workflow
+  description: >-
+    Agent workflow for technology migrations, platform upgrades, and system
+    modernization. Handles careful planning, phased implementation, rollback
+    procedures, and validation to ensure safe transitions.
+  type: migration
+  project_types:
+    - platform-migration
+    - framework-upgrade
+    - database-migration
+    - cloud-migration
+    - technology-modernization
+
+  sequence:
+    - step: session_initialization
+      agent: bmad-master
+      action: comprehensive_context_load
+      uses: session-kickoff
+      notes: |
+        Comprehensive initialization:
+        - Full Memory Bank review
+        - Current architecture understanding
+        - Dependency analysis
+        - Integration points mapping
+        - Risk assessment preparation
+
+    - agent: architect
+      action: current_state_analysis
+      creates: current-state-analysis.md
+      uses: document-project
+      notes: |
+        Document current state:
+        - Complete system architecture
+        - Technology stack details
+        - Dependencies and versions
+        - Integration points
+        - Performance baselines
+        - Known issues and constraints
+
+    - agent: architect
+      action: target_state_design
+      creates: target-state-design.md
+      notes: |
+        Design target architecture:
+        - New technology stack
+        - Migration architecture
+        - Compatibility layers needed
+        - Performance targets
+        - Security improvements
+        - Scalability goals
+
+    - agent: analyst
+      action: gap_analysis
+      creates: migration-gap-analysis.md
+      requires:
+        - current-state-analysis.md
+        - target-state-design.md
+      notes: |
+        Analyze migration gaps:
+        - Technical gaps to bridge
+        - Feature parity assessment
+        - Data migration needs
+        - Training requirements
+        - Tool changes
+        - Process updates needed
+
+    - agent: pm
+      action: migration_planning
+      creates: migration-plan.md
+      requires: migration-gap-analysis.md
+      notes: |
+        Create migration plan:
+        - Phased approach design
+        - Timeline with milestones
+        - Resource requirements
+        - Risk mitigation strategies
+        - Rollback procedures
+        - Success criteria
+
+    - agent: architect
+      action: migration_architecture
+      creates: migration-architecture.md
+      notes: |
+        Technical migration design:
+        - Parallel run strategy
+        - Data migration approach
+        - API compatibility layers
+        - Feature flags design
+        - Monitoring strategy
+        - Cutover procedures
+
+    - agent: po
+      validates: migration_plan
+      uses: po-master-checklist
+      notes: |
+        Validate migration approach:
+        - Business continuity assured
+        - Risk acceptable
+        - Timeline realistic
+        - Resources available
+        - Rollback viable
+
+    - agent: dev
+      action: create_migration_tools
+      creates: migration-tools/
+      notes: |
+        Build migration utilities:
+        - Data migration scripts
+        - Compatibility adapters
+        - Validation tools
+        - Performance benchmarks
+        - Rollback scripts
+        - Monitoring setup
+
+    - migration_phases:
+      repeats: for_each_phase
+      sequence:
+        - agent: sm
+          action: phase_planning
+          creates: phase-plan.md
+          notes: |
+            Plan migration phase:
+            - Define phase scope
+            - Create detailed tasks
+            - Set success criteria
+            - Plan validation steps
+            - Schedule activities
+
+        - agent: dev
+          action: implement_phase
+          updates: system_components
+          notes: |
+            Phase implementation:
+            - Migrate components
+            - Update configurations
+            - Modify integrations
+            - Apply compatibility layers
+            - Enable feature flags
+
+        - agent: qa
+          action: phase_validation
+          validates: migrated_components
+          notes: |
+            Comprehensive testing:
+            - Functional validation
+            - Performance testing
+            - Integration testing
+            - Security scanning
+            - Load testing
+            - Compatibility checks
+
+        - agent: dev
+          action: parallel_run_validation
+          validates: system_parity
+          condition: parallel_run_phase
+          notes: |
+            Parallel run checks:
+            - Compare outputs
+            - Verify data consistency
+            - Performance comparison
+            - Error rate analysis
+            - Resource utilization
+
+        - agent: architect
+          creates: adr-migration-phase.md
+          action: document_phase_decisions
+          notes: |
+            Document phase outcomes:
+            - Decisions made
+            - Issues encountered
+            - Workarounds applied
+            - Performance impacts
+            - Lessons learned
+
+        - agent: po
+          action: phase_signoff
+          validates: phase_completion
+          notes: |
+            Phase acceptance:
+            - Verify success criteria
+            - Review test results
+            - Approve continuation
+            - Update stakeholders
+
+    - agent: dev
+      action: cutover_preparation
+      creates: cutover-checklist.md
+      notes: |
+        Prepare for cutover:
+        - Final validation checklist
+        - Cutover procedures
+        - Communication plan
+        - Rollback procedures
+        - Monitoring alerts
+        - Support readiness
+
+    - agent: architect
+      action: final_validation
+      validates: system_readiness
+      notes: |
+        Pre-cutover validation:
+        - All components migrated
+        - Performance acceptable
+        - Security validated
+        - Integrations working
+        - Data integrity verified
+        - Rollback tested
+
+    - agent: po
+      action: cutover_approval
+      validates: go_live_readiness
+      notes: |
+        Final go-live approval:
+        - All criteria met
+        - Risks acceptable
+        - Team ready
+        - Communications sent
+        - Support prepared
+
+    - agent: dev
+      creates: dev_journal_entry
+      action: document_migration
+      uses: create-dev-journal
+      notes: |
+        Document migration:
+        - Migration summary
+        - Issues and resolutions
+        - Performance changes
+        - Lessons learned
+        - Update Memory Bank
+
+    - agent: sm
+      action: post_migration_review
+      creates: migration-review.md
+      notes: |
+        Post-migration review:
+        - Success metrics
+        - Issues encountered
+        - Performance analysis
+        - Cost analysis
+        - Team feedback
+        - Improvement recommendations
+
+    - workflow_end:
+      action: migration_complete
+      notes: |
+        Migration completed!
+        - System successfully migrated
+        - Performance validated
+        - Documentation updated
+        - Team trained
+        - Monitoring active
+
+  flow_diagram: |
+    ```mermaid
+    graph TD
+        A[Start: Migration] --> B[bmad-master: comprehensive init]
+        B --> C[architect: current state]
+        C --> D[architect: target state]
+        D --> E[analyst: gap analysis]
+        E --> F[pm: migration plan]
+        F --> G[architect: migration architecture]
+        G --> H[po: validate plan]
+        
+        H --> I[dev: build tools]
+        I --> J[Migration Phases]
+        J --> K[sm: phase planning]
+        K --> L[dev: implement phase]
+        L --> M[qa: validate phase]
+        M --> N{Parallel run?}
+        N -->|Yes| O[dev: validate parity]
+        N -->|No| P[architect: document phase]
+        O --> P
+        P --> Q[po: phase signoff]
+        Q --> R{More phases?}
+        R -->|Yes| J
+        R -->|No| S[dev: cutover prep]
+        
+        S --> T[architect: final validation]
+        T --> U[po: cutover approval]
+        U --> V[dev: document migration]
+        V --> W[sm: post-migration review]
+        W --> X[Migration Complete]
+
+        style X fill:#90EE90
+        style B fill:#FF6B6B
+        style H fill:#FFD700
+        style Q fill:#FFD700
+        style U fill:#FFD700
+        style L fill:#FFA500
+        style M fill:#FFA500
+        style T fill:#98FB98
+    ```
+
+  decision_guidance:
+    when_to_use:
+      - End-of-life technology
+      - Performance limitations
+      - Security vulnerabilities
+      - Scalability requirements
+      - Cost optimization needs
+      - Compliance requirements
+
+  handoff_prompts:
+    analysis_complete: |
+      Migration analysis complete:
+      - Current components: {{component_count}}
+      - Migration complexity: {{complexity_score}}/10
+      - Estimated phases: {{phase_count}}
+      - Risk level: {{risk_level}}
+
+    plan_ready: |
+      Migration plan created:
+      - Total phases: {{phase_count}}
+      - Timeline: {{timeline_weeks}} weeks
+      - Rollback points: {{rollback_count}}
+      - Success criteria defined
+
+    phase_complete: |
+      Phase {{phase_number}} complete:
+      - Components migrated: {{component_count}}
+      - Tests passed: {{test_pass_rate}}%
+      - Performance delta: {{performance_change}}%
+      - Issues resolved: {{issue_count}}
+
+    cutover_ready: |
+      System ready for cutover:
+      - All phases complete
+      - Validation passed: {{validation_score}}/100
+      - Rollback tested: Yes
+      - Team prepared: Yes
+
+    complete: |
+      Migration successful!
+      - Cutover completed: {{cutover_duration}}
+      - System stability: {{stability_metric}}
+      - Performance improvement: {{perf_improvement}}%
+      - Zero data loss confirmed

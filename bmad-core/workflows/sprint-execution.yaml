@@ -1,0 +1,249 @@
+workflow:
+  id: sprint-execution
+  name: Sprint-Based Development Workflow
+  description: >-
+    Agent workflow for sprint-based agile development. Handles sprint planning,
+    daily development cycles, mid-sprint adjustments, sprint reviews, and retrospectives.
+    Integrates Memory Bank updates and continuous documentation.
+  type: sprint
+  project_types:
+    - agile-development
+    - scrum-sprint
+    - iterative-delivery
+    - continuous-improvement
+
+  sequence:
+    - step: sprint_kickoff
+      agent: bmad-master
+      action: initialize_sprint_context
+      uses: session-kickoff
+      notes: |
+        Sprint initialization:
+        - Review Memory Bank for project state
+        - Check previous sprint outcomes
+        - Review product backlog
+        - Understand technical context
+        - Review team velocity and capacity
+
+    - agent: sm
+      action: sprint_planning
+      creates: sprint-plan.md
+      uses: sprint-planning-tmpl
+      notes: |
+        Sprint planning session:
+        - Define sprint goals
+        - Select stories from backlog
+        - Estimate story points
+        - Assign initial priorities
+        - Create sprint backlog
+        - Document in sprint-plan.md
+
+    - agent: po
+      validates: sprint_plan
+      action: approve_sprint_scope
+      notes: |
+        Validate sprint plan:
+        - Confirm goals align with product vision
+        - Verify story selection
+        - Approve priorities
+        - Sign off on sprint commitment
+
+    - daily_development_cycle:
+      repeats: for_each_sprint_day
+      sequence:
+        - agent: sm
+          action: daily_standup
+          creates: daily-status.md
+          notes: |
+            Daily coordination:
+            - Review yesterday's progress
+            - Plan today's work
+            - Identify blockers
+            - Update sprint burndown
+
+        - agent: dev
+          action: implement_daily_work
+          updates: implementation_files
+          notes: |
+            Development work:
+            - Work on assigned stories
+            - Follow coding standards
+            - Create unit tests
+            - Update story status
+
+        - agent: dev
+          creates: dev_journal_entry
+          action: document_daily_progress
+          uses: create-dev-journal
+          condition: end_of_day
+          notes: |
+            Daily documentation:
+            - Document work completed
+            - Note challenges faced
+            - Record decisions made
+            - Update Memory Bank activeContext
+
+    - step: mid_sprint_check
+      agent: sm
+      action: assess_sprint_health
+      condition: sprint_midpoint
+      notes: |
+        Mid-sprint assessment:
+        - Review burndown chart
+        - Assess story completion rate
+        - Identify at-risk items
+        - Plan adjustments if needed
+
+    - agent: po
+      action: mid_sprint_adjustment
+      condition: scope_change_needed
+      optional: true
+      notes: |
+        Sprint adjustment:
+        - Review proposed changes
+        - Approve scope modifications
+        - Update sprint goals if needed
+        - Communicate changes
+
+    - agent: qa
+      action: continuous_testing
+      updates: test_results
+      repeats: as_stories_complete
+      notes: |
+        Ongoing quality assurance:
+        - Test completed stories
+        - Report issues immediately
+        - Verify acceptance criteria
+        - Update story status
+
+    - agent: architect
+      creates: adr.md
+      action: document_decisions
+      condition: architectural_decision_made
+      notes: |
+        ADR creation:
+        - Document significant decisions
+        - Record context and rationale
+        - Update Memory Bank systemPatterns
+        - Link to related stories
+
+    - step: sprint_review_preparation
+      agent: sm
+      action: prepare_review_materials
+      creates: sprint-review-prep.md
+      condition: sprint_final_day
+      notes: |
+        Review preparation:
+        - Compile completed stories
+        - Prepare demonstration materials
+        - Document impediments
+        - Calculate velocity metrics
+
+    - agent: sm
+      action: conduct_sprint_review
+      uses: conduct-sprint-review
+      creates: sprint-review-summary.md
+      notes: |
+        Sprint review meeting:
+        - Demonstrate completed work
+        - Gather stakeholder feedback
+        - Document acceptance status
+        - Update product backlog
+        - Use sprint-review-checklist.md
+
+    - agent: po
+      action: accept_sprint_deliverables
+      validates: completed_stories
+      notes: |
+        Sprint acceptance:
+        - Review demonstrated features
+        - Confirm acceptance criteria met
+        - Sign off on completed work
+        - Update story status to Done
+
+    - agent: sm
+      action: sprint_retrospective
+      creates: sprint-retrospective.md
+      notes: |
+        Sprint retrospective:
+        - What went well
+        - What could improve
+        - Action items for next sprint
+        - Team velocity analysis
+        - Process improvements
+
+    - agent: bmad-master
+      action: update_memory_bank
+      uses: update-memory-bank
+      notes: |
+        Comprehensive Memory Bank update:
+        - Sprint outcomes to progress.md
+        - Technical decisions to systemPatterns.md
+        - Learnings to activeContext.md
+        - Update project velocity metrics
+
+    - workflow_end:
+      action: sprint_complete
+      notes: |
+        Sprint completed!
+        - All deliverables accepted
+        - Memory Bank updated
+        - Retrospective documented
+        - Ready for next sprint planning
+
+  flow_diagram: |
+    ```mermaid
+    graph TD
+        A[Start: Sprint] --> B[bmad-master: sprint kickoff]
+        B --> C[sm: sprint planning]
+        C --> D[po: approve sprint scope]
+        
+        D --> E[Daily Cycle Start]
+        E --> F[sm: daily standup]
+        F --> G[dev: implement work]
+        G --> H[dev: daily journal]
+        H --> I{More days?}
+        I -->|Yes| E
+        I -->|No| J[sm: mid-sprint check]
+        
+        J --> K{Adjustment needed?}
+        K -->|Yes| L[po: scope adjustment]
+        K -->|No| M[Continue development]
+        L --> M
+        
+        M --> N[qa: continuous testing]
+        N --> O{Architecture decision?}
+        O -->|Yes| P[architect: create ADR]
+        O -->|No| Q[sm: prepare review]
+        P --> Q
+        
+        Q --> R[sm: sprint review]
+        R --> S[po: accept deliverables]
+        S --> T[sm: retrospective]
+        T --> U[bmad-master: update Memory Bank]
+        U --> V[Sprint Complete]
+
+        style V fill:#90EE90
+        style B fill:#FFE4B5
+        style C fill:#FFE4B5
+        style R fill:#ADD8E6
+        style T fill:#F0E68C
+        style U fill:#DDA0DD
+    ```
+
+  decision_guidance:
+    when_to_use:
+      - Team follows agile/scrum methodology
+      - Fixed-length iterations preferred
+      - Regular stakeholder reviews needed
+      - Continuous improvement focus
+      - Multiple stories per iteration
+
+  handoff_prompts:
+    kickoff_to_planning: "Sprint context initialized. Ready for sprint planning with backlog items."
+    planning_to_po: "Sprint plan created with {{story_count}} stories totaling {{story_points}} points. Please review and approve."
+    daily_standup: "Yesterday: {{completed_tasks}}. Today: {{planned_tasks}}. Blockers: {{blockers}}."
+    mid_sprint_alert: "Sprint health check: {{completion_percentage}}% complete. {{at_risk_count}} stories at risk."
+    review_ready: "Sprint review prepared. {{completed_stories}} stories ready for demonstration."
+    retrospective_complete: "Sprint retrospective complete. {{improvement_actions}} action items for next sprint."
+    complete: "Sprint {{sprint_number}} complete. Velocity: {{velocity}} points. Ready for next sprint planning."

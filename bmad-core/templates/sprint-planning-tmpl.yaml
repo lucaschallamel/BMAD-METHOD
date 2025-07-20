@@ -1,0 +1,240 @@
+template:
+  type: document
+  id: sprint-planning-tmpl
+  name: Sprint Planning Template
+  version: 1.0.0
+  description: >-
+    Template for sprint planning sessions. Documents sprint goals, selected stories,
+    capacity planning, risk assessment, and success criteria. Integrates with Memory Bank
+    for context and creates Dev Journal entries for tracking.
+  category: planning
+
+sections:
+  - id: sprint-overview
+    name: Sprint Overview
+    content: |
+      # Sprint [Number] Planning
+
+      ## Sprint Information
+      - **Sprint Number**: [X]
+      - **Sprint Name**: [Descriptive name]
+      - **Start Date**: [YYYY-MM-DD]
+      - **End Date**: [YYYY-MM-DD]
+      - **Duration**: [X weeks]
+      - **Team**: [Team name/composition]
+
+      ## Sprint Theme
+      [Brief description of the sprint's primary focus or theme]
+
+  - id: context-review
+    name: Context Review
+    content: |
+      ## Context from Previous Sprint
+
+      ### Previous Sprint Outcomes
+      [Summary of what was completed in the previous sprint]
+
+      ### Carried Over Items
+      - [ ] [Story/task carried from previous sprint]
+      - [ ] [Technical debt item]
+
+      ### Memory Bank Context
+      - **Active Context**: [Key points from activeContext.md]
+      - **Recent Patterns**: [Relevant patterns from systemPatterns.md]
+      - **Progress Status**: [Current state from progress.md]
+
+      ### Recent Dev Journal Insights
+      [Key learnings or decisions from recent dev journals]
+
+  - id: sprint-goals
+    name: Sprint Goals
+    content: |
+      ## Sprint Goals
+
+      ### Primary Goal
+      [Main objective for this sprint - should be achievable and measurable]
+
+      ### Secondary Goals
+      1. [Secondary objective 1]
+      2. [Secondary objective 2]
+      3. [Secondary objective 3]
+
+      ### Success Criteria
+      - [ ] [Specific measurable outcome 1]
+      - [ ] [Specific measurable outcome 2]
+      - [ ] [Specific measurable outcome 3]
+
+      ### Definition of Done
+      - [ ] All code reviewed and approved
+      - [ ] All tests passing (unit, integration, E2E)
+      - [ ] Documentation updated
+      - [ ] Memory Bank updated with progress
+      - [ ] Dev Journal entry created
+
+  - id: capacity-planning
+    name: Capacity Planning
+    content: |
+      ## Team Capacity
+
+      ### Available Hours
+      | Team Member | Role | Available Hours | Planned Time Off |
+      |-------------|------|-----------------|------------------|
+      | [Name] | [Role] | [Hours] | [Dates if any] |
+
+      ### Velocity Reference
+      - **Previous Sprint Velocity**: [Story points]
+      - **3-Sprint Average**: [Story points]
+      - **Target Velocity**: [Story points]
+
+      ### Capacity Allocation
+      - **Feature Development**: [X]%
+      - **Bug Fixes**: [X]%
+      - **Technical Debt**: [X]%
+      - **Meetings/Ceremonies**: [X]%
+      - **Buffer**: [X]%
+
+  - id: selected-stories
+    name: Selected Stories
+    content: |
+      ## Selected User Stories
+
+      ### Committed Stories
+      | Story ID | Title | Points | Assignee | Dependencies |
+      |----------|-------|--------|----------|--------------|
+      | [ID] | [Title] | [Points] | [Name] | [Dependencies] |
+
+      ### Total Story Points: [X]
+
+      ### Story Details
+      #### [Story ID]: [Story Title]
+      - **Acceptance Criteria**: 
+        - [ ] [Criterion 1]
+        - [ ] [Criterion 2]
+      - **Technical Considerations**: [Notes]
+      - **Integration Points**: [Systems/APIs]
+      - **Testing Strategy**: [Approach]
+
+  - id: technical-planning
+    name: Technical Planning
+    content: |
+      ## Technical Considerations
+
+      ### Architecture Impacts
+      - [ ] [Component/system that will be modified]
+      - [ ] [New integrations required]
+      - [ ] [Database changes needed]
+
+      ### Technical Dependencies
+      | Dependency | Status | Owner | Due Date |
+      |------------|--------|-------|----------|
+      | [Item] | [Status] | [Name] | [Date] |
+
+      ### Technical Debt Items
+      - [ ] [Debt item to address this sprint]
+      - [ ] [Refactoring opportunity]
+
+      ### Performance Considerations
+      - [Performance impacts to monitor]
+      - [Optimization opportunities]
+
+  - id: risk-assessment
+    name: Risk Assessment
+    content: |
+      ## Risk Assessment
+
+      ### Identified Risks
+      | Risk | Probability | Impact | Mitigation Strategy | Owner |
+      |------|-------------|--------|---------------------|-------|
+      | [Risk description] | High/Med/Low | High/Med/Low | [Strategy] | [Name] |
+
+      ### Dependencies on External Teams
+      - **Team**: [External team name]
+        - **Dependency**: [What we need]
+        - **Status**: [Current status]
+        - **Fallback**: [Plan B if blocked]
+
+      ### Technical Risks
+      - [ ] [Complex integration risk]
+      - [ ] [Performance risk]
+      - [ ] [Security consideration]
+
+  - id: communication-plan
+    name: Communication Plan
+    content: |
+      ## Communication Plan
+
+      ### Sprint Ceremonies
+      - **Daily Standup**: [Time] @ [Location/Link]
+      - **Sprint Review**: [Date/Time] @ [Location/Link]
+      - **Retrospective**: [Date/Time] @ [Location/Link]
+
+      ### Stakeholder Updates
+      - **Format**: [Email/Slack/Meeting]
+      - **Frequency**: [Daily/Weekly]
+      - **Recipients**: [List of stakeholders]
+
+      ### Escalation Path
+      1. [First level - e.g., Scrum Master]
+      2. [Second level - e.g., Product Owner]
+      3. [Third level - e.g., Engineering Manager]
+
+  - id: sprint-backlog
+    name: Sprint Backlog
+    content: |
+      ## Sprint Backlog
+
+      ### Ready for Development
+      - [ ] [Task ready to start]
+      - [ ] [Another task]
+
+      ### In Progress
+      - [ ] [Task being worked on]
+
+      ### Stretch Goals
+      - [ ] [Additional story if capacity allows]
+      - [ ] [Nice-to-have feature]
+
+      ### Not Selected (Documented for Next Sprint)
+      - [Story/task deferred with reason]
+      - [Another deferred item]
+
+  - id: acceptance-criteria
+    name: Sprint Acceptance Criteria
+    content: |
+      ## Sprint Acceptance Criteria
+
+      ### Must Complete
+      - [ ] All committed stories meet Definition of Done
+      - [ ] No critical bugs in production
+      - [ ] Memory Bank updated with sprint progress
+      - [ ] Dev Journals document key decisions
+      - [ ] All integration tests passing
+
+      ### Should Complete
+      - [ ] Technical debt items addressed
+      - [ ] Documentation updated
+      - [ ] Performance benchmarks met
+
+      ### Sprint Review Preparation
+      - [ ] Demo environment ready
+      - [ ] Demo script prepared
+      - [ ] Metrics collected
+      - [ ] Stakeholder invites sent
+
+usage:
+  instructions: |
+    This template should be used at the beginning of each sprint during sprint planning.
+
+    1. Review previous sprint outcomes and Memory Bank context
+    2. Define clear, measurable sprint goals
+    3. Assess team capacity realistically
+    4. Select stories that align with goals and capacity
+    5. Identify and plan for risks
+    6. Establish clear communication plans
+    7. Document all decisions in Dev Journal
+
+  integration:
+    - memory-bank: Update activeContext.md with sprint goals
+    - dev-journal: Create sprint planning entry
+    - workflows: Referenced by sprint-execution workflow
+    - checklists: Links to sprint-review-checklist for end of sprint

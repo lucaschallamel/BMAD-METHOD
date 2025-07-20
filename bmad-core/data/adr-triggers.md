@@ -65,7 +65,7 @@
 - **Feature Flags**: Implementation approach
 - **Backward Compatibility**: Version strategy
 
-## Red Flags - Always Create an ADR When:
+## Red Flags - Always Create an ADR When
 
 1. **Multiple Valid Options Exist**: The team is debating between approaches
 2. **Significant Cost Implications**: The decision impacts budget substantially
@@ -76,7 +76,7 @@
 7. **Performance Critical**: Decision significantly impacts system performance
 8. **Security Implications**: Decision affects system security posture
 
-## When NOT to Create an ADR:
+## When NOT to Create an ADR
 
 1. **Implementation Details**: How to name a variable or structure a small module
 2. **Temporary Solutions**: Quick fixes that will be replaced soon
@@ -84,5 +84,5 @@
 4. **Tool Configuration**: Minor tool settings that are easily changeable
 5. **Obvious Choices**: When there's only one reasonable option
 
-## Remember:
+## Remember
 > "If someone might ask 'Why did we do it this way?' in 6 months, you need an ADR."

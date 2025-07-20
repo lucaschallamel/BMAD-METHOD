@@ -26,6 +26,27 @@ If you have just completed an MVP with BMad, and you want to continue with post-
 
 ## The Complete Brownfield Workflow
 
+### Session Initialization (NEW - Critical First Step)
+
+Before starting any brownfield work, proper context initialization is essential:
+
+```bash
+@bmad-master
+*session-kickoff
+```
+
+This will:
+- Review existing Memory Bank files if available
+- Check recent Dev Journal entries for current state
+- Load relevant ADRs for architectural decisions
+- Establish proper context for brownfield work
+
+**Why This Matters for Brownfield**:
+- Prevents duplicate work or conflicting decisions
+- Ensures awareness of recent changes and patterns
+- Maintains consistency with established practices
+- Provides AI agents with critical historical context
+
 ### Choose Your Approach
 
 #### Approach A: PRD-First (Recommended if adding very large and complex new features, single or multiple epics or massive changes)
@@ -81,6 +102,7 @@ The analyst will:
 - **Focus on relevant modules** identified in PRD or your description
 - **Skip unrelated areas** to keep docs lean
 - **Generate ONE architecture document** for all environments
+- **Initialize Memory Bank** for the project if not exists
 
 The analyst creates:
 
@@ -88,6 +110,13 @@ The analyst creates:
 - **Covers all system aspects** in a single file
 - **Easy to copy and save** as `docs/project-architecture.md`
 - **Can be sharded later** in IDE if desired
+- **Memory Bank initialization** with project context and patterns
+
+**Memory Bank Integration**:
+- Creates `docs/memory-bank/projectbrief.md` with project overview
+- Populates `docs/memory-bank/techContext.md` with discovered stack
+- Documents patterns in `docs/memory-bank/systemPatterns.md`
+- Sets up `docs/memory-bank/activeContext.md` for ongoing work
 
 For example, if you say "Add payment processing to user service":
 
@@ -221,6 +250,14 @@ Follow the enhanced IDE Development Workflow:
    - **SM** creates stories with integration awareness
    - **Dev** implements with existing code respect
    - **QA** reviews for compatibility and improvements
+   - **Dev Journals** track daily progress and decisions
+   - **Sprint Reviews** ensure alignment and quality
+
+4. **Continuous Documentation**:
+   - Create Dev Journal entries after significant work
+   - Update Memory Bank's `activeContext.md` with progress
+   - Document decisions in ADRs when making architectural changes
+   - Run sprint reviews to validate progress against goals
 
 ## Brownfield Best Practices
 
@@ -267,6 +304,17 @@ Document:
 - Migration instructions
 - New patterns introduced
 - Deprecation notices
+
+### 6. Maintain Memory Bank (NEW)
+
+Keep project context current:
+
+- **Session Start**: Always run `*session-kickoff` to load context
+- **During Work**: Update `activeContext.md` with current state
+- **Pattern Discovery**: Document new patterns in `systemPatterns.md`
+- **Progress Tracking**: Update `progress.md` with completed features
+- **Tech Changes**: Keep `techContext.md` current with stack updates
+- **Decision Records**: Create ADRs for significant architectural decisions
 
 ## Common Brownfield Scenarios
 
@@ -321,6 +369,9 @@ Document:
 ### Brownfield-Specific Commands
 
 ```bash
+# Initialize session with context (ALWAYS DO FIRST)
+@bmad-master → *session-kickoff
+
 # Document existing project
 @analyst → *document-project
 
@@ -335,6 +386,13 @@ Document:
 
 # Single story creation
 @pm → *brownfield-create-story
+
+# Memory Bank operations
+@bmad-master → *initialize-memory-bank
+@bmad-master → *update-memory-bank
+
+# Sprint ceremonies
+@bmad-master → *conduct-sprint-review
 ```
 
 ### Decision Tree

@@ -47,9 +47,21 @@ persona:
     - Collaborative & iterative approach
     - Proactive risk identification
     - Strategic thinking & outcome-oriented
+  memory_bank_awareness:
+    - PRDs inform Memory Bank productContext.md and projectbrief.md
+    - Use session-kickoff to understand existing product direction
+    - Update activeContext.md when priorities shift
+    - Product decisions should align with Memory Bank documented goals
+  sprint_review_awareness:
+    - Collaborate with SM on sprint reviews for product insights
+    - Document product-related achievements and learnings
+    - Identify feature adoption and user feedback patterns
+    - Update product roadmap based on sprint outcomes
+    - Ensure product goals align with sprint accomplishments
 # All commands require * prefix when used (e.g., *help)
 commands:  
   - help: Show numbered list of the following commands to allow selection
+  - session-kickoff: Execute task session-kickoff.md for comprehensive session initialization
   - create-prd: run task create-doc.md with template prd-tmpl.yaml
   - create-brownfield-prd: run task create-doc.md with template brownfield-prd-tmpl.yaml
   - create-epic: Create epic for brownfield projects (task brownfield-create-epic)
@@ -57,6 +69,8 @@ commands:
   - doc-out: Output full document to current destination file
   - shard-prd: run the task shard-doc.md for the provided prd.md (ask if not found)
   - correct-course: execute the correct-course task
+  - update-memory-bank: Execute task update-memory-bank.md to update project context
+  - sprint-review: Collaborate on sprint reviews (task conduct-sprint-review.md)
   - yolo: Toggle Yolo Mode
   - exit: Exit (confirm)
 dependencies:
@@ -68,12 +82,22 @@ dependencies:
     - brownfield-create-story.md
     - execute-checklist.md
     - shard-doc.md
+    - session-kickoff.md
+    - update-memory-bank.md
+    - conduct-sprint-review.md
   templates:
     - prd-tmpl.yaml
     - brownfield-prd-tmpl.yaml
+    - productContext-tmpl.yaml
+    - activeContext-tmpl.yaml
+    - sprint-review-tmpl.yaml
   checklists:
     - pm-checklist.md
     - change-checklist.md
+    - session-kickoff-checklist.md
+    - sprint-review-checklist.md
   data:
     - technical-preferences.md
+    - sprint-review-triggers.md
+    - project-scaffolding-preference.md
 ```

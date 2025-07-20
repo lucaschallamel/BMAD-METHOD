@@ -81,6 +81,8 @@ Ask the user if they want to work through the checklist:
 - [ ] Component interactions and dependencies are mapped
 - [ ] Data flows are clearly illustrated
 - [ ] Technology choices for each component are specified
+- [ ] Memory Bank systemPatterns.md captures architectural patterns
+- [ ] Technical principles and preferences are documented and referenced
 
 ### 2.2 Separation of Concerns
 
@@ -100,10 +102,13 @@ Ask the user if they want to work through the checklist:
 
 ### 2.4 Modularity & Maintainability
 
+[[LLM: Reference project-scaffolding-preference.md for standard project organization principles.]]
+
 - [ ] System is divided into cohesive, loosely-coupled modules
 - [ ] Components can be developed and tested independently
 - [ ] Changes can be localized to specific components
 - [ ] Code organization promotes discoverability
+- [ ] Project structure follows project-scaffolding-preference.md
 - [ ] Architecture specifically designed for AI agent implementation
 
 ## 3. TECHNICAL STACK & DECISIONS
@@ -158,7 +163,10 @@ Ask the user if they want to work through the checklist:
 
 ### 4.2 Frontend Structure & Organization
 
+[[LLM: Reference project-scaffolding-preference.md for standard project structure guidelines.]]
+
 - [ ] Directory structure is clearly documented with ASCII diagram
+- [ ] Structure aligns with project-scaffolding-preference.md standards
 - [ ] Component organization follows stated patterns
 - [ ] File naming conventions are explicit
 - [ ] Structure supports chosen framework's best practices
@@ -316,13 +324,17 @@ Ask the user if they want to work through the checklist:
 
 ### 7.6 Architectural Decision Records (ADRs)
 
-- [ ] ADR process is established for the project
-- [ ] Significant architecture decisions are documented in ADRs
-- [ ] Technology stack choices have corresponding ADRs
-- [ ] Integration approach decisions are captured in ADRs
-- [ ] ADRs follow consistent format and numbering
-- [ ] Superseded decisions are properly tracked
-- [ ] ADR index is maintained and accessible
+- [ ] ADR process is established for the project with clear templates
+- [ ] All significant architecture decisions are documented in ADRs
+- [ ] Technology stack choices have corresponding ADRs with alternatives considered
+- [ ] Integration approach decisions are captured in ADRs with rationale
+- [ ] ADRs follow consistent format (Context, Decision, Consequences) and numbering
+- [ ] Superseded decisions are properly tracked with links to new decisions
+- [ ] ADR index is maintained and accessible in docs/adr/
+- [ ] Each ADR includes status (proposed, accepted, deprecated, superseded)
+- [ ] Trade-offs and implications are clearly documented
+- [ ] ADRs are linked from relevant architecture sections
+- [ ] Review process for ADRs is defined and followed
 
 ## 8. DEPENDENCY & INTEGRATION MANAGEMENT
 
@@ -388,11 +400,41 @@ Ask the user if they want to work through the checklist:
 - [ ] Testing patterns are clearly defined
 - [ ] Debugging guidance is provided
 
-## 10. ACCESSIBILITY IMPLEMENTATION [[FRONTEND ONLY]]
+## 10. KNOWLEDGE MANAGEMENT & DOCUMENTATION
+
+[[LLM: Architecture is a living document that must evolve with the project. Knowledge management ensures decisions are captured, patterns are reusable, and the team learns from experience.]]
+
+### 10.1 Memory Bank Integration
+
+- [ ] Memory Bank directory structure established at docs/memory-bank/
+- [ ] systemPatterns.md documents architectural patterns and decisions
+- [ ] techContext.md captures technology stack context and constraints
+- [ ] activeContext.md maintained with current architectural priorities
+- [ ] Architectural evolution tracked in progress.md
+- [ ] Cross-references between Memory Bank and architecture docs
+
+### 10.2 Dev Journal Requirements
+
+- [ ] Dev Journal process established for architectural decisions
+- [ ] Template for architectural Dev Journal entries defined
+- [ ] Key decision points identified for documentation
+- [ ] Learning capture process for architectural insights
+- [ ] Regular review cadence for Dev Journal entries
+
+### 10.3 Technical Principles Alignment
+
+- [ ] Core technical principles documented and accessible
+- [ ] Architecture aligns with established coding standards
+- [ ] Microservice patterns (if applicable) properly applied
+- [ ] Twelve-factor principles considered and documented
+- [ ] Security and performance principles integrated
+- [ ] Deviations from principles justified in ADRs
+
+## 11. ACCESSIBILITY IMPLEMENTATION [[FRONTEND ONLY]]
 
 [[LLM: Skip this section for backend-only projects. Accessibility is a core requirement for any user interface.]]
 
-### 10.1 Accessibility Standards
+### 11.1 Accessibility Standards
 
 - [ ] Semantic HTML usage is emphasized
 - [ ] ARIA implementation guidelines provided
@@ -400,7 +442,7 @@ Ask the user if they want to work through the checklist:
 - [ ] Focus management approach specified
 - [ ] Screen reader compatibility addressed
 
-### 10.2 Accessibility Testing
+### 11.2 Accessibility Testing
 
 - [ ] Accessibility testing tools identified
 - [ ] Testing process integrated into workflow

@@ -134,6 +134,8 @@ Triggered by:
 - Significant project pivot
 - Before major feature work
 
+**Sprint Review Integration**: For sprint-end updates, use the `sprint-review-checklist.md` to ensure all sprint accomplishments, learnings, and technical decisions are captured in the Memory Bank.
+
 ## Quality Checklist
 
 - [ ] All recent dev journals reviewed
@@ -151,8 +153,9 @@ This task integrates with:
 - **Dev Journal Creation**: Triggers selective activeContext update
 - **ADR Creation**: Triggers systemPatterns update
 - **Story Completion**: Triggers progress update
-- **Sprint End**: Triggers comprehensive update
+- **Sprint End**: Triggers comprehensive update (use `sprint-review-checklist.md`)
 - **Architecture Changes**: Triggers multiple file updates
+- **Sprint Reviews**: Reference `sprint-review-checklist.md` to ensure comprehensive capture of sprint outcomes
 
 ## Example Update Flow
 

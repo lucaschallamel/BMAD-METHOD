@@ -4,6 +4,8 @@ This task guides the creation of an ADR to document significant architectural de
 
 ## Initial Setup (if needed)
 
+[[LLM: The ADR location follows the standard defined in project-scaffolding-preference.md]]
+
 If the /docs/adr directory doesn't exist in the project:
 1. Create the directory: `mkdir -p docs/adr`
 2. Create a README.md explaining ADR purpose and structure

@@ -483,7 +483,10 @@ sections:
 
   - id: unified-project-structure
     title: Unified Project Structure
-    instruction: Create a monorepo structure that accommodates both frontend and backend. Adapt based on chosen tools and frameworks.
+    instruction: |
+      Create a monorepo structure that accommodates both frontend and backend. Adapt based on chosen tools and frameworks.
+      
+      NOTE: Reference project-scaffolding-preference.md for standard project structure guidelines and ensure alignment with BMAD conventions including docs/memory-bank, docs/adr, and docs/devJournal directories.
     elicit: true
     type: code
     language: plaintext

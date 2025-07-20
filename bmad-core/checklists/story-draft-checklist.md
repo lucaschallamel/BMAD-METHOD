@@ -38,13 +38,17 @@ We're checking for SUFFICIENT guidance, not exhaustive detail.]]
 2. The business value or user benefit is clear
 3. How this fits into the larger epic/product is explained
 4. Dependencies are explicit ("requires Story X to be complete")
-5. Success looks like something specific, not vague]]
+5. Success looks like something specific, not vague
+6. Memory Bank context has been considered
+7. Technical principles alignment is clear]]
 
 - [ ] Story goal/purpose is clearly stated
 - [ ] Relationship to epic goals is evident
 - [ ] How the story fits into overall system flow is explained
 - [ ] Dependencies on previous stories are identified (if applicable)
 - [ ] Business context and value are clear
+- [ ] Memory Bank context referenced where relevant
+- [ ] Technical principles and preferences considered
 
 ## 2. TECHNICAL IMPLEMENTATION GUIDANCE
 
@@ -79,6 +83,8 @@ Note: We don't need every file listed - just the important ones.]]
 - [ ] Critical information from previous stories is summarized (not just referenced)
 - [ ] Context is provided for why references are relevant
 - [ ] References use consistent format (e.g., `docs/filename.md#section`)
+- [ ] ADR references included where architectural decisions apply
+- [ ] Memory Bank files referenced appropriately (activeContext, systemPatterns, etc.)
 
 ## 4. SELF-CONTAINMENT ASSESSMENT
 
@@ -142,7 +148,7 @@ Generate a concise validation report:
 Be pragmatic - perfect documentation doesn't exist, but it must be enough to provide the extreme context a dev agent needs to get the work down and not create a mess.]]
 
 | Category                             | Status | Issues |
-| ------------------------------------ | ------ | ------ |
+|--------------------------------------|--------|--------|
 | 1. Goal & Context Clarity            | _TBD_  |        |
 | 2. Technical Implementation Guidance | _TBD_  |        |
 | 3. Reference Effectiveness           | _TBD_  |        |

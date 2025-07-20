@@ -6,6 +6,9 @@ This task guides the creation of a development journal entry to document the ses
 - Have git access to review commits and changes
 
 ## Initial Setup (if needed)
+
+[[LLM: The Dev Journal location follows the standard defined in project-scaffolding-preference.md]]
+
 If the /docs/devJournal directory doesn't exist in the project:
 1. Create the directory: `mkdir -p docs/devJournal`
 2. Create a README.md in that directory explaining its purpose
@@ -33,14 +36,16 @@ Check existing entries: `ls docs/devJournal/YYYYMMDD-*.md`
 
 Use the dev-journal-tmpl.yaml template to create a comprehensive entry covering:
 
-#### Essential Sections:
+#### Essential Sections
 1. **Session Overview** - Brief summary of accomplishments
 2. **Work Streams** - Detailed breakdown of each area of work
 3. **Implementation Details** - Key code changes and decisions
 4. **Validation & Testing** - What was tested and verified
 5. **Current State & Next Steps** - Where we are and what's next
 
-#### Evidence Gathering:
+**Sprint Journal Entries**: For end-of-sprint dev journal entries, cross-reference with `sprint-review-checklist.md` to ensure all sprint accomplishments and learnings are captured.
+
+#### Evidence Gathering
 - Review all commits made during session
 - Check modified files by functional area
 - Note any new patterns or architectural decisions
@@ -68,6 +73,7 @@ Before finalizing, ensure:
 - Include enough detail for context without overwhelming
 - Cross-reference related stories, ADRs, or PRs
 - Use British English for consistency
+- For sprint-end entries, ensure alignment with sprint review documentation using `sprint-review-checklist.md`
 
 ## Memory Bank Integration
 

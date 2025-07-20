@@ -1,0 +1,220 @@
+workflow:
+  id: quick-fix
+  name: Quick Fix / Hotfix Workflow
+  description: >-
+    Agent workflow for urgent production fixes and hotfixes. Streamlined process
+    for critical issues that need immediate attention with minimal overhead
+    while maintaining quality and documentation standards.
+  type: hotfix
+  project_types:
+    - production-fix
+    - security-patch
+    - critical-bug
+    - emergency-update
+    - hotfix
+
+  sequence:
+    - step: abbreviated_session_init
+      agent: bmad-master
+      action: quick_context_load
+      uses: session-kickoff
+      notes: |
+        Abbreviated initialization:
+        - Quick Memory Bank scan
+        - Focus on affected system areas
+        - Review recent deployments
+        - Check related ADRs
+        Priority: Speed over comprehensive review
+
+    - step: issue_triage
+      agent: analyst
+      action: analyze_issue
+      creates: issue-analysis.md
+      notes: |
+        Rapid issue analysis:
+        - Reproduce the issue
+        - Identify root cause
+        - Assess impact severity
+        - Determine affected components
+        - Estimate fix complexity
+        Time box: 30 minutes max
+
+    - agent: architect
+      action: quick_solution_design
+      creates: fix-approach.md
+      condition: complex_fix
+      optional: true
+      notes: |
+        For complex fixes only:
+        - Design minimal viable fix
+        - Consider rollback strategy
+        - Identify testing requirements
+        - Note any technical debt incurred
+
+    - agent: dev
+      action: implement_fix
+      creates: fix_implementation
+      notes: |
+        Rapid implementation:
+        - Minimal code changes
+        - Focus on fixing issue only
+        - Add regression test
+        - Comment code thoroughly
+        - Update affected documentation
+
+    - agent: qa
+      action: targeted_testing
+      validates: fix_implementation
+      notes: |
+        Focused testing:
+        - Test the specific fix
+        - Verify no regressions
+        - Check edge cases
+        - Performance impact check
+        - Security implications review
+
+    - agent: dev
+      action: address_test_issues
+      updates: fix_implementation
+      condition: qa_finds_issues
+      notes: |
+        Quick iteration:
+        - Fix identified issues
+        - Re-test specific areas
+        - Update fix if needed
+
+    - agent: architect
+      creates: adr-hotfix.md
+      action: document_emergency_decision
+      notes: |
+        Document fix decision:
+        - Why this approach was chosen
+        - Trade-offs accepted
+        - Technical debt created
+        - Future improvement notes
+        Quick ADR format acceptable
+
+    - agent: dev
+      creates: deployment-notes.md
+      action: prepare_deployment
+      notes: |
+        Deployment preparation:
+        - Create deployment checklist
+        - Document rollback procedure
+        - List configuration changes
+        - Note monitoring requirements
+
+    - agent: dev
+      creates: dev_journal_entry
+      action: document_hotfix
+      uses: create-dev-journal
+      notes: |
+        Quick documentation:
+        - Issue description and impact
+        - Fix approach and rationale
+        - Deployment details
+        - Lessons learned
+        Updates Memory Bank activeContext
+
+    - agent: po
+      action: approve_emergency_release
+      validates: fix_and_documentation
+      notes: |
+        Emergency approval:
+        - Verify fix addresses issue
+        - Accept documentation level
+        - Approve for deployment
+        - Sign off on risk acceptance
+
+    - agent: sm
+      action: post_mortem_planning
+      creates: post-mortem-plan.md
+      optional: true
+      notes: |
+        Schedule follow-up:
+        - Plan full post-mortem
+        - Schedule debt paydown
+        - Identify process improvements
+        - Add to next sprint backlog
+
+    - workflow_end:
+      action: hotfix_complete
+      notes: |
+        Hotfix deployed!
+        - Issue resolved
+        - Basic documentation complete
+        - Post-mortem scheduled
+        - Technical debt logged
+
+  flow_diagram: |
+    ```mermaid
+    graph TD
+        A[Start: Critical Issue] --> B[bmad-master: quick init]
+        B --> C[analyst: triage issue]
+        C --> D{Complex fix?}
+        
+        D -->|Yes| E[architect: design approach]
+        D -->|No| F[dev: implement fix]
+        E --> F
+        
+        F --> G[qa: targeted testing]
+        G --> H{Issues found?}
+        H -->|Yes| I[dev: fix issues]
+        H -->|No| J[architect: quick ADR]
+        I --> G
+        
+        J --> K[dev: deployment prep]
+        K --> L[dev: document hotfix]
+        L --> M[po: emergency approval]
+        M --> N{Post-mortem needed?}
+        N -->|Yes| O[sm: schedule post-mortem]
+        N -->|No| P[Hotfix Complete]
+        O --> P
+
+        style P fill:#90EE90
+        style B fill:#FF6B6B
+        style C fill:#FF6B6B
+        style F fill:#FFA500
+        style G fill:#FFA500
+        style M fill:#FFD700
+    ```
+
+  decision_guidance:
+    when_to_use:
+      - Production system is down
+      - Security vulnerability discovered
+      - Critical bug affecting users
+      - Regulatory compliance issue
+      - Revenue-impacting problem
+
+    when_not_to_use:
+      - Non-critical improvements
+      - Feature requests
+      - Technical debt cleanup
+      - Performance optimizations (non-critical)
+
+  handoff_prompts:
+    triage_complete: |
+      Issue analysis complete:
+      - Severity: {{severity_level}}
+      - Impact: {{affected_users}} users affected
+      - Root cause: {{root_cause}}
+      - Fix complexity: {{complexity_estimate}}
+
+    fix_ready: "Fix implemented in {{time_taken}}. Ready for emergency testing."
+
+    testing_complete: "Fix verified. {{test_count}} tests passed. No regressions found."
+
+    approval_request: |
+      Emergency release request:
+      - Issue: {{issue_description}}
+      - Fix: {{fix_summary}}
+      - Risk: {{risk_level}}
+      - Rollback available: {{yes/no}}
+
+    complete: |
+      Hotfix deployed successfully.
+      - Deployment time: {{deployment_time}}
+      - Issue resolved: {{confirmation}}
+      - Post-mortem scheduled: {{date/time or N/A}}
+      - Technical debt ticket: {{ticket_id}}

@@ -13,6 +13,18 @@ workflow:
     - integration-enhancement
 
   sequence:
+    - step: session_initialization
+      agent: bmad-master
+      action: session_kickoff
+      uses: session-kickoff
+      notes: |
+        Initialize AI session context:
+        - Review Memory Bank if exists
+        - Understand service architecture and dependencies
+        - Check recent dev journals and ADRs
+        - Review technical principles and patterns
+        Required for new sessions or after 24+ hour gaps
+
     - step: service_analysis
       agent: architect
       action: analyze existing project and use task document-project
@@ -40,6 +52,17 @@ workflow:
       updates: any_flagged_documents
       condition: po_checklist_issues
       notes: "If PO finds issues, return to relevant agent to fix and re-export updated documents to docs/ folder."
+
+    - step: sprint_planning_check
+      agent: sm
+      action: verify_sprint_context
+      condition: development_ready
+      notes: |
+        If part of sprint:
+        - Align service enhancements with sprint goals
+        - Update sprint backlog
+        - Plan for sprint review
+        - Create ADRs for API changes
 
     - agent: po
       action: shard_documents
@@ -105,6 +128,19 @@ workflow:
         - Dev Agent (New Chat): Address remaining items
         - Return to QA for final approval
 
+    - agent: dev
+      creates: dev_journal_entry
+      action: document_session_work
+      uses: create-dev-journal
+      condition: significant_work_completed
+      notes: |
+        Create dev journal for:
+        - API changes and integration updates
+        - Performance improvements
+        - Service architecture decisions (trigger ADR)
+        - End of work session
+        Updates Memory Bank systemPatterns
+
     - repeat_development_cycle:
       action: continue_for_all_stories
       notes: |
@@ -122,25 +158,40 @@ workflow:
         - Validate epic was completed correctly
         - Document learnings and improvements
 
+    - agent: sm
+      action: conduct_sprint_review
+      uses: conduct-sprint-review
+      condition: sprint_boundary
+      notes: |
+        At sprint end:
+        - Review service enhancements and API changes
+        - Document performance improvements
+        - Update Memory Bank with architectural decisions
+        - Create sprint summary with metrics
+        - Plan next sprint priorities
+
     - workflow_end:
       action: project_complete
       notes: |
         All stories implemented and reviewed!
-        Project development phase complete.
-        
+        Service development phase complete.
+        Memory Bank and API documentation updated.
+
         Reference: {root}/data/bmad-kb.md#IDE Development Workflow
 
   flow_diagram: |
     ```mermaid
     graph TD
-        A[Start: Service Enhancement] --> B[analyst: analyze existing service]
+        A[Start: Service Enhancement] --> A1[bmad-master: session kickoff]
+        A1 --> B[architect: analyze existing service]
         B --> C[pm: prd.md]
         C --> D[architect: architecture.md]
         D --> E[po: validate with po-master-checklist]
         E --> F{PO finds issues?}
         F -->|Yes| G[Return to relevant agent for fixes]
-        F -->|No| H[po: shard documents]
+        F -->|No| SP[sm: sprint planning]
         G --> E
+        SP --> H[po: shard documents]
         
         H --> I[sm: create story]
         I --> J{Review draft story?}
@@ -155,10 +206,14 @@ workflow:
         P -->|No| O
         Q --> N
         O -->|Yes| I
-        O -->|No| R{Epic retrospective?}
+        O -->|No| DJ[dev: dev journal]
+        DJ --> R{Epic retrospective?}
         R -->|Yes| S[po: epic retrospective]
-        R -->|No| T[Project Complete]
-        S --> T
+        R -->|No| SR{Sprint boundary?}
+        S --> SR
+        SR -->|Yes| SRV[sm: sprint review]
+        SR -->|No| T[Project Complete]
+        SRV --> T
 
         style T fill:#90EE90
         style H fill:#ADD8E6

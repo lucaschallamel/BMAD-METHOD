@@ -16,7 +16,7 @@ workflow:
   mode_selection:
     instruction: |
       Choose the workflow mode that best fits your needs:
-      
+
       1. **Comprehensive Mode** - Full product development brief with guided elicitation
          Output: docs/brief.md
          
@@ -25,7 +25,7 @@ workflow:
          
       3. **Rapid Mode** - Quick project documentation with structured prompts
          Output: docs/brief.md
-  
+
   elicitation: advanced-elicitation
   custom_elicitation:
     title: "Project Brief Enhancement Actions"
@@ -314,7 +314,7 @@ prompts:
   success_criteria: "Define 3-5 measurable success criteria"
   in_scope: "What is IN scope for this project?"
   out_scope: "What is explicitly OUT of scope?"
-  
+
   # User-related prompts
   primary_user_type: "Describe the primary user type"
   primary_user_needs: "What do primary users need from this system?"
@@ -323,14 +323,14 @@ prompts:
   secondary_user_type: "Describe secondary user types (if any)"
   secondary_user_needs: "What do secondary users need?"
   secondary_user_description: "Detailed description of secondary users"
-  
+
   # Comprehensive mode prompts
   executive_summary_content: "Create executive summary (product concept, problem, target market, value proposition)"
   detailed_problem_description: "Detailed problem statement with evidence and impact"
   solution_description: "Describe the solution approach and key differentiators"
   mvp_scope: "Define MVP scope - what's the minimum viable product?"
   kpis: "List key performance indicators"
-  
+
   # Technical prompts
   technical_constraints: "List technical constraints"
   business_constraints: "List business constraints"
@@ -340,13 +340,13 @@ prompts:
   security_requirements: "Define security requirements"
   scalability_requirements: "Define scalability expectations"
   reliability_requirements: "Define reliability/uptime requirements"
-  
+
   # Stakeholder prompts (memory bank mode)
   stakeholders: "List primary stakeholders with roles and interests"
   decision_makers: "List key decision makers and what they decide"
   milestones: "Define major milestones with dates and descriptions"
   current_phase_description: "Describe the current project phase"
-  
+
   # Risk and planning prompts (comprehensive mode)
   assumptions: "List key assumptions"
   risks: "List primary risks with impact and mitigation"
@@ -354,12 +354,12 @@ prompts:
   technical_architecture_notes: "Technical architecture considerations"
   phase2_features: "Features planned for Phase 2"
   long_term_vision: "Long-term vision for the product"
-  
+
   # Support prompts
   references: "List links to supporting documentation"
   research_summary: "Summary of research conducted"
   competitive_analysis: "Competitive analysis findings"
-  
+
   # Mode selection
   workflow_mode: "Choose workflow mode: comprehensive, memory_bank, or rapid"
   output_path: "Output file path (auto-set based on mode if not specified)"

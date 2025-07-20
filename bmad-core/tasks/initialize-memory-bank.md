@@ -15,6 +15,8 @@ The Memory Bank serves as persistent memory for AI agents, containing:
 
 ### 1. Create Directory Structure
 
+[[LLM: The Memory Bank location follows the standard defined in project-scaffolding-preference.md]]
+
 ```bash
 mkdir -p docs/memory-bank
 ```
@@ -157,11 +159,13 @@ The Memory Bank integrates with:
 - [ ] Next steps clearly defined
 - [ ] Technical decisions documented
 - [ ] Progress accurately reflected
+- [ ] Verified against session-kickoff-checklist.md requirements
 
 ## Notes
 
 - Memory Bank is the foundation for AI continuity
 - Must be updated regularly to maintain value
-- All agents should read before starting work
+- All agents should read before starting work (via session-kickoff task)
 - Updates should be comprehensive but concise
 - British English for consistency
+- Use session-kickoff-checklist.md to verify proper initialization

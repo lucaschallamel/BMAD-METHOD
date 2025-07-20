@@ -1,0 +1,287 @@
+workflow:
+  id: documentation-update
+  name: Documentation Update Workflow
+  description: >-
+    Agent workflow for systematic documentation creation and updates. Handles
+    API documentation, user guides, architectural documentation, and knowledge
+    base maintenance with focus on accuracy and completeness.
+  type: documentation
+  project_types:
+    - api-documentation
+    - user-guides
+    - developer-docs
+    - architecture-docs
+    - knowledge-base
+
+  sequence:
+    - step: session_initialization
+      agent: bmad-master
+      action: session_kickoff
+      uses: session-kickoff
+      notes: |
+        Documentation context initialization:
+        - Review Memory Bank for current state
+        - Check existing documentation
+        - Understand system architecture
+        - Review recent changes
+        - Identify documentation standards
+
+    - agent: analyst
+      action: documentation_audit
+      creates: doc-audit-report.md
+      notes: |
+        Comprehensive documentation audit:
+        - Inventory existing documentation
+        - Identify gaps and outdated content
+        - Check accuracy against current code
+        - Review user feedback on docs
+        - Assess documentation coverage
+        - List priority areas
+
+    - agent: pm
+      action: documentation_planning
+      creates: doc-update-plan.md
+      requires: doc-audit-report.md
+      notes: |
+        Create documentation plan:
+        - Prioritize documentation needs
+        - Define target audiences
+        - Set documentation standards
+        - Create content outline
+        - Estimate effort required
+        - Plan review cycles
+
+    - agent: architect
+      action: technical_content_planning
+      creates: technical-doc-outline.md
+      condition: technical_documentation
+      notes: |
+        Technical documentation planning:
+        - Architecture diagrams needed
+        - API specifications to document
+        - Integration guides required
+        - Performance documentation
+        - Security documentation
+        - Deployment guides
+
+    - agent: ux-expert
+      action: user_documentation_planning
+      creates: user-doc-outline.md
+      condition: user_documentation
+      notes: |
+        User documentation planning:
+        - User journey mapping
+        - Tutorial structure
+        - FAQ compilation
+        - Troubleshooting guides
+        - Quick start guides
+        - Video script outlines
+
+    - agent: po
+      validates: documentation_plan
+      notes: |
+        Validate documentation approach:
+        - Confirm priorities align
+        - Approve resource allocation
+        - Sign off on timelines
+        - Verify compliance needs
+
+    - documentation_cycle:
+      repeats: for_each_doc_section
+      sequence:
+        - agent: scribe
+          action: create_documentation
+          creates: documentation_files
+          notes: |
+            Content creation:
+            - Write clear, concise content
+            - Follow style guide
+            - Include code examples
+            - Add diagrams where helpful
+            - Ensure accuracy
+            - Consider localization
+
+        - agent: architect
+          action: technical_review
+          validates: technical_accuracy
+          condition: technical_content
+          notes: |
+            Technical validation:
+            - Verify code examples work
+            - Check API accuracy
+            - Validate architecture diagrams
+            - Ensure version compatibility
+            - Review security implications
+
+        - agent: qa
+          action: documentation_testing
+          validates: documentation_usability
+          notes: |
+            Documentation QA:
+            - Test all code examples
+            - Verify links work
+            - Check formatting
+            - Validate screenshots
+            - Test tutorials end-to-end
+            - Accessibility review
+
+        - agent: mentor
+          action: educational_review
+          validates: learning_effectiveness
+          optional: true
+          notes: |
+            Educational quality:
+            - Check clarity for beginners
+            - Verify learning progression
+            - Assess completeness
+            - Review examples
+            - Suggest improvements
+
+    - agent: scribe
+      action: create_documentation_index
+      creates: documentation-index.md
+      notes: |
+        Create navigation aids:
+        - Table of contents
+        - Cross-references
+        - Search keywords
+        - Category tags
+        - Version mapping
+        - Related resources
+
+    - agent: dev
+      action: integrate_documentation
+      updates: project_documentation
+      notes: |
+        Documentation integration:
+        - Update README files
+        - Link from code comments
+        - Update help systems
+        - Deploy to doc sites
+        - Configure search
+        - Set up redirects
+
+    - agent: scribe
+      creates: dev_journal_entry
+      action: document_doc_updates
+      uses: create-dev-journal
+      notes: |
+        Document the documentation:
+        - What was updated and why
+        - Major changes made
+        - Known gaps remaining
+        - Feedback incorporated
+        - Update Memory Bank
+
+    - agent: po
+      action: documentation_acceptance
+      validates: final_documentation
+      notes: |
+        Final documentation review:
+        - Verify completeness
+        - Check quality standards
+        - Approve for publication
+        - Sign off on release
+
+    - agent: sm
+      action: documentation_release
+      creates: doc-release-notes.md
+      notes: |
+        Documentation release:
+        - Publish updates
+        - Notify stakeholders
+        - Update version notes
+        - Plan maintenance cycle
+        - Schedule next review
+
+    - workflow_end:
+      action: documentation_complete
+      notes: |
+        Documentation updated!
+        - All sections complete
+        - Quality validated
+        - Published and indexed
+        - Memory Bank updated
+        - Maintenance scheduled
+
+  flow_diagram: |
+    ```mermaid
+    graph TD
+        A[Start: Documentation] --> B[bmad-master: session init]
+        B --> C[analyst: audit docs]
+        C --> D[pm: create plan]
+        D --> E{Technical docs?}
+        E -->|Yes| F[architect: tech outline]
+        E -->|No| G{User docs?}
+        F --> G
+        G -->|Yes| H[ux-expert: user outline]
+        G -->|No| I[po: validate plan]
+        H --> I
+        
+        I --> J[Documentation Cycle]
+        J --> K[scribe: create content]
+        K --> L{Technical content?}
+        L -->|Yes| M[architect: tech review]
+        L -->|No| N[qa: test docs]
+        M --> N
+        N --> O{Educational review?}
+        O -->|Yes| P[mentor: review]
+        O -->|No| Q{More sections?}
+        P --> Q
+        Q -->|Yes| J
+        Q -->|No| R[scribe: create index]
+        
+        R --> S[dev: integrate docs]
+        S --> T[scribe: document updates]
+        T --> U[po: final acceptance]
+        U --> V[sm: release docs]
+        V --> W[Documentation Complete]
+
+        style W fill:#90EE90
+        style B fill:#DDA0DD
+        style K fill:#FFE4B5
+        style M fill:#ADD8E6
+        style N fill:#ADD8E6
+        style T fill:#FFE4B5
+        style V fill:#98FB98
+    ```
+
+  decision_guidance:
+    when_to_use:
+      - Major feature releases
+      - API changes
+      - User complaints about docs
+      - Onboarding difficulties
+      - Compliance requirements
+      - Regular documentation maintenance
+
+  handoff_prompts:
+    audit_complete: |
+      Documentation audit complete:
+      - Total pages: {{page_count}}
+      - Outdated sections: {{outdated_count}}
+      - Missing topics: {{gap_count}}
+      - Priority updates: {{priority_count}}
+
+    plan_ready: |
+      Documentation plan created:
+      - Sections to update: {{section_count}}
+      - New content needed: {{new_count}} pages
+      - Estimated effort: {{effort_hours}} hours
+      - Target completion: {{target_date}}
+
+    section_complete: |
+      Documentation section "{{section_name}}" complete:
+      - Pages created/updated: {{page_count}}
+      - Code examples: {{example_count}}
+      - Diagrams added: {{diagram_count}}
+      - Review status: {{review_status}}
+
+    release_ready: |
+      Documentation release ready:
+      - Total updates: {{update_count}}
+      - Quality score: {{quality_score}}/100
+      - Coverage improvement: {{coverage_increase}}%
+      - Ready for publication
+
+    complete: "Documentation update complete. {{total_pages}} pages updated. Next review scheduled for {{next_review_date}}."

@@ -218,11 +218,14 @@ Ask the user if they want to work through the checklist:
 
 ### 6.3 First Epic Completeness
 
+[[LLM: Reference project-scaffolding-preference.md for comprehensive project structure and initialization guidelines.]]
+
 - [ ] First epic includes all necessary setup steps
-- [ ] Project scaffolding and initialization addressed
+- [ ] Project scaffolding follows project-scaffolding-preference.md
 - [ ] Core infrastructure setup included
 - [ ] Development environment setup addressed
 - [ ] Local testability established early
+- [ ] BMAD-specific directories included in setup (Memory Bank, ADRs, Dev Journals)
 
 ## 7. TECHNICAL GUIDANCE
 
@@ -234,6 +237,7 @@ Ask the user if they want to work through the checklist:
 - [ ] Performance considerations highlighted
 - [ ] Security requirements articulated
 - [ ] Known areas of high complexity or technical risk flagged for architectural deep-dive
+- [ ] ADR (Architecture Decision Record) templates prepared for key decisions
 
 ### 7.2 Technical Decision Framework
 
@@ -243,6 +247,8 @@ Ask the user if they want to work through the checklist:
 - [ ] Non-negotiable technical requirements highlighted
 - [ ] Areas requiring technical investigation identified
 - [ ] Guidance on technical debt approach provided
+- [ ] ADR creation process integrated into decision-making
+- [ ] Technical principles and preferences aligned with project goals
 
 ### 7.3 Implementation Considerations
 
@@ -288,6 +294,7 @@ Ask the user if they want to work through the checklist:
 - [ ] Technical terms are defined where necessary
 - [ ] Diagrams/visuals included where helpful
 - [ ] Documentation is versioned appropriately
+- [ ] Technical principles clearly documented for team reference
 
 ### 9.2 Stakeholder Alignment
 
@@ -296,6 +303,16 @@ Ask the user if they want to work through the checklist:
 - [ ] Potential areas of disagreement addressed
 - [ ] Communication plan for updates established
 - [ ] Approval process defined
+- [ ] Sprint Review cadence and format agreed upon
+
+### 9.3 Sprint Review Planning
+
+- [ ] Sprint Review schedule established and communicated
+- [ ] Review format aligned with stakeholder preferences
+- [ ] Success metrics for sprint defined
+- [ ] Demo scenarios planned for completed features
+- [ ] Retrospective process integrated into sprint planning
+- [ ] Documentation updates planned for sprint outcomes
 
 ## PRD & EPIC VALIDATION SUMMARY
 
@@ -350,7 +367,7 @@ After presenting the report, ask if the user wants:
 ### Category Statuses
 
 | Category                         | Status | Critical Issues |
-| -------------------------------- | ------ | --------------- |
+|----------------------------------|--------|-----------------|
 | 1. Problem Definition & Context  | _TBD_  |                 |
 | 2. MVP Scope Definition          | _TBD_  |                 |
 | 3. User Experience Requirements  | _TBD_  |                 |

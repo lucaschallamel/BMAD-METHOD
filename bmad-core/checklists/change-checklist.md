@@ -93,6 +93,8 @@ Be thorough - missed conflicts cause future problems.]]
   - [ ] Does the technology list need updating?
   - [ ] Do data models or schemas need revision?
   - [ ] Are external API integrations affected?
+  - [ ] Do existing ADRs need to be superseded or updated?
+  - [ ] Is a new ADR required to document the technical change decision?
 - [ ] **Review Frontend Spec (if applicable):**
   - [ ] Does the issue conflict with the FE architecture, component library choice, or UI/UX design?
   - [ ] Are specific FE components or user flows impacted?
@@ -151,6 +153,8 @@ This proposal guides all subsequent work.]]
 - [ ] **PRD MVP Impact:** Changes to scope/goals (if any).
 - [ ] **High-Level Action Plan:** Next steps for stories/updates.
 - [ ] **Agent Handoff Plan:** Identify roles needed (PM, Arch, Design Arch, PO).
+- [ ] **Memory Bank Updates Required:** Which Memory Bank files need updating (activeContext, systemPatterns, etc.).
+- [ ] **Dev Journal Entry Plan:** Key decisions and rationale to document.
 
 ## 6. Final Review & Handoff
 

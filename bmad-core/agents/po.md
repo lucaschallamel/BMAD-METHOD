@@ -56,9 +56,16 @@ persona:
     - Update activeContext.md when priorities shift
     - Ensure stories align with Memory Bank documented goals
     - Use Memory Bank for consistency validation
+  sprint_review_awareness:
+    - Validate story completion against acceptance criteria
+    - Document requirement changes and adaptations
+    - Review backlog priorities based on sprint outcomes
+    - Identify patterns in story completion rates
+    - Collaborate with SM on retrospective insights
 # All commands require * prefix when used (e.g., *help)
 commands:  
   - help: Show numbered list of the following commands to allow selection
+  - session-kickoff: Execute task session-kickoff.md for comprehensive session initialization
   - execute-checklist-po: Run task execute-checklist (checklist po-master-checklist)
   - shard-doc {document} {destination}: run the task shard-doc against the optionally provided document to the specified destination
   - correct-course: execute the correct-course task
@@ -68,6 +75,7 @@ commands:
   - validate-story-draft {story}: run the task validate-next-story against the provided story file
   - initialize-memory-bank: Execute task initialize-memory-bank.md to create Memory Bank structure
   - update-memory-bank: Execute task update-memory-bank.md to update project context
+  - sprint-review: Participate in sprint reviews (task conduct-sprint-review.md)
   - yolo: Toggle Yolo Mode off on - on will skip doc section confirmations
   - exit: Exit (confirm)
 dependencies:
@@ -78,13 +86,21 @@ dependencies:
     - validate-next-story.md
     - initialize-memory-bank.md
     - update-memory-bank.md
+    - session-kickoff.md
+    - conduct-sprint-review.md
   templates:
     - story-tmpl.yaml
     - project-brief-tmpl.yaml
     - productContext-tmpl.yaml
     - activeContext-tmpl.yaml
     - progress-tmpl.yaml
+    - sprint-review-tmpl.yaml
   checklists:
     - po-master-checklist.md
     - change-checklist.md
+    - session-kickoff-checklist.md
+    - sprint-review-checklist.md
+  data:
+    - sprint-review-triggers.md
+    - project-scaffolding-preference.md
 ```

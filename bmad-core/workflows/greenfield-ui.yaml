@@ -14,6 +14,18 @@ workflow:
     - simple-interface
 
   sequence:
+    - step: session_initialization
+      agent: bmad-master
+      action: session_kickoff
+      uses: session-kickoff
+      notes: |
+        Initialize AI session context:
+        - Review Memory Bank if exists
+        - Understand project state and technical principles
+        - Check recent dev journals and ADRs
+        - Review sprint context if applicable
+        Required for new sessions or after 24+ hour gaps
+
     - agent: analyst
       creates: project-brief.md
       optional_steps:
@@ -67,6 +79,17 @@ workflow:
       action: guide_project_structure
       condition: user_has_generated_ui
       notes: "If user generated UI with v0/Lovable: For polyrepo setup, place downloaded project in separate frontend repo. For monorepo, place in apps/web or frontend/ directory. Review architecture document for specific guidance."
+
+    - step: sprint_planning_check
+      agent: sm
+      action: verify_sprint_context
+      condition: development_ready
+      notes: |
+        If part of sprint:
+        - Align UI development with sprint goals
+        - Update sprint backlog
+        - Plan for sprint review
+        - Create ADRs for significant UI decisions
 
     - agent: po
       action: shard_documents
@@ -132,6 +155,19 @@ workflow:
         - Dev Agent (New Chat): Address remaining items
         - Return to QA for final approval
 
+    - agent: dev
+      creates: dev_journal_entry
+      action: document_session_work
+      uses: create-dev-journal
+      condition: significant_work_completed
+      notes: |
+        Create dev journal for:
+        - UI component completion
+        - Complex frontend solutions
+        - Design pattern decisions (trigger ADR)
+        - End of work session
+        Updates Memory Bank activeContext
+
     - repeat_development_cycle:
       action: continue_for_all_stories
       notes: |
@@ -149,18 +185,32 @@ workflow:
         - Validate epic was completed correctly
         - Document learnings and improvements
 
+    - agent: sm
+      action: conduct_sprint_review
+      uses: conduct-sprint-review
+      condition: sprint_boundary
+      notes: |
+        At sprint end:
+        - Review UI components and features delivered
+        - Document design decisions and patterns
+        - Update Memory Bank with UI patterns
+        - Create sprint summary with visual samples
+        - Plan next sprint UI priorities
+
     - workflow_end:
       action: project_complete
       notes: |
         All stories implemented and reviewed!
-        Project development phase complete.
-        
+        UI development phase complete.
+        Memory Bank and design documentation updated.
+
         Reference: {root}/data/bmad-kb.md#IDE Development Workflow
 
   flow_diagram: |
     ```mermaid
     graph TD
-        A[Start: UI Development] --> B[analyst: project-brief.md]
+        A[Start: UI Development] --> A1[bmad-master: session kickoff]
+        A1 --> B[analyst: project-brief.md]
         B --> C[pm: prd.md]
         C --> D[ux-expert: front-end-spec.md]
         D --> D2{Generate v0 prompt?}
@@ -174,8 +224,9 @@ workflow:
         G --> H
         H --> I{PO finds issues?}
         I -->|Yes| J[Return to relevant agent for fixes]
-        I -->|No| K[po: shard documents]
+        I -->|No| SP[sm: sprint planning]
         J --> H
+        SP --> K[po: shard documents]
         
         K --> L[sm: create story]
         L --> M{Review draft story?}
@@ -190,10 +241,14 @@ workflow:
         S -->|No| R
         T --> Q
         R -->|Yes| L
-        R -->|No| U{Epic retrospective?}
+        R -->|No| DJ[dev: dev journal]
+        DJ --> U{Epic retrospective?}
         U -->|Yes| V[po: epic retrospective]
-        U -->|No| W[Project Complete]
-        V --> W
+        U -->|No| SR{Sprint boundary?}
+        V --> SR
+        SR -->|Yes| SRV[sm: sprint review]
+        SR -->|No| W[Project Complete]
+        SRV --> W
 
         B -.-> B1[Optional: brainstorming]
         B -.-> B2[Optional: market research]

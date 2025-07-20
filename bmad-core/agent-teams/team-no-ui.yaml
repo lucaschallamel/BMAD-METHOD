@@ -11,3 +11,9 @@ agents:
 workflows:
   - greenfield-service.yaml
   - brownfield-service.yaml
+  - sprint-execution.yaml
+  - quick-fix.yaml
+  - technical-debt.yaml
+  - documentation-update.yaml
+  - system-migration.yaml
+  - performance-optimization.yaml

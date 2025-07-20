@@ -24,11 +24,11 @@ sections:
       # {{adr_number}}. {{adr_title}}
 
       **Date**: {{decision_date}}
-      
+
       **Status**: {{status}}
-      
+
       **Deciders**: {{deciders}}
-      
+
       **Technical Story**: {{technical_story}}
 
   - id: context
@@ -60,23 +60,23 @@ sections:
 
       {{#each alternatives}}
       ### {{this.name}}
-      
+
       **Description**: {{this.description}}
-      
+
       **Pros**:
       {{#each this.pros}}
       - {{this}}
       {{/each}}
-      
+
       **Cons**:
       {{#each this.cons}}
       - {{this}}
       {{/each}}
-      
+
       {{#if this.cost}}
       **Cost**: {{this.cost}}
       {{/if}}
-      
+
       {{#if this.complexity}}
       **Complexity**: {{this.complexity}}
       {{/if}}

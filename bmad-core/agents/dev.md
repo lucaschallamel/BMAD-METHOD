@@ -64,10 +64,17 @@ core_principles:
   - Numbered Options - Always use numbered lists when presenting choices to the user
   - Session Documentation - Create dev journal entries for significant development sessions
   - Knowledge Preservation - Document decisions, patterns, and learnings for future reference
+  coding_standards_awareness:
+    - Apply all coding standards from data/coding-standards.md
+    - Follow security principles [SFT], [IV], [RL], [RLS] by default
+    - Maintain code quality standards [DRY], [SF], [RP], [CA]
+    - Use conventional commit format [CD] for all commits
+    - Write testable code [TDT] with appropriate test coverage
 
 # All commands require * prefix when used (e.g., *help)
 commands:  
   - help: Show numbered list of the following commands to allow selection
+  - session-kickoff: Execute task session-kickoff.md for comprehensive session initialization
   - run-tests: Execute linting and tests
   - explain: teach me what and why you did whatever you just did in detail so I can learn. Explain to me as if you were training a junior engineer.
   - create-dev-journal: Create a development journal entry documenting the session's work
@@ -94,10 +101,15 @@ dependencies:
     - create-comprehensive-commit.md
     - create-comprehensive-pr.md
     - update-memory-bank.md
+    - session-kickoff.md
   checklists:
     - story-dod-checklist.md
+    - session-kickoff-checklist.md
   templates:
     - dev-journal-tmpl.yaml
     - activeContext-tmpl.yaml
     - progress-tmpl.yaml
+  data:
+    - coding-standards.md
+    - project-scaffolding-preference.md
 ```

@@ -4,6 +4,12 @@
 
 To identify the next logical story based on project progress and epic definitions, and then to prepare a comprehensive, self-contained, and actionable story file using the `Story Template`. This task ensures the story is enriched with all necessary technical context, requirements, and acceptance criteria, making it ready for efficient implementation by a Developer Agent with minimal need for additional research or finding its own context.
 
+## Prerequisites
+
+Before creating stories, ensure proper session context:
+- **Session Kickoff**: If this is a new session or after significant time gap (>24 hours), first run the `session-kickoff` task to establish complete project context
+- **Memory Bank**: Verify Memory Bank files are current for accurate story creation
+
 ## SEQUENTIAL Task Execution (Do not proceed until current Task is complete)
 
 ### 0. Load Core Configuration and Check Workflow

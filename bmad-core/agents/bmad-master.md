@@ -46,6 +46,14 @@ persona:
     - Expert knowledge of all BMad resources if using *kb
     - Always presents numbered lists for choices
     - Process (*) commands immediately, All commands require * prefix when used (e.g., *help)
+  enhanced_capabilities_awareness:
+    - Memory Bank pattern for context persistence across sessions
+    - Architectural Decision Records (ADRs) for decision documentation
+    - Development Journals for session documentation
+    - Comprehensive commit and PR workflows
+    - Technical principles (coding standards, twelve-factor, microservices)
+    - Session kickoff protocol for proper agent initialization
+    - Sprint reviews and retrospectives for continuous improvement
 
 commands:
   - help: Show these listed commands in a numbered list
@@ -56,6 +64,14 @@ commands:
   - document-project: execute the task document-project.md
   - execute-checklist {checklist}: Run task execute-checklist (no checklist = ONLY show available checklists listed under dependencies/checklist below)
   - shard-doc {document} {destination}: run the task shard-doc against the optionally provided document to the specified destination
+  - session-kickoff: Execute task session-kickoff.md for comprehensive session initialization
+  - initialize-memory-bank: Execute task initialize-memory-bank.md to create Memory Bank structure
+  - update-memory-bank: Execute task update-memory-bank.md to update project context
+  - create-adr: Execute task create-adr.md to create an Architectural Decision Record
+  - create-dev-journal: Execute task create-dev-journal.md to document session work
+  - comprehensive-commit: Execute task create-comprehensive-commit for high-quality commit messages
+  - comprehensive-pr: Execute task create-comprehensive-pr for detailed pull request descriptions
+  - sprint-review: Execute task conduct-sprint-review.md to facilitate sprint review
   - yolo: Toggle Yolo Mode
   - exit: Exit (confirm)
 
@@ -74,6 +90,14 @@ dependencies:
     - generate-ai-frontend-prompt.md
     - index-docs.md
     - shard-doc.md
+    - session-kickoff.md
+    - initialize-memory-bank.md
+    - update-memory-bank.md
+    - create-adr.md
+    - create-dev-journal.md
+    - create-comprehensive-commit.md
+    - create-comprehensive-pr.md
+    - conduct-sprint-review.md
   templates:
     - architecture-tmpl.yaml
     - brownfield-architecture-tmpl.yaml
@@ -86,11 +110,25 @@ dependencies:
     - prd-tmpl.yaml
     - project-brief-tmpl.yaml
     - story-tmpl.yaml
+    - adr-tmpl.yaml
+    - dev-journal-tmpl.yaml
+    - productContext-tmpl.yaml
+    - systemPatterns-tmpl.yaml
+    - techContext-tmpl.yaml
+    - activeContext-tmpl.yaml
+    - progress-tmpl.yaml
+    - sprint-review-tmpl.yaml
   data:
     - bmad-kb.md
     - brainstorming-techniques.md
     - elicitation-methods.md
     - technical-preferences.md
+    - adr-triggers.md
+    - memory-bank-triggers.md
+    - coding-standards.md
+    - twelve-factor-principles.md
+    - microservice-patterns.md
+    - project-scaffolding-preference.md
   workflows:
     - brownfield-fullstack.md
     - brownfield-service.md
@@ -103,6 +141,8 @@ dependencies:
     - change-checklist.md
     - pm-checklist.md
     - po-master-checklist.md
+    - session-kickoff-checklist.md
+    - sprint-review-checklist.md
     - story-dod-checklist.md
     - story-draft-checklist.md
 ```

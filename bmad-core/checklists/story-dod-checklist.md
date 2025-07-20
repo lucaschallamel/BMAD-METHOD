@@ -59,11 +59,15 @@ The goal is quality delivery, not just checking boxes.]]
 
 5. **Story Administration:**
 
-   [[LLM: Documentation helps the next developer. What should they know?]]
+   [[LLM: Documentation helps the next developer. What should they know? Update Memory Bank and Dev Journal]]
 
    - [ ] All tasks within the story file are marked as complete.
    - [ ] Any clarifications or decisions made during development are documented in the story file or linked appropriately.
    - [ ] The story wrap up section has been completed with notes of changes or information relevant to the next story or overall project, the agent model that was primarily used during development, and the changelog of any changes is properly updated.
+   - [ ] Dev Journal entry created documenting implementation decisions and challenges
+   - [ ] Memory Bank updated with new patterns, decisions, or technical context
+   - [ ] ADR created if significant architectural decisions were made
+   - [ ] Comprehensive commit workflow followed with descriptive commit messages
 
 6. **Dependencies, Build & Configuration:**
 
