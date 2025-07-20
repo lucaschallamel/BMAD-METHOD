@@ -1,0 +1,171 @@
+template:
+  id: memory-bank-projectbrief-v1
+  name: Memory Bank - Project Brief
+  version: 1.0
+  output:
+    format: markdown
+    filename: docs/memory-bank/projectbrief.md
+    title: "Project Brief"
+  description: |
+    Foundation document - the source of truth for project scope.
+    This file defines the project foundation. All other memory bank files build upon this brief.
+
+workflow:
+  mode: guided
+  instruction: |
+    For new projects: Interview user about project goals, understand target users, define success criteria, identify constraints.
+    For existing projects: Analyze current state from documentation, README files, architecture docs, and existing code.
+
+sections:
+  - id: overview
+    title: Project Overview
+    instruction: Capture the essential project information
+    template: |
+      **Project Name**: {{project_name}}  
+      **Version**: {{version | default: "1.0"}}  
+      **Last Updated**: {{current_date}}  
+      **Status**: {{status | options: "Active, Planning, On Hold"}}
+
+  - id: core-purpose
+    title: Core Purpose
+    instruction: Write one paragraph describing what this project is and why it exists
+    template: |
+      {{core_purpose_description}}
+
+  - id: goals-objectives
+    title: Goals and Objectives
+    instruction: Define primary goals and measurable success criteria
+    template: |
+      ### Primary Goals
+      {{#each primary_goals}}
+      {{@index + 1}}. {{this}}
+      {{/each}}
+
+      ### Success Criteria
+      {{#each success_criteria}}
+      - [ ] {{this}}
+      {{/each}}
+
+  - id: scope
+    title: Scope
+    instruction: Clearly define what's in and out of scope
+    template: |
+      ### In Scope
+      {{#each in_scope}}
+      - {{this}}
+      {{/each}}
+
+      ### Out of Scope
+      {{#each out_scope}}
+      - {{this}}
+      {{/each}}
+
+  - id: constraints
+    title: Constraints
+    instruction: Document all types of constraints affecting the project
+    template: |
+      ### Technical Constraints
+      {{#each technical_constraints}}
+      - {{this}}
+      {{/each}}
+
+      ### Business Constraints
+      {{#each business_constraints}}
+      - {{this}}
+      {{/each}}
+
+      ### Regulatory/Compliance
+      {{#each regulatory_constraints}}
+      - {{this}}
+      {{/each}}
+
+  - id: target-users
+    title: Target Users
+    instruction: Define primary and secondary user groups
+    template: |
+      ### Primary Users
+      - **User Type**: {{primary_user_type}}
+      - **Needs**: {{primary_user_needs}}
+      - **Volume**: {{primary_user_volume}}
+
+      ### Secondary Users
+      - **User Type**: {{secondary_user_type}}
+      - **Needs**: {{secondary_user_needs}}
+
+  - id: key-requirements
+    title: Key Requirements
+    instruction: List functional and non-functional requirements
+    template: |
+      ### Functional Requirements
+      {{#each functional_requirements}}
+      {{@index + 1}}. {{this}}
+      {{/each}}
+
+      ### Non-Functional Requirements
+      - **Performance**: {{performance_requirements}}
+      - **Security**: {{security_requirements}}
+      - **Scalability**: {{scalability_requirements}}
+      - **Reliability**: {{reliability_requirements}}
+
+  - id: timeline
+    title: Timeline
+    instruction: Define major milestones and current phase
+    template: |
+      ### Major Milestones
+      | Milestone | Target Date | Description |
+      |-----------|-------------|-------------|
+      {{#each milestones}}
+      | {{this.name}} | {{this.date}} | {{this.description}} |
+      {{/each}}
+
+      ### Current Phase
+      {{current_phase_description}}
+
+  - id: stakeholders
+    title: Stakeholders
+    instruction: Identify primary stakeholders and decision makers
+    template: |
+      ### Primary Stakeholders
+      {{#each stakeholders}}
+      - **{{this.role}}**: {{this.name}} - {{this.interest}}
+      {{/each}}
+
+      ### Key Decision Makers
+      {{#each decision_makers}}
+      - **{{this.role}}**: {{this.name}} - {{this.decisions}}
+      {{/each}}
+
+  - id: references
+    title: References
+    instruction: Link to related documentation
+    template: |
+      {{#each references}}
+      - {{this}}
+      {{/each}}
+
+prompts:
+  project_name: "What is the project name?"
+  status: "What is the current project status? (Active/Planning/On Hold)"
+  core_purpose_description: "Describe in one paragraph what this project is and why it exists"
+  primary_goals: "List 3-5 primary goals for this project"
+  success_criteria: "Define 3-5 measurable success criteria"
+  in_scope: "What is IN scope for this project? (features, capabilities, platforms)"
+  out_scope: "What is explicitly OUT of scope?"
+  technical_constraints: "List any technical constraints (technology limitations, platform requirements, integration constraints)"
+  business_constraints: "List any business constraints (timeline, budget, resources)"
+  regulatory_constraints: "List any regulatory/compliance requirements"
+  primary_user_type: "Describe the primary user type"
+  primary_user_needs: "What do primary users need from this system?"
+  primary_user_volume: "Expected number of primary users"
+  secondary_user_type: "Describe secondary user types (if any)"
+  secondary_user_needs: "What do secondary users need?"
+  functional_requirements: "List 3-5 core functional requirements"
+  performance_requirements: "Define performance targets"
+  security_requirements: "Define security requirements"
+  scalability_requirements: "Define scalability expectations"
+  reliability_requirements: "Define reliability/uptime requirements"
+  milestones: "Define major milestones with dates and descriptions"
+  current_phase_description: "Describe the current project phase"
+  stakeholders: "List primary stakeholders with roles and interests"
+  decision_makers: "List key decision makers and what they decide"
+  references: "List links to related documentation"

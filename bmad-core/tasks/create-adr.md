@@ -40,7 +40,7 @@ Before creating the ADR, collect:
 
 ### 4. Create ADR File
 
-Use the adr-tmpl.md template to create:
+Use the adr-tmpl.yaml template to create:
 `docs/adr/NNNN-descriptive-title.md`
 
 Example: `0001-use-react-for-frontend.md`

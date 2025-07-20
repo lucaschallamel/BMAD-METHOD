@@ -102,7 +102,7 @@ dependencies:
     - front-end-architecture-tmpl.yaml
     - fullstack-architecture-tmpl.yaml
     - brownfield-architecture-tmpl.yaml
-    - adr-tmpl.md
+    - adr-tmpl.yaml
   checklists:
     - architect-checklist.md
   data:

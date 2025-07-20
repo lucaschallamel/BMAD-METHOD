@@ -1,0 +1,264 @@
+template:
+  id: memory-bank-techcontext-v1
+  name: Memory Bank - Tech Context
+  version: 1.0
+  output:
+    format: markdown
+    filename: docs/memory-bank/techContext.md
+    title: "Tech Context"
+  description: |
+    Technology stack, development environment, and technical constraints.
+    This document defines the technical environment and constraints. Update when tools, versions, or constraints change.
+
+workflow:
+  mode: guided
+  instruction: |
+    Document the complete technical environment including stack, tools, dependencies, and constraints.
+    Be specific about versions and configuration requirements.
+
+sections:
+  - id: technology-stack
+    title: Technology Stack
+    instruction: Document all layers of the technology stack
+    template: |
+      ### Core Technologies
+      | Layer | Technology | Version | Purpose |
+      |-------|------------|---------|---------|
+      {{#each core_technologies}}
+      | {{this.layer}} | {{this.technology}} | {{this.version}} | {{this.purpose}} |
+      {{/each}}
+
+      {{#if frontend_stack}}
+      ### Frontend Stack (if applicable)
+      | Technology | Version | Purpose |
+      |------------|---------|---------|
+      {{#each frontend_stack}}
+      | {{this.technology}} | {{this.version}} | {{this.purpose}} |
+      {{/each}}
+      {{/if}}
+
+      ### Infrastructure
+      | Component | Technology | Purpose |
+      |-----------|------------|---------|
+      {{#each infrastructure}}
+      | {{this.component}} | {{this.technology}} | {{this.purpose}} |
+      {{/each}}
+
+  - id: development-environment
+    title: Development Environment
+    instruction: Document development setup requirements
+    template: |
+      ### Prerequisites
+      - **OS**: {{supported_os}}
+      - **Runtime**: {{required_runtime}}
+      - **Tools**: {{required_tools}}
+      - **Access**: {{required_access}}
+
+      ### Local Setup
+      ```bash
+      # Quick start commands
+      {{setup_commands}}
+      ```
+
+      ### Environment Variables
+      | Variable | Purpose | Example | Required |
+      |----------|---------|---------|----------|
+      {{#each environment_variables}}
+      | `{{this.name}}` | {{this.purpose}} | `{{this.example}}` | {{this.required}} |
+      {{/each}}
+
+      ### Development Tools
+      - **IDE**: {{recommended_ide}}
+      - **Debugger**: {{debugger_setup}}
+      - **API Testing**: {{api_testing_tools}}
+      - **Database Tools**: {{database_tools}}
+
+  - id: dependencies
+    title: Dependencies
+    instruction: Document core and development dependencies
+    template: |
+      ### Core Dependencies
+      | Package | Version | Purpose | Critical? |
+      |---------|---------|---------|-----------|
+      {{#each core_dependencies}}
+      | {{this.package}} | {{this.version}} | {{this.purpose}} | {{this.critical}} |
+      {{/each}}
+
+      ### Development Dependencies
+      | Package | Version | Purpose |
+      |---------|---------|---------|
+      {{#each dev_dependencies}}
+      | {{this.package}} | {{this.version}} | {{this.purpose}} |
+      {{/each}}
+
+      ### Dependency Management
+      - **Update Strategy**: {{update_strategy}}
+      - **Security Scanning**: {{security_scanning}}
+      - **License Compliance**: {{license_compliance}}
+
+  - id: build-deployment
+    title: Build & Deployment
+    instruction: Document build process and deployment pipeline
+    template: |
+      ### Build Process
+      ```bash
+      # Development build
+      {{dev_build_command}}
+
+      # Production build
+      {{prod_build_command}}
+
+      # What happens during build
+      {{#each build_steps}}
+      {{@index + 1}}. {{this}}
+      {{/each}}
+      ```
+
+      ### Deployment Pipeline
+      {{#each deployment_stages}}
+      {{@index + 1}}. **{{this.stage}}**: {{this.process}}
+      {{/each}}
+
+      ### Configuration Management
+      - **Development**: {{dev_config}}
+      - **Staging**: {{staging_config}}
+      - **Production**: {{prod_config}}
+
+  - id: technical-constraints
+    title: Technical Constraints
+    instruction: Document performance, platform, and API constraints
+    template: |
+      ### Performance Requirements
+      - **Response Time**: {{response_time_target}}
+      - **Throughput**: {{throughput_target}}
+      - **Concurrent Users**: {{concurrent_users_target}}
+      - **Data Volume**: {{data_volume_expectations}}
+
+      ### Browser/Platform Support
+      | Platform | Minimum Version | Notes |
+      |----------|----------------|-------|
+      {{#each platform_support}}
+      | {{this.platform}} | {{this.min_version}} | {{this.notes}} |
+      {{/each}}
+
+      ### API Constraints
+      - **Rate Limits**: {{rate_limits}}
+      - **Payload Size**: {{payload_size}}
+      - **Timeout**: {{request_timeout}}
+      - **Versioning**: {{api_versioning}}
+
+      ### Security Constraints
+      - **Compliance**: {{compliance_requirements}}
+      - **Encryption**: {{encryption_requirements}}
+      - **Authentication**: {{auth_requirements}}
+      - **Audit**: {{audit_requirements}}
+
+  - id: external-services
+    title: External Services
+    instruction: Document third-party services and monitoring
+    template: |
+      ### Third-Party APIs
+      | Service | Purpose | Limits | Fallback |
+      |---------|---------|--------|----------|
+      {{#each third_party_apis}}
+      | {{this.service}} | {{this.purpose}} | {{this.limits}} | {{this.fallback}} |
+      {{/each}}
+
+      ### Monitoring Services
+      - **APM**: {{apm_tool}}
+      - **Logging**: {{logging_service}}
+      - **Error Tracking**: {{error_tracking}}
+      - **Analytics**: {{analytics_service}}
+
+  - id: testing-infrastructure
+    title: Testing Infrastructure
+    instruction: Document testing setup and strategies
+    template: |
+      ### Test Types
+      | Type | Tool | Location | Command |
+      |------|------|----------|---------|
+      {{#each test_types}}
+      | {{this.type}} | {{this.tool}} | {{this.location}} | `{{this.command}}` |
+      {{/each}}
+
+      ### Test Environment
+      - **Database**: {{test_database}}
+      - **External Services**: {{test_mocking_strategy}}
+      - **Test Data**: {{test_data_approach}}
+
+  - id: maintenance
+    title: Maintenance Considerations
+    instruction: Document maintenance tasks and limitations
+    template: |
+      ### Regular Tasks
+      - **Dependency Updates**: {{dependency_update_schedule}}
+      - **Security Patches**: {{security_patch_timeline}}
+      - **Database Maintenance**: {{db_maintenance_tasks}}
+      - **Log Rotation**: {{log_rotation_policy}}
+
+      ### Monitoring Alerts
+      | Alert | Threshold | Action |
+      |-------|-----------|--------|
+      {{#each monitoring_alerts}}
+      | {{this.alert}} | {{this.threshold}} | {{this.action}} |
+      {{/each}}
+
+      ### Known Limitations
+      {{#each limitations}}
+      {{@index + 1}}. **{{this.limitation}}**: {{this.description}}
+      {{/each}}
+
+prompts:
+  core_technologies: "List core technologies (runtime, framework, database, cache, queue)"
+  frontend_stack: "List frontend technologies if applicable"
+  infrastructure: "List infrastructure components (hosting, containers, CI/CD)"
+  supported_os: "Supported operating systems"
+  required_runtime: "Required runtime versions"
+  required_tools: "Required development tools"
+  required_access: "Required permissions/accounts"
+  setup_commands: "Quick start commands for local setup"
+  environment_variables: "List environment variables with details"
+  recommended_ide: "Recommended IDE and extensions"
+  debugger_setup: "How to set up debugging"
+  api_testing_tools: "API testing tools (Postman, Insomnia, etc.)"
+  database_tools: "Database GUI clients"
+  core_dependencies: "List critical dependencies"
+  dev_dependencies: "List development dependencies"
+  update_strategy: "How/when are dependencies updated?"
+  security_scanning: "What security scanning tools are used?"
+  license_compliance: "How is license compliance checked?"
+  dev_build_command: "Development build command"
+  prod_build_command: "Production build command"
+  build_steps: "What happens during the build process?"
+  deployment_stages: "List deployment stages with processes"
+  dev_config: "Development configuration approach"
+  staging_config: "Staging configuration management"
+  prod_config: "Production secrets handling"
+  response_time_target: "Target response time"
+  throughput_target: "Requests per second target"
+  concurrent_users_target: "Expected concurrent users"
+  data_volume_expectations: "Storage expectations"
+  platform_support: "Browser/platform support matrix"
+  rate_limits: "API rate limiting"
+  payload_size: "Maximum payload sizes"
+  request_timeout: "Request timeout settings"
+  api_versioning: "API version strategy"
+  compliance_requirements: "Compliance requirements (PCI, HIPAA, GDPR, etc.)"
+  encryption_requirements: "Encryption requirements"
+  auth_requirements: "Authentication requirements"
+  audit_requirements: "Audit logging requirements"
+  third_party_apis: "List third-party API integrations"
+  apm_tool: "Application performance monitoring tool"
+  logging_service: "Log aggregation service"
+  error_tracking: "Error monitoring service"
+  analytics_service: "Usage analytics service"
+  test_types: "List test types with tools and commands"
+  test_database: "Test database setup"
+  test_mocking_strategy: "How are external services mocked?"
+  test_data_approach: "Test data fixtures/factories"
+  dependency_update_schedule: "When are dependencies updated?"
+  security_patch_timeline: "Security patch response time"
+  db_maintenance_tasks: "Database maintenance tasks"
+  log_rotation_policy: "Log rotation policy"
+  monitoring_alerts: "List monitoring alerts with thresholds"
+  limitations: "List known limitations and workarounds"

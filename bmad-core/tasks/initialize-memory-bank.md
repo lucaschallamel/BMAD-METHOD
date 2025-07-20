@@ -130,12 +130,12 @@ After creating initial files:
 ## Templates
 
 Use the memory bank templates from `bmad-core/templates/memory-bank/`:
-- `projectbrief-tmpl.md`
-- `productContext-tmpl.md`
-- `systemPatterns-tmpl.md`
-- `techContext-tmpl.md`
-- `activeContext-tmpl.md`
-- `progress-tmpl.md`
+- `projectbrief-tmpl.yaml`
+- `productContext-tmpl.yaml`
+- `systemPatterns-tmpl.yaml`
+- `techContext-tmpl.yaml`
+- `activeContext-tmpl.yaml`
+- `progress-tmpl.yaml`
 
 ## Integration Points
 

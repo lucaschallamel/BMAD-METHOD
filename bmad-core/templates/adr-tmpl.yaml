@@ -1,0 +1,245 @@
+template:
+  id: adr-template-v1
+  name: Architectural Decision Record (ADR)
+  version: 1.0
+  output:
+    format: markdown
+    filename: docs/adr/{{adr_number}}-{{adr_slug}}.md
+    title: "{{adr_number}}. {{adr_title}}"
+  description: |
+    Template for creating Architectural Decision Records using Michael Nygard's format.
+    Documents significant architectural decisions with context, alternatives, and consequences.
+
+workflow:
+  mode: guided
+  instruction: |
+    Create an ADR for a significant architectural decision. Gather context about the problem,
+    alternatives considered, and the chosen solution before starting.
+
+sections:
+  - id: header
+    title: ADR Header
+    instruction: Basic ADR information
+    template: |
+      # {{adr_number}}. {{adr_title}}
+
+      **Date**: {{decision_date}}
+      
+      **Status**: {{status}}
+      
+      **Deciders**: {{deciders}}
+      
+      **Technical Story**: {{technical_story}}
+
+  - id: context
+    title: Context and Problem Statement
+    instruction: Describe the situation requiring a decision
+    template: |
+      ## Context and Problem Statement
+
+      {{problem_context}}
+
+      ### Current Situation
+      {{current_situation}}
+
+      ### Driving Forces
+      {{#each driving_forces}}
+      - {{this}}
+      {{/each}}
+
+      ### Requirements
+      {{#each requirements}}
+      - {{this}}
+      {{/each}}
+
+  - id: alternatives
+    title: Considered Alternatives
+    instruction: List and analyze all alternatives considered
+    template: |
+      ## Considered Alternatives
+
+      {{#each alternatives}}
+      ### {{this.name}}
+      
+      **Description**: {{this.description}}
+      
+      **Pros**:
+      {{#each this.pros}}
+      - {{this}}
+      {{/each}}
+      
+      **Cons**:
+      {{#each this.cons}}
+      - {{this}}
+      {{/each}}
+      
+      {{#if this.cost}}
+      **Cost**: {{this.cost}}
+      {{/if}}
+      
+      {{#if this.complexity}}
+      **Complexity**: {{this.complexity}}
+      {{/if}}
+
+      {{/each}}
+
+  - id: decision
+    title: Decision
+    instruction: State the chosen solution clearly
+    template: |
+      ## Decision
+
+      We will {{decision_statement}}.
+
+      ### Rationale
+      {{decision_rationale}}
+
+      ### Key Factors
+      {{#each decision_factors}}
+      - {{this}}
+      {{/each}}
+
+  - id: consequences
+    title: Consequences
+    instruction: Document both positive and negative consequences
+    template: |
+      ## Consequences
+
+      ### Positive Consequences
+      {{#each positive_consequences}}
+      - {{this}}
+      {{/each}}
+
+      ### Negative Consequences
+      {{#each negative_consequences}}
+      - {{this}}
+      {{/each}}
+
+      ### Risks and Mitigations
+      {{#each risks}}
+      - **Risk**: {{this.risk}}
+      - **Mitigation**: {{this.mitigation}}
+      {{/each}}
+
+  - id: implementation
+    title: Implementation
+    instruction: Define concrete next steps
+    template: |
+      ## Implementation
+
+      ### Next Steps
+      {{#each implementation_steps}}
+      {{@index + 1}}. {{this}}
+      {{/each}}
+
+      ### Timeline
+      {{implementation_timeline}}
+
+      ### Success Criteria
+      {{#each success_criteria}}
+      - {{this}}
+      {{/each}}
+
+      ### Verification
+      {{verification_approach}}
+
+  - id: compliance
+    title: Compliance and Standards
+    instruction: Document compliance considerations
+    template: |
+      ## Compliance and Standards
+
+      {{#if compliance_requirements}}
+      ### Compliance Requirements
+      {{#each compliance_requirements}}
+      - {{this}}
+      {{/each}}
+      {{/if}}
+
+      {{#if standards_alignment}}
+      ### Standards Alignment
+      {{#each standards_alignment}}
+      - {{this}}
+      {{/each}}
+      {{/if}}
+
+      {{#if architectural_principles}}
+      ### Architectural Principles
+      {{#each architectural_principles}}
+      - {{this}}
+      {{/each}}
+      {{/if}}
+
+  - id: related
+    title: Related Information
+    instruction: Link to related decisions and documentation
+    template: |
+      ## Related Information
+
+      {{#if related_adrs}}
+      ### Related ADRs
+      {{#each related_adrs}}
+      - {{this}}
+      {{/each}}
+      {{/if}}
+
+      {{#if references}}
+      ### References
+      {{#each references}}
+      - {{this}}
+      {{/each}}
+      {{/if}}
+
+      {{#if superseded_by}}
+      ### Superseded By
+      {{superseded_by}}
+      {{/if}}
+
+      {{#if supersedes}}
+      ### Supersedes
+      {{supersedes}}
+      {{/if}}
+
+validation:
+  required_fields:
+    - adr_number
+    - adr_title
+    - decision_date
+    - status
+    - problem_context
+    - alternatives
+    - decision_statement
+    - positive_consequences
+    - negative_consequences
+    - implementation_steps
+
+prompts:
+  adr_number: "ADR number (format: 0001, 0002, etc.)"
+  adr_title: "Descriptive title for this ADR"
+  adr_slug: "URL-friendly slug (auto-generated from title if not provided)"
+  decision_date: "Date this decision was made"
+  status: "Status of this ADR (Proposed, Accepted, Superseded, Deprecated)"
+  deciders: "Who made this decision?"
+  technical_story: "Link to related story/issue if applicable"
+  problem_context: "Describe the problem or situation requiring a decision"
+  current_situation: "What is the current state?"
+  driving_forces: "List forces driving the need for this decision"
+  requirements: "List requirements that influence the decision"
+  alternatives: "List all alternatives considered with pros/cons"
+  decision_statement: "Complete this: 'We will...'"
+  decision_rationale: "Why was this alternative chosen?"
+  decision_factors: "Key factors that influenced the decision"
+  positive_consequences: "List positive outcomes expected"
+  negative_consequences: "List negative consequences or trade-offs"
+  risks: "List risks and their mitigations"
+  implementation_steps: "List concrete next steps for implementation"
+  implementation_timeline: "When will this be implemented?"
+  success_criteria: "How will we know this was successful?"
+  verification_approach: "How will we verify the decision is working?"
+  compliance_requirements: "Any compliance considerations"
+  standards_alignment: "How does this align with standards?"
+  architectural_principles: "Which architectural principles does this support?"
+  related_adrs: "Links to related ADRs"
+  references: "Links to supporting documentation"
+  superseded_by: "If superseded, link to newer ADR"
+  supersedes: "If this supersedes others, list them"

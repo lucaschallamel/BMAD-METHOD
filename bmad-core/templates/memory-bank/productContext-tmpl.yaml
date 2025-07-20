@@ -1,0 +1,192 @@
+template:
+  id: memory-bank-productcontext-v1
+  name: Memory Bank - Product Context
+  version: 1.0
+  output:
+    format: markdown
+    filename: docs/memory-bank/productContext.md
+    title: "Product Context"
+  description: |
+    The "why" behind the project - problems, solutions, and user experience.
+    This document explains why the project exists and what success looks like from a user perspective.
+
+workflow:
+  mode: guided
+  instruction: |
+    Focus on understanding the problem space, solution approach, and expected outcomes.
+    Draw from user research, market analysis, and stakeholder interviews.
+
+sections:
+  - id: problem-statement
+    title: Problem Statement
+    instruction: Clearly articulate the problem being solved
+    template: |
+      ### Core Problem
+      {{core_problem_description}}
+
+      ### Current State
+      - **How it's done today**: {{current_approach}}
+      - **Pain points**: {{pain_points}}
+      - **Impact**: {{problem_impact}}
+
+      ### Root Causes
+      {{#each root_causes}}
+      {{@index + 1}}. {{this}}
+      {{/each}}
+
+  - id: solution-approach
+    title: Solution Approach
+    instruction: Describe how we're solving the problem
+    template: |
+      ### Our Solution
+      {{solution_description}}
+
+      ### Why This Approach
+      {{#each approach_reasons}}
+      - {{this}}
+      {{/each}}
+
+      ### Key Innovations
+      {{#each innovations}}
+      - {{this}}
+      {{/each}}
+
+  - id: user-experience
+    title: User Experience Vision
+    instruction: Define the user journey and design principles
+    template: |
+      ### User Journey
+      1. **Discovery**: {{discovery_phase}}
+      2. **Onboarding**: {{onboarding_phase}}
+      3. **Core Usage**: {{core_usage_phase}}
+      4. **Value Realization**: {{value_realization_phase}}
+
+      ### Design Principles
+      {{#each design_principles}}
+      - **{{this.principle}}**: {{this.description}}
+      {{/each}}
+
+      ### Success Metrics
+      - **User Satisfaction**: {{user_satisfaction_metric}}
+      - **Adoption Rate**: {{adoption_rate_metric}}
+      - **Task Completion**: {{task_completion_metric}}
+
+  - id: expected-outcomes
+    title: Expected Outcomes
+    instruction: Define short, medium, and long-term outcomes
+    template: |
+      ### Short-term (3 months)
+      {{#each short_term_outcomes}}
+      - {{this}}
+      {{/each}}
+
+      ### Medium-term (6-12 months)
+      {{#each medium_term_outcomes}}
+      - {{this}}
+      {{/each}}
+
+      ### Long-term (1+ years)
+      {{#each long_term_outcomes}}
+      - {{this}}
+      {{/each}}
+
+  - id: user-personas
+    title: User Personas
+    instruction: Define primary and secondary personas
+    template: |
+      ### Primary Persona: {{primary_persona_name}}
+      - **Role**: {{primary_persona_role}}
+      - **Goals**: {{primary_persona_goals}}
+      - **Frustrations**: {{primary_persona_frustrations}}
+      - **Needs**: {{primary_persona_needs}}
+      - **Technical Level**: {{primary_persona_tech_level}}
+
+      ### Secondary Persona: {{secondary_persona_name}}
+      - **Role**: {{secondary_persona_role}}
+      - **Goals**: {{secondary_persona_goals}}
+      - **Needs**: {{secondary_persona_needs}}
+
+  - id: competitive-landscape
+    title: Competitive Landscape
+    instruction: Analyze existing solutions and our differentiation
+    template: |
+      ### Existing Solutions
+      | Solution | Strengths | Weaknesses | Our Differentiation |
+      |----------|-----------|------------|-------------------|
+      {{#each competitors}}
+      | {{this.name}} | {{this.strengths}} | {{this.weaknesses}} | {{this.differentiation}} |
+      {{/each}}
+
+      ### Market Opportunity
+      {{market_opportunity}}
+
+  - id: assumptions-risks
+    title: Assumptions and Risks
+    instruction: Document key assumptions and validation plans
+    template: |
+      ### Key Assumptions
+      {{#each assumptions}}
+      {{@index + 1}}. {{this}}
+      {{/each}}
+
+      ### Validation Plans
+      {{#each validation_plans}}
+      - {{this}}
+      {{/each}}
+
+  - id: ecosystem-integration
+    title: Integration with Ecosystem
+    instruction: Define how this fits into the larger ecosystem
+    template: |
+      ### Upstream Dependencies
+      {{#each upstream_dependencies}}
+      - {{this}}
+      {{/each}}
+
+      ### Downstream Impact
+      {{#each downstream_impacts}}
+      - {{this}}
+      {{/each}}
+
+      ### Partner Integrations
+      {{#each partner_integrations}}
+      - {{this}}
+      {{/each}}
+
+prompts:
+  core_problem_description: "Clearly describe the main problem this project solves"
+  current_approach: "How is this problem currently addressed (workarounds, manual processes)?"
+  pain_points: "What specific pain points do users face?"
+  problem_impact: "What is the cost/consequence of not solving this problem?"
+  root_causes: "List 3-5 underlying causes of the problem"
+  solution_description: "Describe our solution approach in one paragraph"
+  approach_reasons: "Why is this the right approach? (list 3-4 reasons)"
+  innovations: "What's new or different about our approach?"
+  discovery_phase: "How will users find/access the solution?"
+  onboarding_phase: "Describe the initial user experience"
+  core_usage_phase: "Describe primary interaction patterns"
+  value_realization_phase: "When/how will users see benefits?"
+  design_principles: "List 3 design principles with descriptions"
+  user_satisfaction_metric: "How will user satisfaction be measured?"
+  adoption_rate_metric: "What are the target adoption metrics?"
+  task_completion_metric: "What efficiency gains are expected?"
+  short_term_outcomes: "List immediate benefits (3 months)"
+  medium_term_outcomes: "List broader impacts (6-12 months)"
+  long_term_outcomes: "List strategic outcomes (1+ years)"
+  primary_persona_name: "Name for primary user persona"
+  primary_persona_role: "Primary persona's job title/function"
+  primary_persona_goals: "What they want to achieve"
+  primary_persona_frustrations: "Current pain points"
+  primary_persona_needs: "What would help them succeed"
+  primary_persona_tech_level: "Technical expertise level"
+  secondary_persona_name: "Name for secondary persona"
+  secondary_persona_role: "Secondary persona's role"
+  secondary_persona_goals: "What they want to achieve"
+  secondary_persona_needs: "What would help them"
+  competitors: "List existing solutions with analysis"
+  market_opportunity: "Why is now the right time for this solution?"
+  assumptions: "List key assumptions about users/market/technology"
+  validation_plans: "How will each assumption be tested?"
+  upstream_dependencies: "What systems/processes feed into ours?"
+  downstream_impacts: "What systems/processes are affected by our solution?"
+  partner_integrations: "What third-party services/APIs are needed?"
