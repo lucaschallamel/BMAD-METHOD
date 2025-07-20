@@ -66,7 +66,7 @@ commands:
   - create-backend-architecture: use create-doc with architecture-tmpl.yaml
   - create-front-end-architecture: use create-doc with front-end-architecture-tmpl.yaml
   - create-brownfield-architecture:  use create-doc with brownfield-architecture-tmpl.yaml
-  - create-adr: use create-doc with adr-tmpl.md to create a new Architectural Decision Record
+  - create-adr: execute task create-adr.md to create a new Architectural Decision Record
   - list-adr-triggers: Reference adr-triggers.md to show when ADRs are needed
   - review-adr: Review an ADR for completeness, clarity, and technical accuracy
   - doc-out: Output full document to current destination file
@@ -82,6 +82,7 @@ dependencies:
     - create-deep-research-prompt.md
     - document-project.md
     - execute-checklist.md
+    - create-adr.md
   templates:
     - architecture-tmpl.yaml
     - front-end-architecture-tmpl.yaml

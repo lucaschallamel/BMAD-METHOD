@@ -1,0 +1,70 @@
+# Create Dev Journal Entry
+
+This task guides the creation of a development journal entry to document the session's work, decisions, and progress.
+
+## Prerequisites
+- Have git access to review commits and changes
+
+## Initial Setup (if needed)
+If the /docs/devJournal directory doesn't exist in the project:
+1. Create the directory: `mkdir -p docs/devJournal`
+2. Create a README.md in that directory explaining its purpose
+3. Add to git tracking
+
+## Process
+
+### 1. Gather Session Context
+
+First, collect the following information:
+- Current git branch: `git branch --show-current`
+- Session timeframe (when work started and ended)
+- Recent commits: `git log --since="[session-start]" --oneline`
+- Changed files: `git status --porcelain`
+
+### 2. Determine Entry Filename
+
+Create filename using pattern: `YYYYMMDD-NN.md`
+- YYYYMMDD: Today's date
+- NN: Sequential number (01, 02, etc.) if multiple entries per day
+
+Check existing entries: `ls docs/devJournal/YYYYMMDD-*.md`
+
+### 3. Create Journal Entry
+
+Use the dev-journal-tmpl.md template to create a comprehensive entry covering:
+
+#### Essential Sections:
+1. **Session Overview** - Brief summary of accomplishments
+2. **Work Streams** - Detailed breakdown of each area of work
+3. **Implementation Details** - Key code changes and decisions
+4. **Validation & Testing** - What was tested and verified
+5. **Current State & Next Steps** - Where we are and what's next
+
+#### Evidence Gathering:
+- Review all commits made during session
+- Check modified files by functional area
+- Note any new patterns or architectural decisions
+- Document challenges encountered and solutions found
+
+### 4. Quality Checks
+
+Before finalizing, ensure:
+- [ ] All work streams are documented
+- [ ] Technical decisions are explained
+- [ ] Next steps are clear
+- [ ] File changes match git history
+- [ ] Learnings and patterns are captured
+
+### 5. Save and Review
+
+- Save to: `/docs/devJournal/YYYYMMDD-NN.md`
+- Review for completeness and clarity
+- Ensure future developers can understand the session's impact
+
+## Tips
+
+- Focus on the "why" behind changes, not just "what"
+- Document both successes and challenges
+- Include enough detail for context without overwhelming
+- Cross-reference related stories, ADRs, or PRs
+- Use British English for consistency
