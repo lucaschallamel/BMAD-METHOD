@@ -31,7 +31,7 @@ Check existing entries: `ls docs/devJournal/YYYYMMDD-*.md`
 
 ### 3. Create Journal Entry
 
-Use the dev-journal-tmpl.md template to create a comprehensive entry covering:
+Use the dev-journal-tmpl.yaml template to create a comprehensive entry covering:
 
 #### Essential Sections:
 1. **Session Overview** - Brief summary of accomplishments
