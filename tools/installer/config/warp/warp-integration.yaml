@@ -1,0 +1,248 @@
+# BMAD-WARP Integration Configuration
+# This configuration enables deep integration of BMAD Core with WARP's agentic framework
+
+warp-integration:
+  name: WARP Terminal Editor
+  version: "1.0.0"
+  description: Deep integration with WARP's agentic development environment
+  
+  # WARP Core Integration Points
+  integration-points:
+    agents:
+      description: Map BMAD agents to WARP's multi-agent management system
+      location: .warp/agents/
+      format: yaml
+      features:
+        - Multi-agent conversations
+        - Agent context sharing
+        - Model choice per agent
+        - Active AI assistance
+    
+    workflows:
+      description: Deploy BMAD workflows as WARP Drive workflows
+      location: .warp/workflows/
+      format: yaml
+      features:
+        - Sequential task execution
+        - Conditional branching
+        - Context propagation
+        - Error handling
+    
+    rules:
+      description: Define agent activation rules and constraints
+      location: .warp/rules/
+      format: yaml
+      features:
+        - Command detection
+        - Natural language triggers
+        - Context-aware activation
+        - Permission management
+    
+    prompts:
+      description: System prompts and templates for agent interactions
+      location: .warp/prompts/
+      format: markdown
+      features:
+        - Dynamic prompt generation
+        - Context injection
+        - Template variables
+        - Multi-language support
+    
+    notebooks:
+      description: Interactive documentation and examples
+      location: .warp/notebooks/
+      format: ipynb
+      features:
+        - Live code examples
+        - Agent demonstrations
+        - Workflow tutorials
+        - Best practices
+    
+    environment:
+      description: Environment variables and configuration
+      location: .warp/env/
+      format: env
+      features:
+        - API keys management
+        - Model configurations
+        - Feature flags
+        - Custom settings
+
+  # Agent Mapping Configuration
+  agent-mapping:
+    strategy: enhanced
+    features:
+      multi-agent-support: true
+      context-persistence: true
+      model-selection: true
+      active-assistance: true
+    
+    mapping-rules:
+      # Core BMAD agents mapped to WARP capabilities
+      bmad-orchestrator:
+        warp-type: orchestrator
+        capabilities:
+          - agent-coordination
+          - workflow-management
+          - context-routing
+          - error-recovery
+      
+      analyst:
+        warp-type: planning-agent
+        capabilities:
+          - requirement-analysis
+          - project-planning
+          - documentation-review
+          - stakeholder-communication
+      
+      pm:
+        warp-type: project-agent
+        capabilities:
+          - sprint-planning
+          - backlog-management
+          - progress-tracking
+          - team-coordination
+      
+      architect:
+        warp-type: design-agent
+        capabilities:
+          - system-design
+          - architecture-decisions
+          - technical-planning
+          - pattern-selection
+      
+      dev:
+        warp-type: implementation-agent
+        capabilities:
+          - code-generation
+          - debugging
+          - refactoring
+          - optimization
+      
+      qa:
+        warp-type: quality-agent
+        capabilities:
+          - test-generation
+          - validation
+          - bug-detection
+          - quality-metrics
+
+  # Workflow Integration
+  workflow-mapping:
+    # Map BMAD workflows to WARP Drive
+    fullstack-agile-workflow:
+      warp-name: bmad-fullstack-development
+      stages:
+        - planning
+        - architecture
+        - implementation
+        - testing
+        - deployment
+    
+    quick-build-workflow:
+      warp-name: bmad-rapid-prototyping
+      stages:
+        - ideation
+        - poc-development
+        - iteration
+        - validation
+
+  # WARP-Specific Features
+  warp-features:
+    agent-notifications:
+      enabled: true
+      description: Agents can notify when user input is needed
+      implementation: webhook
+    
+    context-aware-assistance:
+      enabled: true
+      description: Proactive AI assistance based on development context
+      triggers:
+        - error-detection
+        - code-review
+        - performance-issues
+        - security-concerns
+    
+    model-selection:
+      enabled: true
+      supported-models:
+        - gpt-4
+        - claude-3
+        - gemini-pro
+        - custom-models
+      
+    notebook-integration:
+      enabled: true
+      features:
+        - Interactive agent demos
+        - Workflow visualizations
+        - Code playground
+        - Documentation browser
+
+  # Installation Configuration
+  installation:
+    directories:
+      - path: .warp/
+        description: Root WARP configuration directory
+      - path: .warp/agents/
+        description: Agent definitions and configurations
+      - path: .warp/workflows/
+        description: Workflow definitions
+      - path: .warp/rules/
+        description: Agent activation rules
+      - path: .warp/prompts/
+        description: System prompts and templates
+      - path: .warp/notebooks/
+        description: Interactive notebooks
+      - path: .warp/env/
+        description: Environment configuration
+      - path: .warp/context/
+        description: Persistent context storage
+    
+    file-templates:
+      agent-template: warp-agent-template.yaml
+      workflow-template: warp-workflow-template.yaml
+      rule-template: warp-rule-template.yaml
+      prompt-template: warp-prompt-template.md
+      
+  # Configuration Templates
+  templates:
+    warp-config:
+      file: .warp/config.yaml
+      content: |
+        # WARP Configuration
+        version: 1.0
+        
+        # BMAD Integration
+        bmad:
+          enabled: true
+          version: ${BMAD_VERSION}
+          
+        # Agent Configuration
+        agents:
+          multi-agent: true
+          max-concurrent: 5
+          context-sharing: true
+          
+        # Workflow Configuration
+        workflows:
+          auto-detect: true
+          error-recovery: true
+          
+        # Model Configuration
+        models:
+          default: gpt-4
+          allow-selection: true
+          
+    agent-manifest:
+      file: .warp/agents/manifest.yaml
+      content: |
+        # BMAD Agent Manifest for WARP
+        agents:
+          ${AGENT_LIST}
+        
+        # Agent activation rules
+        activation:
+          command-prefix: "@"
+          natural-language: true
+          context-aware: true

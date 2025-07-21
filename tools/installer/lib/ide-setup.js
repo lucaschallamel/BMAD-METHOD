@@ -47,6 +47,8 @@ class IdeSetup extends BaseIdeSetup {
         return this.setupClaudeCode(installDir, selectedAgent)
       case 'windsurf':
         return this.setupWindsurf(installDir, selectedAgent)
+      case 'warp':
+        return this.setupWarp(installDir, selectedAgent)
       case 'trae':
         return this.setupTrae(installDir, selectedAgent)
       case 'roo':
@@ -197,6 +199,7 @@ class IdeSetup extends BaseIdeSetup {
   }
 
   async setupWindsurf (installDir, selectedAgent) {
+    // Fallback to basic Windsurf setup
     const windsurfRulesDir = path.join(installDir, '.windsurf', 'rules')
     const agents = selectedAgent ? [selectedAgent] : await this.getAllAgentIds(installDir)
 
@@ -246,6 +249,13 @@ class IdeSetup extends BaseIdeSetup {
     console.log(chalk.green(`\n✓ Created Windsurf rules in ${windsurfRulesDir}`))
 
     return true
+  }
+
+  async setupWarp (installDir, selectedAgent) {
+    // Use enhanced WARP setup
+    console.log(chalk.blue('Setting up enhanced WARP integration...'))
+    const warpSetup = require('./ide-warp-setup')
+    return warpSetup.setup(installDir, selectedAgent)
   }
 
   async setupTrae (installDir, selectedAgent) {

@@ -204,12 +204,38 @@ dependencies:
 
 ## IDE Integration
 
+### Supported IDEs
+
+BMad Method supports multiple AI-powered IDEs:
+
+- **Cursor** - AI-first code editor with agent rules
+- **Claude Code** - Anthropic's official IDE with slash commands
+- **Windsurf** - Codeium's IDE with multi-agent support
+- **WARP** - Advanced terminal editor with agentic framework (Enhanced Integration)
+- **Trae** - AI code editor with custom rules
+- **Roo Code** - IDE with custom modes support
+- **Cline** - VS Code extension with agent integration
+- **Gemini CLI** - Command-line interface for Google's AI
+- **GitHub Copilot** - GitHub's AI pair programmer (VS Code)
+
 ### IDE Best Practices
 
 - **Context Management**: Keep relevant files only in context, keep files as lean and focused as necessary
 - **Agent Selection**: Use appropriate agent for task
 - **Iterative Development**: Work in small, focused tasks
 - **File Organization**: Maintain clean project structure
+
+### WARP Terminal Editor (Enhanced Integration)
+
+WARP provides the most advanced integration with BMAD, featuring:
+- **Multi-agent management** with concurrent agent execution
+- **Agent notifications** when user input is required
+- **Model selection** per agent (GPT-4, Claude, Gemini)
+- **Workflow automation** with WARP Drive integration
+- **Context persistence** via Memory Bank
+- **Interactive notebooks** for examples and tutorials
+
+See the [WARP Integration Guide](../docs/warp-integration-guide.md) for detailed setup and usage.
 
 ## Technical Preferences System
 

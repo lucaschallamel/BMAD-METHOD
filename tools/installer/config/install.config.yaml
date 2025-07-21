@@ -37,6 +37,26 @@ ide-configurations:
       # To use BMad agents in Windsurf:
       # 1. Type @agent-name (e.g., "@dev", "@pm")
       # 2. Windsurf will adopt that agent's persona
+  warp:
+    name: WARP Terminal Editor
+    rule-dir: .warp/
+    format: enhanced-integration
+    command-suffix: .yaml
+    instructions: |
+      # To use BMad agents in WARP:
+      # 1. Agents are available via @agent-name or /bmad agent-name
+      # 2. Workflows can be run with /run workflow-name
+      # 3. Multi-agent conversations are supported
+      # 4. Context is automatically persisted across sessions
+      # 5. Notebooks provide interactive examples and tutorials
+      # 
+      # WARP's agentic framework features:
+      # - Multi-agent management with concurrent agents
+      # - Agent notifications when input is needed
+      # - Model selection per agent
+      # - Active AI assistance with context awareness
+      # - Integrated workflows and rules
+      # - Environment variable management
   trae:
     name: Trae
     rule-dir: .trae/rules/

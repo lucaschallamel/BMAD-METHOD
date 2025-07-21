@@ -1,0 +1,120 @@
+# WARP Agent Template for BMAD Agents
+# This template defines how BMAD agents are configured for WARP's agentic framework
+
+agent:
+  id: ${AGENT_ID}
+  name: ${AGENT_NAME}
+  type: ${AGENT_TYPE}
+  version: "1.0.0"
+  
+  # Agent metadata from BMAD
+  metadata:
+    title: ${AGENT_TITLE}
+    description: ${AGENT_DESCRIPTION}
+    icon: ${AGENT_ICON}
+    whenToUse: ${WHEN_TO_USE}
+    
+  # WARP-specific configuration
+  warp:
+    # Multi-agent capabilities
+    multi-agent:
+      enabled: true
+      can-coordinate: true
+      shared-context: true
+      
+    # Model configuration
+    models:
+      default: ${DEFAULT_MODEL}
+      allowed:
+        - gpt-4
+        - claude-3
+        - gemini-pro
+      selection-strategy: ${MODEL_STRATEGY}
+      
+    # Notification settings
+    notifications:
+      enabled: true
+      triggers:
+        - user-input-required
+        - task-completed
+        - error-occurred
+        - decision-needed
+        
+    # Context configuration
+    context:
+      persistent: true
+      shared: true
+      includes:
+        - project-context
+        - memory-bank
+        - active-tasks
+        - conversation-history
+        
+  # Agent capabilities (from BMAD)
+  capabilities:
+    ${CAPABILITIES_LIST}
+    
+  # Tools and integrations
+  tools:
+    ${TOOLS_LIST}
+    
+  # Activation rules
+  activation:
+    # Command-based activation
+    commands:
+      - "@${AGENT_ID}"
+      - "/bmad ${AGENT_ID}"
+      
+    # Natural language triggers
+    triggers:
+      ${TRIGGER_LIST}
+      
+    # Context-aware activation
+    context-triggers:
+      ${CONTEXT_TRIGGERS}
+      
+  # Agent behavior configuration
+  behavior:
+    # Startup instructions
+    startup:
+      ${STARTUP_INSTRUCTIONS}
+      
+    # Operating instructions
+    instructions:
+      ${AGENT_INSTRUCTIONS}
+      
+    # Constraints and guidelines
+    constraints:
+      ${CONSTRAINTS_LIST}
+      
+  # Integration with BMAD systems
+  integrations:
+    memory-bank:
+      enabled: true
+      auto-update: true
+      
+    workflows:
+      ${WORKFLOW_LIST}
+      
+    templates:
+      ${TEMPLATE_LIST}
+      
+    tasks:
+      ${TASK_LIST}
+      
+  # WARP Drive integration
+  warp-drive:
+    # Notebooks associated with this agent
+    notebooks:
+      - examples/${AGENT_ID}-examples.ipynb
+      - tutorials/${AGENT_ID}-tutorial.ipynb
+      
+    # Prompts for this agent
+    prompts:
+      - ${AGENT_ID}-system.md
+      - ${AGENT_ID}-context.md
+      
+    # Environment variables
+    environment:
+      BMAD_AGENT: ${AGENT_ID}
+      BMAD_VERSION: ${BMAD_VERSION}

@@ -1,0 +1,106 @@
+# WARP Workflow Template for BMAD Workflows
+# Maps BMAD workflows to WARP Drive's workflow system
+
+workflow:
+  id: ${WORKFLOW_ID}
+  name: ${WORKFLOW_NAME}
+  version: "1.0.0"
+  type: ${WORKFLOW_TYPE}
+  
+  # Workflow metadata
+  metadata:
+    description: ${WORKFLOW_DESCRIPTION}
+    category: ${WORKFLOW_CATEGORY}
+    tags: ${WORKFLOW_TAGS}
+    
+  # WARP-specific configuration
+  warp:
+    # Execution settings
+    execution:
+      mode: ${EXECUTION_MODE} # sequential, parallel, conditional
+      timeout: ${TIMEOUT}
+      retry-policy:
+        enabled: true
+        max-attempts: 3
+        backoff: exponential
+        
+    # Context management
+    context:
+      propagation: true
+      isolation: false
+      persistence: true
+      
+    # Error handling
+    error-handling:
+      strategy: ${ERROR_STRATEGY} # fail-fast, continue, rollback
+      notifications: true
+      recovery-actions:
+        ${RECOVERY_ACTIONS}
+        
+  # Workflow stages (from BMAD)
+  stages:
+    ${STAGES_LIST}
+    
+  # Agent coordination
+  agents:
+    # Primary agent for this workflow
+    primary: ${PRIMARY_AGENT}
+    
+    # Supporting agents
+    supporting:
+      ${SUPPORTING_AGENTS}
+      
+    # Agent handoff rules
+    handoffs:
+      ${HANDOFF_RULES}
+      
+  # Triggers and conditions
+  triggers:
+    # Manual triggers
+    manual:
+      - command: "/run ${WORKFLOW_ID}"
+      - ui-action: "Run ${WORKFLOW_NAME}"
+      
+    # Automatic triggers
+    automatic:
+      ${AUTO_TRIGGERS}
+      
+    # Conditional triggers
+    conditional:
+      ${CONDITIONAL_TRIGGERS}
+      
+  # Inputs and outputs
+  inputs:
+    ${INPUT_SCHEMA}
+    
+  outputs:
+    ${OUTPUT_SCHEMA}
+    
+  # Integration points
+  integrations:
+    # Memory Bank integration
+    memory-bank:
+      read: ${MEMORY_READ_POINTS}
+      write: ${MEMORY_WRITE_POINTS}
+      
+    # External tools
+    tools:
+      ${TOOLS_INTEGRATION}
+      
+    # Notebooks
+    notebooks:
+      ${NOTEBOOK_INTEGRATION}
+      
+  # WARP Drive features
+  warp-drive:
+    # Associated prompts
+    prompts:
+      ${PROMPT_LIST}
+      
+    # Environment configuration
+    environment:
+      ${ENV_CONFIG}
+      
+    # Notifications
+    notifications:
+      ${NOTIFICATION_CONFIG}
