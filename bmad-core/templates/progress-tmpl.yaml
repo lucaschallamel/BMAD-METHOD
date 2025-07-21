@@ -1,0 +1,241 @@
+template:
+  id: memory-bank-progress-v1
+  name: Memory Bank - Progress
+  version: 1.0
+  output:
+    format: markdown
+    filename: docs/memory-bank/progress.md
+    title: "Progress"
+  description: |
+    Project state tracking - what's done, what's in progress, known issues, and evolution.
+    This document tracks project progress and evolution. It provides historical context and current status for planning and decision-making.
+
+workflow:
+  mode: guided
+  instruction: |
+    Document the complete project progress including completed features, ongoing work, 
+    technical metrics, and the evolution of decisions over time.
+
+sections:
+  - id: project-status
+    title: Project Status Overview
+    instruction: High-level project status
+    template: |
+      **Overall Completion**: {{completion_percentage}}%  
+      **Phase**: {{current_phase}}  
+      **Health**: {{project_health}}  
+      **Last Updated**: {{last_updated}}
+
+  - id: feature-completion
+    title: Feature Completion Status
+    instruction: Track feature delivery status
+    template: |
+      ### Completed Features
+      | Feature | Version | Completed | Key Capabilities |
+      |---------|---------|-----------|------------------|
+      {{#each completed_features}}
+      | {{this.name}} | {{this.version}} | {{this.date}} | {{this.capabilities}} |
+      {{/each}}
+
+      ### In Progress Features
+      | Feature | Progress | Target | Status | Notes |
+      |---------|----------|--------|--------|--------|
+      {{#each in_progress_features}}
+      | {{this.name}} | {{this.progress}}% | {{this.target}} | {{this.status}} | {{this.notes}} |
+      {{/each}}
+
+      ### Upcoming Features
+      | Feature | Priority | Planned Start | Dependencies |
+      |---------|----------|---------------|--------------|
+      {{#each upcoming_features}}
+      | {{this.name}} | {{this.priority}} | {{this.planned_start}} | {{this.dependencies}} |
+      {{/each}}
+
+  - id: sprint-history
+    title: Sprint/Iteration History
+    instruction: Track sprint performance and velocity
+    template: |
+      ### Recent Sprints
+      | Sprint | Duration | Completed | Velocity | Key Achievements |
+      |--------|----------|-----------|----------|------------------|
+      {{#each recent_sprints}}
+      | {{this.name}} | {{this.duration}} | {{this.completed}} | {{this.velocity}} | {{this.achievements}} |
+      {{/each}}
+
+      ### Velocity Trend
+      - **Average Velocity**: {{average_velocity}}
+      - **Trend**: {{velocity_trend}}
+      - **Factors**: {{velocity_factors}}
+
+  - id: quality-metrics
+    title: Quality Metrics
+    instruction: Track test coverage and code quality
+    template: |
+      ### Test Coverage
+      | Type | Coverage | Target | Status |
+      |------|----------|--------|--------|
+      {{#each test_coverage}}
+      | {{this.type}} | {{this.coverage}}% | {{this.target}}% | {{this.status}} |
+      {{/each}}
+
+      ### Code Quality
+      - **Technical Debt**: {{technical_debt_level}}
+      - **Code Coverage**: {{code_coverage}}%
+      - **Complexity**: {{complexity_metrics}}
+      - **Standards Compliance**: {{standards_compliance}}
+
+  - id: known-issues
+    title: Known Issues & Bugs
+    instruction: Track critical and major issues
+    template: |
+      ### Critical Issues
+      | Issue | Impact | Workaround | Fix ETA |
+      |-------|--------|------------|---------|
+      {{#each critical_issues}}
+      | {{this.description}} | {{this.impact}} | {{this.workaround}} | {{this.eta}} |
+      {{/each}}
+
+      ### Major Issues
+      | Issue | Component | Status | Assigned |
+      |-------|-----------|--------|----------|
+      {{#each major_issues}}
+      | {{this.description}} | {{this.component}} | {{this.status}} | {{this.assigned}} |
+      {{/each}}
+
+      ### Technical Debt Registry
+      | Debt Item | Impact | Effort | Priority | Plan |
+      |-----------|--------|--------|----------|------|
+      {{#each technical_debt}}
+      | {{this.item}} | {{this.impact}} | {{this.effort}} | {{this.priority}} | {{this.plan}} |
+      {{/each}}
+
+  - id: decision-evolution
+    title: Evolution of Key Decisions
+    instruction: Track how major decisions have evolved over time
+    template: |
+      ### Architecture Evolution
+      | Version | Change | Rationale | Impact |
+      |---------|--------|-----------|---------|
+      {{#each architecture_evolution}}
+      | {{this.version}} | {{this.change}} | {{this.rationale}} | {{this.impact}} |
+      {{/each}}
+
+      ### Technology Changes
+      | Date | From | To | Reason | Status |
+      |------|------|-----|--------|--------|
+      {{#each technology_changes}}
+      | {{this.date}} | {{this.from}} | {{this.to}} | {{this.reason}} | {{this.status}} |
+      {{/each}}
+
+      ### Process Evolution
+      | Change | When | Why | Result |
+      |--------|------|-----|--------|
+      {{#each process_changes}}
+      | {{this.change}} | {{this.date}} | {{this.reason}} | {{this.result}} |
+      {{/each}}
+
+  - id: release-history
+    title: Release History
+    instruction: Track releases and what was delivered
+    template: |
+      ### Recent Releases
+      | Version | Date | Major Changes | Breaking Changes |
+      |---------|------|---------------|------------------|
+      {{#each recent_releases}}
+      | {{this.version}} | {{this.date}} | {{this.changes}} | {{this.breaking}} |
+      {{/each}}
+
+      ### Upcoming Releases
+      | Version | Target Date | Planned Features | Risks |
+      |---------|-------------|------------------|--------|
+      {{#each upcoming_releases}}
+      | {{this.version}} | {{this.date}} | {{this.features}} | {{this.risks}} |
+      {{/each}}
+
+  - id: performance-trends
+    title: Performance Trends
+    instruction: Track system and user metrics over time
+    template: |
+      ### System Performance
+      | Metric | Current | Target | Trend | Notes |
+      |--------|---------|--------|--------|-------|
+      {{#each system_metrics}}
+      | {{this.metric}} | {{this.current}} | {{this.target}} | {{this.trend}} | {{this.notes}} |
+      {{/each}}
+
+      ### User Metrics
+      | Metric | Current | Last Month | Trend |
+      |--------|---------|------------|--------|
+      {{#each user_metrics}}
+      | {{this.metric}} | {{this.current}} | {{this.previous}} | {{this.trend}} |
+      {{/each}}
+
+  - id: lessons-learned
+    title: Lessons Learned
+    instruction: Capture what's working well and what needs improvement
+    template: |
+      ### What's Working Well
+      {{#each successes}}
+      {{@index + 1}}. **{{this.practice}}**: {{this.description}}
+         - Result: {{this.result}}
+         - Continue: {{this.why_continue}}
+
+      {{/each}}
+
+      ### What Needs Improvement
+      {{#each improvements_needed}}
+      {{@index + 1}}. **{{this.challenge}}**: {{this.description}}
+         - Impact: {{this.impact}}
+         - Plan: {{this.improvement_plan}}
+
+      {{/each}}
+
+  - id: risk-register
+    title: Risk Register
+    instruction: Track mitigated and active risks
+    template: |
+      ### Mitigated Risks
+      | Risk | Mitigation | Result |
+      |------|------------|--------|
+      {{#each mitigated_risks}}
+      | {{this.risk}} | {{this.mitigation}} | {{this.result}} |
+      {{/each}}
+
+      ### Active Risks
+      | Risk | Probability | Impact | Mitigation Plan |
+      |------|-------------|--------|-----------------|
+      {{#each active_risks}}
+      | {{this.risk}} | {{this.probability}} | {{this.impact}} | {{this.mitigation}} |
+      {{/each}}
+
+prompts:
+  completion_percentage: "Overall project completion percentage"
+  current_phase: "Current project phase name"
+  project_health: "Project health status (Green/Yellow/Red)"
+  last_updated: "When was this last updated?"
+  completed_features: "List completed features with details"
+  in_progress_features: "List features currently in development"
+  upcoming_features: "List planned upcoming features"
+  recent_sprints: "List recent sprints with performance data"
+  average_velocity: "Average team velocity (points/stories per sprint)"
+  velocity_trend: "Is velocity increasing, stable, or decreasing?"
+  velocity_factors: "What factors are affecting velocity?"
+  test_coverage: "Test coverage by type (unit, integration, e2e)"
+  technical_debt_level: "Current technical debt level (High/Medium/Low)"
+  code_coverage: "Overall code coverage percentage"
+  complexity_metrics: "Code complexity metrics"
+  standards_compliance: "Compliance with coding standards"
+  critical_issues: "List critical issues that need immediate attention"
+  major_issues: "List major issues in backlog"
+  technical_debt: "Technical debt items with priority"
+  architecture_evolution: "How has the architecture evolved?"
+  technology_changes: "Technology stack changes over time"
+  process_changes: "Process improvements made"
+  recent_releases: "Recent versions released"
+  upcoming_releases: "Planned future releases"
+  system_metrics: "System performance metrics (response time, throughput, errors)"
+  user_metrics: "User metrics (active users, feature adoption, satisfaction)"
+  successes: "What practices/decisions are working well?"
+  improvements_needed: "What challenges need to be addressed?"
+  mitigated_risks: "Risks that have been successfully mitigated"
+  active_risks: "Current risks being tracked"

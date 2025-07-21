@@ -4,6 +4,12 @@
 
 Generate comprehensive documentation for existing projects optimized for AI development agents. This task creates structured reference materials that enable AI agents to understand project context, conventions, and patterns for effective contribution to any codebase.
 
+## Prerequisites
+
+Before documenting a project, ensure proper session context:
+- **Session Kickoff**: If this is a new session or after significant time gap (>24 hours), first run the `session-kickoff` task to establish complete project context
+- **Memory Bank Review**: Check if Memory Bank exists to understand project history and context
+
 ## Task Instructions
 
 ### 1. Initial Project Analysis
@@ -111,9 +117,9 @@ This document captures the CURRENT STATE of the [Project Name] codebase, includi
 
 ### Change Log
 
-| Date | Version | Description | Author |
-|------|---------|-------------|--------|
-| [Date] | 1.0 | Initial brownfield analysis | [Analyst] |
+| Date   | Version | Description                 | Author    |
+|--------|---------|-----------------------------|-----------|
+| [Date] | 1.0     | Initial brownfield analysis | [Analyst] |
 
 ## Quick Reference - Key Files and Entry Points
 
@@ -136,11 +142,11 @@ This document captures the CURRENT STATE of the [Project Name] codebase, includi
 
 ### Actual Tech Stack (from package.json/requirements.txt)
 
-| Category | Technology | Version | Notes |
-|----------|------------|---------|--------|
-| Runtime | Node.js | 16.x | [Any constraints] |
-| Framework | Express | 4.18.2 | [Custom middleware?] |
-| Database | PostgreSQL | 13 | [Connection pooling setup] |
+| Category  | Technology | Version | Notes                      |
+|-----------|------------|---------|----------------------------|
+| Runtime   | Node.js    | 16.x    | [Any constraints]          |
+| Framework | Express    | 4.18.2  | [Custom middleware?]       |
+| Database  | PostgreSQL | 13      | [Connection pooling setup] |
 
 etc...
 
@@ -208,10 +214,10 @@ Instead of duplicating, reference actual model files:
 
 ### External Services
 
-| Service | Purpose | Integration Type | Key Files |
-|---------|---------|------------------|-----------|
-| Stripe | Payments | REST API | `src/integrations/stripe/` |
-| SendGrid | Emails | SDK | `src/services/emailService.js` |
+| Service  | Purpose  | Integration Type | Key Files                      |
+|----------|----------|------------------|--------------------------------|
+| Stripe   | Payments | REST API         | `src/integrations/stripe/`     |
+| SendGrid | Emails   | SDK              | `src/services/emailService.js` |
 
 etc...
 
@@ -332,6 +338,18 @@ Apply the advanced elicitation task after major sections to refine based on user
 - Document enables AI agents to navigate and understand the actual codebase
 - Technical constraints and "gotchas" are clearly documented
 
+## Memory Bank Integration
+
+After documenting a project:
+1. Ensure proper session context via `session-kickoff` task (references `session-kickoff-checklist.md`)
+2. Consider initializing Memory Bank if not exists (`initialize-memory-bank` task)
+3. Use the brownfield architecture document to populate:
+   - `projectbrief.md` - Extract project goals and constraints
+   - `systemPatterns.md` - Document architecture and patterns
+   - `techContext.md` - Capture technology stack and environment
+   - `progress.md` - Note current state and technical debt
+4. This provides AI agents with both detailed architecture docs and quick-reference Memory Bank
+
 ## Notes
 
 - This task creates ONE document that captures the TRUE state of the system
@@ -339,3 +357,4 @@ Apply the advanced elicitation task after major sections to refine based on user
 - Documents technical debt, workarounds, and constraints honestly
 - For brownfield projects with PRD: Provides clear enhancement impact analysis
 - The goal is PRACTICAL documentation for AI agents doing real work
+- Memory Bank provides quick context; architecture doc provides deep detail

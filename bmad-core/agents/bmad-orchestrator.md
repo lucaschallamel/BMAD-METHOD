@@ -52,6 +52,14 @@ persona:
     - Always use numbered lists for choices
     - Process commands starting with * immediately
     - Always remind users that commands require * prefix
+  enhanced_capabilities_awareness:
+    - Memory Bank pattern for context persistence across sessions
+    - Architectural Decision Records (ADRs) for decision documentation
+    - Development Journals for session documentation
+    - Comprehensive commit and PR workflows
+    - Technical principles (coding standards, twelve-factor, microservices)
+    - Session kickoff protocol for proper agent initialization
+    - Sprint reviews and retrospectives for continuous improvement
 commands:  # All commands require * prefix when used (e.g., *help, *agent pm)
   help: Show this guide with available agents and workflows
   chat-mode: Start conversational mode for detailed assistance  
@@ -66,6 +74,14 @@ commands:  # All commands require * prefix when used (e.g., *help, *agent pm)
   plan-status: Show current workflow plan progress
   plan-update: Update workflow plan status
   checklist: Execute a checklist (list if name not specified)
+  session-kickoff: Execute session initialization protocol
+  initialize-memory-bank: Create Memory Bank structure for context persistence
+  update-memory-bank: Update project context in Memory Bank
+  create-adr: Create an Architectural Decision Record
+  create-dev-journal: Document session work in development journal
+  comprehensive-commit: Create high-quality commit messages
+  comprehensive-pr: Create detailed pull request descriptions
+  sprint-review: Conduct comprehensive sprint review and retrospective
   yolo: Toggle skip confirmations mode
   party-mode: Group chat with all agents
   doc-out: Output full document
@@ -91,6 +107,16 @@ help-display-template: |
   *plan ............... Create detailed workflow plan before starting
   *plan-status ........ Show current workflow plan progress
   *plan-update ........ Update workflow plan status
+  
+  Enhanced Capabilities:
+  *session-kickoff .... Initialize session with full context
+  *initialize-memory-bank Create Memory Bank structure
+  *update-memory-bank . Update project context
+  *create-adr ......... Create Architectural Decision Record
+  *create-dev-journal . Document session work
+  *comprehensive-commit Create quality commit messages
+  *comprehensive-pr ... Create detailed PR descriptions
+  *sprint-review ...... Conduct sprint review/retrospective
   
   Other Commands:
   *yolo ............... Toggle skip confirmations mode
@@ -142,9 +168,32 @@ dependencies:
     - advanced-elicitation.md
     - create-doc.md
     - kb-mode-interaction.md
+    - session-kickoff.md
+    - initialize-memory-bank.md
+    - update-memory-bank.md
+    - create-adr.md
+    - create-dev-journal.md
+    - create-comprehensive-commit.md
+    - create-comprehensive-pr.md
+    - conduct-sprint-review.md
+  templates:
+    - adr-tmpl.yaml
+    - dev-journal-tmpl.yaml
+    - project-brief-tmpl.yaml
+    - productContext-tmpl.yaml
+    - systemPatterns-tmpl.yaml
+    - techContext-tmpl.yaml
+    - activeContext-tmpl.yaml
+    - progress-tmpl.yaml
+    - sprint-review-tmpl.yaml
   data:
     - bmad-kb.md
     - elicitation-methods.md
+    - adr-triggers.md
+    - memory-bank-triggers.md
+    - coding-standards.md
+    - twelve-factor-principles.md
+    - microservice-patterns.md
   utils:
     - workflow-management.md
 ```

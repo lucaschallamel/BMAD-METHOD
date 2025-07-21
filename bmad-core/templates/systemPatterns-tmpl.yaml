@@ -1,0 +1,245 @@
+template:
+  id: memory-bank-systempatterns-v1
+  name: Memory Bank - System Patterns
+  version: 1.0
+  output:
+    format: markdown
+    filename: docs/memory-bank/systemPatterns.md
+    title: "System Patterns"
+  description: |
+    Technical architecture, design patterns, and critical implementation decisions.
+    This document captures the technical architecture and implementation patterns. It's updated when architectural decisions are made or patterns change.
+
+workflow:
+  mode: guided
+  instruction: |
+    Document the system architecture, patterns, and technical decisions.
+    Reference ADRs for detailed decision records. Focus on the "what" and "how" of the system.
+
+sections:
+  - id: architecture-overview
+    title: System Architecture Overview
+    instruction: Provide high-level architecture view
+    template: |
+      ### High-Level Architecture
+      ```
+      {{architecture_diagram}}
+      ```
+
+      ### Architectural Style
+      - **Pattern**: {{architectural_pattern}}
+      - **Rationale**: {{pattern_rationale}}
+      - **Trade-offs**: {{pattern_tradeoffs}}
+
+  - id: core-components
+    title: Core Components
+    instruction: Document each major component
+    template: |
+      {{#each components}}
+      ### Component {{@index + 1}}: {{this.name}}
+      - **Purpose**: {{this.purpose}}
+      - **Responsibilities**: {{this.responsibilities}}
+      - **Technology**: {{this.technology}}
+      - **Interfaces**: {{this.interfaces}}
+      - **Location**: {{this.location}}
+
+      {{/each}}
+
+  - id: design-patterns
+    title: Design Patterns
+    instruction: Document patterns used throughout the system
+    template: |
+      {{#each patterns}}
+      ### Pattern {{@index + 1}}: {{this.name}}
+      - **Where Used**: {{this.where_used}}
+      - **Implementation**: {{this.implementation}}
+      - **Benefits**: {{this.benefits}}
+      {{#if this.example}}
+      - **Example**: {{this.example}}
+      {{/if}}
+
+      {{/each}}
+
+  - id: data-architecture
+    title: Data Architecture
+    instruction: Document data flow and storage strategy
+    template: |
+      ### Data Flow
+      ```
+      {{data_flow_diagram}}
+      ```
+
+      ### Storage Strategy
+      | Data Type | Storage | Rationale | Retention |
+      |-----------|---------|-----------|-----------|
+      {{#each storage_strategy}}
+      | {{this.type}} | {{this.storage}} | {{this.rationale}} | {{this.retention}} |
+      {{/each}}
+
+      ### Data Models
+      - **Core Entities**: {{core_entities}}
+      - **Relationships**: {{entity_relationships}}
+      - **Schemas**: {{schema_location}}
+
+  - id: integration-architecture
+    title: Integration Architecture
+    instruction: Document internal and external integrations
+    template: |
+      ### Internal Integrations
+      ```
+      {{internal_integration_diagram}}
+      ```
+
+      ### External Integrations
+      | System | Integration Type | Purpose | Critical? |
+      |--------|-----------------|---------|-----------|
+      {{#each external_integrations}}
+      | {{this.system}} | {{this.type}} | {{this.purpose}} | {{this.critical}} |
+      {{/each}}
+
+      ### API Design Principles
+      {{#each api_principles}}
+      - {{this}}
+      {{/each}}
+
+  - id: security-architecture
+    title: Security Architecture
+    instruction: Document security layers and approach
+    template: |
+      ### Security Layers
+      {{#each security_layers}}
+      {{@index + 1}}. **{{this.layer}}**: {{this.description}}
+      {{/each}}
+
+      ### Authentication & Authorization
+      - **Method**: {{auth_method}}
+      - **Implementation**: {{auth_implementation}}
+      - **Authorization Model**: {{authorization_model}}
+
+  - id: critical-paths
+    title: Critical Implementation Paths
+    instruction: Document key workflows through the system
+    template: |
+      {{#each critical_paths}}
+      ### Path {{@index + 1}}: {{this.name}}
+      {{#each this.steps}}
+      {{@index + 1}}. {{this}}
+      {{/each}}
+
+      {{/each}}
+
+  - id: performance-patterns
+    title: Performance Patterns
+    instruction: Document performance optimization strategies
+    template: |
+      ### Caching Strategy
+      - **What's Cached**: {{cached_data}}
+      - **Where**: {{cache_locations}}
+      - **TTL**: {{cache_ttl}}
+      - **Invalidation**: {{cache_invalidation}}
+
+      ### Async Processing
+      - **Queue System**: {{queue_system}}
+      - **Use Cases**: {{async_use_cases}}
+      - **Retry Logic**: {{retry_logic}}
+
+  - id: scalability-patterns
+    title: Scalability Patterns
+    instruction: Document scaling strategies
+    template: |
+      ### Horizontal Scaling
+      - **Stateless Components**: {{stateless_components}}
+      - **Load Balancing**: {{load_balancing_strategy}}
+      - **Session Management**: {{session_management}}
+
+      ### Vertical Scaling
+      - **Bottlenecks**: {{known_bottlenecks}}
+      - **Optimization Points**: {{optimization_points}}
+
+  - id: key-decisions
+    title: Key Technical Decisions
+    instruction: Summary of major technical decisions
+    template: |
+      Reference: See `docs/adr/` for detailed Architectural Decision Records
+
+      {{#each key_decisions}}
+      ### Decision {{@index + 1}}: {{this.title}}
+      - **Choice**: {{this.choice}}
+      - **Rationale**: {{this.rationale}}
+      - **Impact**: {{this.impact}}
+
+      {{/each}}
+
+  - id: error-handling
+    title: Error Handling Patterns
+    instruction: Document error handling approach
+    template: |
+      ### Global Error Strategy
+      - **Logging**: {{error_logging}}
+      - **User Feedback**: {{error_feedback}}
+      - **Recovery**: {{error_recovery}}
+
+      ### Circuit Breakers
+      - **Protected Services**: {{protected_services}}
+      - **Thresholds**: {{circuit_thresholds}}
+      - **Fallbacks**: {{fallback_behavior}}
+
+  - id: monitoring-observability
+    title: Monitoring & Observability
+    instruction: Document monitoring strategy
+    template: |
+      ### Key Metrics
+      - **Business Metrics**: {{business_metrics}}
+      - **Technical Metrics**: {{technical_metrics}}
+      - **SLIs/SLOs**: {{sli_slo}}
+
+      ### Logging Strategy
+      - **Log Levels**: {{log_levels}}
+      - **Structured Logging**: {{structured_logging_format}}
+      - **Retention**: {{log_retention}}
+
+prompts:
+  architecture_diagram: "Provide ASCII or text diagram showing major components and relationships"
+  architectural_pattern: "What architectural pattern is used? (Microservices, Monolith, Serverless, etc.)"
+  pattern_rationale: "Why was this architecture chosen?"
+  pattern_tradeoffs: "What are the trade-offs of this approach?"
+  components: "List major components with details"
+  patterns: "List design patterns used in the system"
+  data_flow_diagram: "Diagram showing how data moves through the system"
+  storage_strategy: "Define storage strategy for different data types"
+  core_entities: "List main domain objects"
+  entity_relationships: "How do entities relate to each other?"
+  schema_location: "Where are schema definitions located?"
+  internal_integration_diagram: "Diagram of internal service integrations"
+  external_integrations: "List external system integrations"
+  api_principles: "List API design principles (REST conventions, versioning, etc.)"
+  security_layers: "List security layers (edge, application, data, infrastructure)"
+  auth_method: "Authentication method (JWT, OAuth, SAML, etc.)"
+  auth_implementation: "How authentication works"
+  authorization_model: "Authorization model (RBAC, ABAC, etc.)"
+  critical_paths: "List critical user/system workflows"
+  cached_data: "What data types are cached?"
+  cache_locations: "Where are caches located?"
+  cache_ttl: "Cache expiration strategies"
+  cache_invalidation: "How is cache cleared?"
+  queue_system: "What queue technology is used?"
+  async_use_cases: "What processes run asynchronously?"
+  retry_logic: "How are failures handled?"
+  stateless_components: "Which components can scale horizontally?"
+  load_balancing_strategy: "Load balancing approach"
+  session_management: "How are sessions handled?"
+  known_bottlenecks: "Known scaling limitations"
+  optimization_points: "Where to focus optimization efforts"
+  key_decisions: "List major technical decisions with rationale"
+  error_logging: "How are errors logged?"
+  error_feedback: "How are errors shown to users?"
+  error_recovery: "Automatic recovery mechanisms"
+  protected_services: "Which integrations have circuit breakers?"
+  circuit_thresholds: "When do circuits open?"
+  fallback_behavior: "Degraded functionality approach"
+  business_metrics: "What business metrics are tracked?"
+  technical_metrics: "Performance indicators tracked"
+  sli_slo: "Service level indicators and objectives"
+  log_levels: "When to use each log level"
+  structured_logging_format: "Log format and fields"
+  log_retention: "How long are logs kept?"

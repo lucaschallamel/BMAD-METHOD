@@ -59,17 +59,51 @@ Ask the user if they want to work through the checklist:
 - Section by section (interactive mode) - Review each section, get confirmation before proceeding
 - All at once (comprehensive mode) - Complete full analysis and present report at end]]
 
+## 0. SESSION INITIALIZATION & CONTEXT
+
+[[LLM: Before any validation, ensure complete project understanding through systematic session kickoff. This prevents context gaps that lead to suboptimal decisions.]]
+
+### 0.1 Session Kickoff Completion
+
+- [ ] Session kickoff task completed to establish project context
+- [ ] Memory Bank files reviewed (if they exist)
+- [ ] Recent Dev Journal entries reviewed for current state
+- [ ] Architecture documentation reviewed and understood
+- [ ] Git status and recent commits analyzed
+- [ ] Documentation inconsistencies identified and noted
+
+### 0.2 Memory Bank Initialization [[NEW PROJECT]]
+
+- [ ] Memory Bank directory structure created at `docs/memory-bank/`
+- [ ] Initial `projectbrief.md` created with project foundation
+- [ ] `activeContext.md` initialized with current priorities
+- [ ] `progress.md` started to track project state
+- [ ] `systemPatterns.md` prepared for architecture decisions
+- [ ] `techContext.md` and `productContext.md` initialized
+
+### 0.3 Technical Principles Alignment
+
+- [ ] Technical principles and preferences documented
+- [ ] Coding standards established and referenced
+- [ ] Microservice patterns (if applicable) documented
+- [ ] Twelve-factor principles considered and applied
+- [ ] Security and performance standards defined
+
 ## 1. PROJECT SETUP & INITIALIZATION
 
 [[LLM: Project setup is the foundation. For greenfield, ensure clean start. For brownfield, ensure safe integration with existing system. Verify setup matches project type.]]
 
 ### 1.1 Project Scaffolding [[GREENFIELD ONLY]]
 
+[[LLM: Reference project-scaffolding-preference.md in data dependencies for comprehensive project structure guidelines. Ensure project follows standardized directory structure and documentation practices.]]
+
 - [ ] Epic 1 includes explicit steps for project creation/initialization
+- [ ] Project structure follows project-scaffolding-preference.md guidelines
 - [ ] If using a starter template, steps for cloning/setup are included
 - [ ] If building from scratch, all necessary scaffolding steps are defined
 - [ ] Initial README or documentation setup is included
 - [ ] Repository setup and initial commit processes are defined
+- [ ] BMAD-specific directories created (docs/memory-bank, docs/adr, docs/devJournal)
 
 ### 1.2 Existing System Integration [[BROWNFIELD ONLY]]
 
@@ -295,14 +329,15 @@ Ask the user if they want to work through the checklist:
 
 ## 9. DOCUMENTATION & HANDOFF
 
-[[LLM: Good documentation enables smooth development. For brownfield, documentation of integration points is critical.]]
+[[LLM: Good documentation enables smooth development. For brownfield, documentation of integration points is critical. Include Dev Journal and Sprint Review processes.]]
 
 ### 9.1 Developer Documentation
 
 - [ ] API documentation created alongside implementation
 - [ ] Setup instructions are comprehensive
-- [ ] Architecture decisions documented
+- [ ] Architecture decisions documented with ADRs
 - [ ] Patterns and conventions documented
+- [ ] Dev Journal maintained with daily/weekly updates
 - [ ] [[BROWNFIELD ONLY]] Integration points documented in detail
 
 ### 9.2 User Documentation
@@ -314,11 +349,22 @@ Ask the user if they want to work through the checklist:
 
 ### 9.3 Knowledge Transfer
 
+- [ ] Dev Journal entries capture key decisions and learnings
+- [ ] Sprint Review documentation prepared for stakeholders
 - [ ] [[BROWNFIELD ONLY]] Existing system knowledge captured
 - [ ] [[BROWNFIELD ONLY]] Integration knowledge documented
 - [ ] Code review knowledge sharing planned
 - [ ] Deployment knowledge transferred to operations
-- [ ] Historical context preserved
+- [ ] Historical context preserved in Memory Bank
+
+### 9.4 Sprint Review Preparation
+
+- [ ] Sprint objectives and completion status documented
+- [ ] Key achievements and blockers identified
+- [ ] Technical decisions and their rationale captured
+- [ ] Lessons learned documented for future sprints
+- [ ] Next sprint priorities aligned with project goals
+- [ ] Memory Bank updated with sprint outcomes
 
 ## 10. POST-MVP CONSIDERATIONS
 
@@ -414,7 +460,8 @@ After presenting the report, ask if the user wants:
 ### Category Statuses
 
 | Category                                | Status | Critical Issues |
-| --------------------------------------- | ------ | --------------- |
+|-----------------------------------------|--------|-----------------|
+| 0. Session Initialization & Context     | _TBD_  |                 |
 | 1. Project Setup & Initialization       | _TBD_  |                 |
 | 2. Infrastructure & Deployment          | _TBD_  |                 |
 | 3. External Dependencies & Integrations | _TBD_  |                 |

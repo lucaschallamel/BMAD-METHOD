@@ -238,6 +238,98 @@ You will want to verify from sharding your architecture that these documents exi
 
 As your project grows and the code starts to build consistent patterns, coding standards should be reduced to just the items that the agent makes mistakes at still - must with the better models, they will look at surrounding code in files and not need a rule from that file to guide them.
 
+## Enhanced BMad Features
+
+### Session Kickoff Protocol
+
+Every new AI session should begin with proper context initialization:
+
+```mermaid
+graph TD
+    A[New Session Start] --> B[bmad-master: session-kickoff]
+    B --> C[Review Memory Bank]
+    C --> D[Check Dev Journals]
+    D --> E[Review Recent ADRs]
+    E --> F[Load Technical Principles]
+    F --> G[Session Ready]
+    
+    style A fill:#f5f5f5
+    style B fill:#FF6B6B
+    style C fill:#DDA0DD
+    style D fill:#FFE4B5
+    style E fill:#ADD8E6
+    style F fill:#98FB98
+    style G fill:#90EE90
+```
+
+**When to use**: Start of any new session, after 24+ hour gaps, or when switching contexts.
+
+### Memory Bank Pattern
+
+The Memory Bank provides persistent context across AI sessions:
+
+- **Location**: `docs/memory-bank/`
+- **Core Files**:
+  - `projectbrief.md` - Project foundation and goals
+  - `productContext.md` - User needs and problems
+  - `systemPatterns.md` - Architecture and patterns
+  - `techContext.md` - Technology stack
+  - `activeContext.md` - Current work state
+  - `progress.md` - Completed features and status
+
+**Integration**: All agents automatically reference Memory Bank during session kickoff.
+
+### Development Journals
+
+Track session work and decisions:
+
+- **Location**: `docs/devJournal/`
+- **Format**: `YYYYMMDD-NN.md` (e.g., `20240115-01.md`)
+- **Created**: After significant work sessions
+- **Contents**: Work completed, decisions made, challenges faced
+
+### Architectural Decision Records (ADRs)
+
+Document significant technical decisions:
+
+- **Location**: `docs/adr/`
+- **Format**: Michael Nygard ADR format
+- **Triggers**: Major architecture changes, new patterns, technology choices
+- **Integration**: Automatically referenced in Memory Bank
+
+### Sprint Ceremonies
+
+BMad now includes full sprint support:
+
+1. **Sprint Planning**: Integrated into all workflows after validation
+2. **Daily Development**: Tracked through dev journals
+3. **Sprint Review**: Comprehensive review using `sprint-review-checklist.md`
+4. **Retrospectives**: Optional but recommended for continuous improvement
+
+### New Specialized Workflows
+
+Beyond the standard development workflows, BMad now includes:
+
+- **sprint-execution.yaml**: Full sprint-based agile development
+- **quick-fix.yaml**: Streamlined hotfix process
+- **technical-debt.yaml**: Systematic debt reduction
+- **documentation-update.yaml**: Documentation maintenance
+- **system-migration.yaml**: Platform and technology migrations
+- **performance-optimization.yaml**: Performance improvement cycles
+
+### Quality Gates
+
+All workflows now include 8-step validation:
+
+1. Syntax validation
+2. Type checking
+3. Linting
+4. Security scanning
+5. Test execution
+6. Performance validation
+7. Documentation checks
+8. Integration testing
+
 ## Getting Help
 
 - **Discord Community**: [Join Discord](https://discord.gg/gk8jAdXWmj)

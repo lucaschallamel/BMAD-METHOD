@@ -15,13 +15,17 @@ Foundations in Agentic Agile Driven Development, known as the Breakthrough Metho
 
 ## Overview
 
-**BMad Method's Two Key Innovations:**
+**BMad Method's Key Innovations:**
 
 **1. Agentic Planning:** Dedicated agents (Analyst, PM, Architect) collaborate with you to create detailed, consistent PRDs and Architecture documents. Through advanced prompt engineering and human-in-the-loop refinement, these planning agents produce comprehensive specifications that go far beyond generic AI task generation.
 
 **2. Context-Engineered Development:** The Scrum Master agent then transforms these detailed plans into hyper-detailed development stories that contain everything the Dev agent needs - full context, implementation details, and architectural guidance embedded directly in story files.
 
-This two-phase approach eliminates both **planning inconsistency** and **context loss** - the biggest problems in AI-assisted development. Your Dev agent opens a story file with complete understanding of what to build, how to build it, and why.
+**3. Memory Bank Pattern:** Persistent AI context management across development sessions maintains project understanding, architectural decisions, and development progress, eliminating context loss between sessions.
+
+**4. Architecture Decision Records (ADRs):** Comprehensive tracking and documentation of technical decisions throughout the project lifecycle, preserving institutional knowledge and decision rationale.
+
+This multi-faceted approach eliminates **planning inconsistency**, **context loss**, and **decision drift** - the biggest problems in AI-assisted development. Your Dev agent opens a story file with complete understanding of what to build, how to build it, and why, while the Memory Bank ensures continuity across all development sessions.
 
 **📖 [See the complete workflow in the User Guide](bmad-core/user-guide.md)** - Planning phase, development cycle, and all agent roles
 
@@ -41,6 +45,9 @@ This two-phase approach eliminates both **planning inconsistency** and **context
 - **[Install and Build software with Full Stack Agile AI Team](#quick-start)** → Quick Start Instruction
 - **[Learn how to use BMad](bmad-core/user-guide.md)** → Complete user guide and walkthrough
 - **[See available AI agents](#available-agents)** → Specialized roles for your team
+- **[Memory Bank Guide](docs/memory-bank-guide.md)** → Persistent context management
+- **[ADR Guide](docs/adr-guide.md)** → Architecture decision documentation
+- **[Project Scaffolding Guide](docs/project-scaffolding-guide.md)** → Standardized project structures
 - **[Explore non-technical uses](#-beyond-software-development---expansion-packs)** → Creative writing, business, wellness, education
 - **[Create my own AI agents](#creating-your-own-expansion-pack)** → Build agents for your domain
 - **[Browse ready-made expansion packs](expansion-packs/)** → Game dev, DevOps, infrastructure and get inspired with ideas and examples

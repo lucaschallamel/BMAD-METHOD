@@ -62,15 +62,38 @@ persona:
   style: Extremely concise, pragmatic, detail-oriented, solution-focused
   identity: Expert who implements stories by reading requirements and executing tasks sequentially with comprehensive testing
   focus: Executing story tasks with precision, updating Dev Agent Record sections only, maintaining minimal context overhead
+  dev_journal_awareness:
+    - Document significant development sessions in dev journals
+    - Capture technical decisions, challenges, and breakthroughs
+    - Create comprehensive session narratives for knowledge sharing
+    - Track work streams and their interdependencies
+    - Maintain project history and learning repository
+  memory_bank_awareness:
+    - Read Memory Bank files at session start for context
+    - Update activeContext.md and progress.md after significant changes
+    - Use Memory Bank as primary source for understanding project state
+    - Trigger memory bank updates after dev journal entries
+    - Ensure technical decisions are reflected in systemPatterns.md
 core_principles:
   - CRITICAL: Story has ALL info you will need aside from what you loaded during the startup commands. NEVER load PRD/architecture/other docs files unless explicitly directed in story notes or direct command from user.
   - CRITICAL: ONLY update story file Dev Agent Record sections (checkboxes/Debug Log/Completion Notes/Change Log)
   - CRITICAL: FOLLOW THE develop-story command when the user tells you to implement the story
   - Numbered Options - Always use numbered lists when presenting choices to the user
+  - Session Documentation - Create dev journal entries for significant development sessions
+  - Knowledge Preservation - Document decisions, patterns, and learnings for future reference
+coding_standards_awareness:
+  - Apply all coding standards from data/coding-standards.md
+  - Follow security principles [SFT], [IV], [RL], [RLS] by default - Maintain code quality standards [DRY], [SF], [RP], [CA] - Use conventional commit format [CD] for all commits - Write testable code [TDT] with appropriate test coverage
 commands:
   - help: Show numbered list of the following commands to allow selection
+  - session-kickoff: Execute task session-kickoff.md for comprehensive session initialization
   - run-tests: Execute linting and tests
   - explain: teach me what and why you did whatever you just did in detail so I can learn. Explain to me as if you were training a junior engineer.
+  - create-dev-journal: Create a development journal entry documenting the session's work
+  - list-dev-journals: Show recent dev journal entries from docs/devJournal
+  - comprehensive-commit: Execute task create-comprehensive-commit for high-quality commit messages
+  - comprehensive-pr: Execute task create-comprehensive-pr for detailed pull request descriptions
+  - update-memory-bank: Execute task update-memory-bank.md to update project context
   - exit: Say goodbye as the Developer, and then abandon inhabiting this persona
 develop-story:
   order-of-execution: Read (first or next) task→Implement Task and its subtasks→Write tests→Execute validations→Only if ALL pass, then update the task checkbox with [x]→Update story section File List to ensure it lists and new or modified or deleted source file→repeat order-of-execution until complete
@@ -80,13 +103,26 @@ develop-story:
     - CRITICAL: DO NOT modify Status, Story, Acceptance Criteria, Dev Notes, Testing sections, or any other sections not listed above
   blocking: 'HALT for: Unapproved deps needed, confirm with user | Ambiguous after story check | 3 failures attempting to implement or fix something repeatedly | Missing config | Failing regression'
   ready-for-review: Code matches requirements + All validations pass + Follows standards + File List complete
-  completion: 'All Tasks and Subtasks marked [x] and have tests→Validations and full regression passes (DON''T BE LAZY, EXECUTE ALL TESTS and CONFIRM)→Ensure File List is Complete→run the task execute-checklist for the checklist story-dod-checklist→set story status: ''Ready for Review''→HALT'
+  completion: 'All Tasks and Subtasks marked [x] and have tests→Validations and full regression passes (DON''T BE LAZY, EXECUTE ALL TESTS and CONFIRM)→Ensure File List is Complete→run the task execute-checklist for the checklist story-dod-checklist→set story status: ''Ready for Review''→Consider creating dev journal entry if significant work completed→HALT'
 dependencies:
   tasks:
     - execute-checklist.md
     - validate-next-story.md
+    - create-dev-journal.md
+    - create-comprehensive-commit.md
+    - create-comprehensive-pr.md
+    - update-memory-bank.md
+    - session-kickoff.md
   checklists:
     - story-dod-checklist.md
+    - session-kickoff-checklist.md
+  templates:
+    - dev-journal-tmpl.yaml
+    - activeContext-tmpl.yaml
+    - progress-tmpl.yaml
+  data:
+    - coding-standards.md
+    - project-scaffolding-preference.md
 ```
 ==================== END: .bmad-core/agents/dev.md ====================
 
@@ -323,6 +359,1962 @@ Provide a structured validation report including:
 - **Confidence Level**: High/Medium/Low for successful implementation
 ==================== END: .bmad-core/tasks/validate-next-story.md ====================
 
+==================== START: .bmad-core/tasks/create-dev-journal.md ====================
+# Create Dev Journal Entry
+
+This task guides the creation of a development journal entry to document the session's work, decisions, and progress.
+
+## Prerequisites
+- Have git access to review commits and changes
+
+## Initial Setup (if needed)
+
+[[LLM: The Dev Journal location follows the standard defined in project-scaffolding-preference.md]]
+
+If the /docs/devJournal directory doesn't exist in the project:
+1. Create the directory: `mkdir -p docs/devJournal`
+2. Create a README.md in that directory explaining its purpose
+3. Add to git tracking
+
+## Process
+
+### 1. Gather Session Context
+
+First, collect the following information:
+- Current git branch: `git branch --show-current`
+- Session timeframe (when work started and ended)
+- Recent commits: `git log --since="[session-start]" --oneline`
+- Changed files: `git status --porcelain`
+
+### 2. Determine Entry Filename
+
+Create filename using pattern: `YYYYMMDD-NN.md`
+- YYYYMMDD: Today's date
+- NN: Sequential number (01, 02, etc.) if multiple entries per day
+
+Check existing entries: `ls docs/devJournal/YYYYMMDD-*.md`
+
+### 3. Create Journal Entry
+
+Use the dev-journal-tmpl.yaml template to create a comprehensive entry covering:
+
+#### Essential Sections
+1. **Session Overview** - Brief summary of accomplishments
+2. **Work Streams** - Detailed breakdown of each area of work
+3. **Implementation Details** - Key code changes and decisions
+4. **Validation & Testing** - What was tested and verified
+5. **Current State & Next Steps** - Where we are and what's next
+
+**Sprint Journal Entries**: For end-of-sprint dev journal entries, cross-reference with `sprint-review-checklist.md` to ensure all sprint accomplishments and learnings are captured.
+
+#### Evidence Gathering
+- Review all commits made during session
+- Check modified files by functional area
+- Note any new patterns or architectural decisions
+- Document challenges encountered and solutions found
+
+### 4. Quality Checks
+
+Before finalizing, ensure:
+- [ ] All work streams are documented
+- [ ] Technical decisions are explained
+- [ ] Next steps are clear
+- [ ] File changes match git history
+- [ ] Learnings and patterns are captured
+
+### 5. Save and Review
+
+- Save to: `/docs/devJournal/YYYYMMDD-NN.md`
+- Review for completeness and clarity
+- Ensure future developers can understand the session's impact
+
+## Tips
+
+- Focus on the "why" behind changes, not just "what"
+- Document both successes and challenges
+- Include enough detail for context without overwhelming
+- Cross-reference related stories, ADRs, or PRs
+- Use British English for consistency
+- For sprint-end entries, ensure alignment with sprint review documentation using `sprint-review-checklist.md`
+
+## Memory Bank Integration
+
+After creating a dev journal entry:
+1. Update `docs/memory-bank/activeContext.md` with current work and decisions
+2. Update `docs/memory-bank/progress.md` with completed features and status
+3. If patterns or insights discovered, update `docs/memory-bank/systemPatterns.md`
+4. Consider running `update-memory-bank` task for comprehensive update
+
+This ensures AI agents in future sessions have access to session context and learnings.
+==================== END: .bmad-core/tasks/create-dev-journal.md ====================
+
+==================== START: .bmad-core/tasks/create-comprehensive-commit.md ====================
+# Create Comprehensive Commit
+
+This task guides the creation of a high-quality, comprehensive commit message that accurately reflects all staged changes, adhering to Conventional Commits 1.0 standard with anti-tunnel vision mechanisms.
+
+## Purpose
+
+Create commit messages that:
+- Capture ALL work streams, not just the primary change
+- Provide context for future developers
+- Follow Conventional Commits standard
+- Document the "why" behind changes
+- Prevent tunnel vision through systematic evidence gathering
+
+## Process
+
+### 1. Comprehensive Evidence Gathering (MANDATORY)
+
+#### 1.1 Staged Changes Analysis
+Execute and analyze:
+```bash
+# Get summary and detailed view
+git diff --staged --stat
+
+# See operation types (Modified, Added, Deleted)
+git diff --staged --name-status
+```
+
+Group changes by functional area:
+- **Source Code**: Core application logic
+- **API/Backend**: Endpoints, services, repositories
+- **UI/Frontend**: Components, styles, templates
+- **Documentation**: README, docs/, *.md files
+- **Tests**: Test files, test utilities
+- **Configuration**: Config files, environment settings
+- **Database**: Migrations, schema changes
+- **Build/Deploy**: CI/CD, build scripts
+
+For each file, identify:
+- New functionality added
+- Existing functionality modified
+- Bug fixes
+- Refactoring or cleanup
+- Documentation updates
+- Test additions/modifications
+
+#### 1.2 Completeness Check
+```bash
+# Check for unstaged/untracked files
+git status --porcelain
+```
+
+If related files are unstaged:
+- Prompt user about inclusion
+- Ensure completeness of the commit
+
+#### 1.3 Work Stream Identification
+Identify:
+- **Primary Work Stream**: Main focus of the commit
+- **Secondary Work Streams**: Supporting changes
+- **Cross-Functional Impact**: Changes spanning multiple areas
+- **Architecture Impact**: Pattern or structural changes
+
+### 2. Multi-Context Analysis (MANDATORY)
+
+#### 2.1 Session Context
+Review:
+- Conversation history for context
+- Original problem/request
+- Key decisions made
+- Scope evolution (if any)
+
+#### 2.2 Development Context
+Check for:
+- Related dev journal entries
+- Part of larger feature/fix
+- Recent related commits
+- Project milestones
+
+#### 2.3 Business & Technical Context
+Understand:
+- User-facing benefits
+- Technical improvements
+- Problem-solution mapping
+- Alternatives considered
+
+### 3. Commit Message Synthesis
+
+#### 3.1 Type and Scope Selection
+
+**Types** (choose most significant):
+- `feat`: New feature
+- `fix`: Bug fix
+- `docs`: Documentation only
+- `style`: Formatting, no logic change
+- `refactor`: Code restructuring
+- `perf`: Performance improvement
+- `test`: Test additions/modifications
+- `chore`: Maintenance tasks
+
+**Scope** examples:
+- Component-specific: `api`, `ui`, `auth`, `db`
+- Feature-specific: `user-management`, `reporting`
+- System-wide: Use when changes affect multiple areas
+
+#### 3.2 Message Structure
+
+```
+<type>(<scope>): <subject>
+
+<body>
+
+<footer>
+```
+
+**Subject** (≤50 chars):
+- Imperative mood ("add" not "adds")
+- No period at end
+- Capture overall achievement
+
+**Body** (wrap at 72 chars):
+- Explain what and why, not how
+- Break down by work stream if multiple
+- Include context for future developers
+- Technical decisions and rationale
+
+**Footer**:
+- Breaking changes: `BREAKING CHANGE: description`
+- Issue references: `Closes #123`
+- Co-authorship: `Co-Authored-By: Name <email>`
+
+### 4. Anti-Tunnel Vision Checklist
+
+Before finalizing, verify ALL items:
+
+**Content Coverage**:
+- [ ] All staged files explained
+- [ ] All functional areas documented
+- [ ] All work streams identified
+- [ ] Cross-functional impacts noted
+
+**Technical Completeness**:
+- [ ] Code changes include rationale
+- [ ] API changes summarized
+- [ ] UI changes explain user impact
+- [ ] Database changes include migrations
+- [ ] Configuration changes noted
+- [ ] Test changes explained
+
+**Context & Rationale**:
+- [ ] Original problem stated
+- [ ] Solution approach justified
+- [ ] Technical decisions explained
+- [ ] Future implications considered
+
+**Message Quality**:
+- [ ] Subject ≤50 chars, imperative
+- [ ] Body explains what and why
+- [ ] Logical information flow
+- [ ] Appropriate detail level
+- [ ] Conventional Commits format
+
+### 5. Example Multi-Stream Commit
+
+```
+feat(user-management): Add role-based access control with UI and API support
+
+Implemented comprehensive RBAC system to address security audit findings
+and enable fine-grained permission management requested by enterprise
+customers.
+
+API Changes:
+- Added /api/roles endpoints for CRUD operations
+- Extended /api/users with role assignment capabilities
+- Implemented permission checking middleware
+- Added role-based route guards
+
+UI Changes:
+- Created RoleManager component for admin interface
+- Added role assignment UI to user edit form
+- Implemented permission-based UI element visibility
+- Added role badge display to user lists
+
+Database Changes:
+- Added roles and user_roles tables
+- Created permissions lookup table
+- Migrated existing admin users to new role system
+
+Testing:
+- Comprehensive unit tests for role service
+- Integration tests for permission middleware
+- E2E tests for role management workflows
+- Added test fixtures for various permission scenarios
+
+Configuration:
+- Added RBAC feature flags for gradual rollout
+- Extended auth configuration with role providers
+- Added default role mappings
+
+Technical Decisions:
+- Chose RBAC over ABAC for simplicity and performance
+- Implemented as middleware for reusability
+- Used capability-based permissions for flexibility
+
+This enables customers to define custom roles with specific permissions,
+addressing the #1 feature request from enterprise users while maintaining
+backward compatibility with the existing admin/user model.
+
+Closes #234, #245
+Relates to #189
+
+Co-Authored-By: AI Assistant <ai@example.com>
+```
+
+### 6. Execution
+
+After verification:
+1. Present commit message to user
+2. Upon confirmation, execute:
+   ```bash
+   git commit -m "message"
+   # or for multi-line:
+   git commit
+   ```
+
+## Key Principles
+
+- **Prevent Tunnel Vision**: Systematic evidence gathering
+- **Multi-Stream Awareness**: Capture all work, not just primary
+- **Future Developer Focus**: Context over implementation details
+- **Comprehensive Coverage**: No significant work left undocumented
+- **Quality Standards**: Clear, complete, conventional
+
+## Memory Bank Integration
+
+Consider updating Memory Bank after significant commits:
+- For feature additions: Update `progress.md` and `activeContext.md`
+- For architectural changes: Update `systemPatterns.md`
+- For tech stack changes: Update `techContext.md`
+- Run `update-memory-bank` task if changes are substantial
+==================== END: .bmad-core/tasks/create-comprehensive-commit.md ====================
+
+==================== START: .bmad-core/tasks/create-comprehensive-pr.md ====================
+# Create Comprehensive Pull Request
+
+This task guides the creation of a high-quality, comprehensive Pull Request description that helps reviewers understand all changes and speeds up the review process.
+
+## Purpose
+
+Create PR descriptions that:
+- Document ALL work streams comprehensively
+- Provide clear testing instructions
+- Help reviewers focus on important areas
+- Prevent tunnel vision through systematic analysis
+- Make code review efficient and thorough
+
+## Process
+
+### 1. Comprehensive Scope Analysis (MANDATORY)
+
+#### 1.1 Branch and Commit Analysis
+
+Determine base branch and analyze all changes:
+```bash
+# Identify target branch (e.g., main, develop)
+git branch --show-current
+
+# Full commit analysis with details
+git log <base_branch>..HEAD --stat --oneline
+
+# Timeline of development
+git log <base_branch>..HEAD --format="%h %ad %s" --date=short
+```
+
+Group commits by type:
+- Features (feat)
+- Bug fixes (fix)
+- Documentation (docs)
+- Refactoring (refactor)
+- Tests (test)
+- Maintenance (chore)
+
+#### 1.2 File System Impact Analysis
+
+```bash
+# All file changes overview
+git diff <base_branch>..HEAD --name-status
+
+# Detailed diff statistics
+git diff <base_branch>..HEAD --stat
+```
+
+Map changes to functional areas:
+- **API/Backend**: Services, endpoints, business logic
+- **UI/Frontend**: Components, styles, user interfaces
+- **Documentation**: All *.md files, API docs, guides
+- **Tests**: Unit tests, integration tests, E2E tests
+- **Configuration**: Environment configs, build settings
+- **Database**: Migrations, schema changes
+- **Infrastructure**: CI/CD, deployment configs
+
+#### 1.3 Work Stream Identification
+
+Identify distinct work streams:
+- **Primary**: Main feature or fix
+- **Secondary**: Supporting changes
+- **Cross-cutting**: Changes affecting multiple areas
+- **Dependencies**: How streams relate to each other
+
+### 2. Multi-Stream Narrative Synthesis
+
+#### 2.1 Context and Motivation
+
+For each work stream, establish:
+- Problem being solved
+- Current state vs. desired state
+- Business/technical benefits
+- Related issues or tickets
+
+#### 2.2 Technical Implementation
+
+Document for each work stream:
+- Overall approach
+- Architectural decisions
+- Design patterns used
+- Alternative solutions considered
+- Technical trade-offs made
+
+#### 2.3 Integration Points
+
+Identify:
+- How work streams integrate
+- Breaking changes (if any)
+- Backward compatibility measures
+- Future extensibility
+
+### 3. Review Instructions (Per Work Stream)
+
+#### 3.1 Testing Instructions
+
+**API Testing**:
+- Endpoint URLs and methods
+- Sample requests (curl/Postman)
+- Expected responses
+- Error scenarios
+- Authentication requirements
+
+**UI Testing**:
+- User flows step-by-step
+- Screenshots/GIFs (before/after)
+- Browser compatibility notes
+- Responsive design checks
+- Accessibility verification
+
+**Database Testing**:
+- Migration commands
+- Verification queries
+- Rollback procedures
+- Data integrity checks
+
+**Configuration Testing**:
+- Environment setup steps
+- New variables/settings
+- Deployment considerations
+
+#### 3.2 Review Focus Areas
+
+Highlight:
+- Complex logic needing attention
+- Security-sensitive changes
+- Performance-critical code
+- Breaking changes
+- New patterns introduced
+
+### 4. PR Description Template
+
+```markdown
+## Summary
+
+[2-3 sentences explaining the PR's purpose and main achievement]
+
+## Context
+
+**Problem**: [What issue does this solve?]
+**Solution**: [High-level approach taken]
+**Impact**: [Who benefits and how?]
+
+## Work Streams
+
+### 🎯 Primary: [Main Feature/Fix Name]
+- **What**: [Brief description]
+- **Files**: [Key files changed]
+- **Impact**: [User/system impact]
+
+### 🔧 Secondary: [Supporting Changes]
+- **What**: [Brief description]
+- **Files**: [Key files changed]
+- **Reason**: [Why needed]
+
+## Technical Changes
+
+### API Changes
+- **New Endpoints**:
+  - `POST /api/v1/resource` - Creates new resource
+  - `GET /api/v1/resource/:id` - Retrieves resource
+- **Modified Endpoints**:
+  - `PUT /api/v1/existing` - Added field validation
+- **Breaking Changes**: None
+
+### UI Changes
+- **New Components**:
+  - `ResourceManager` - Main management interface
+  - `ResourceForm` - Creation/edit form
+- **Updated Components**:
+  - `Dashboard` - Added resource widget
+- **User Experience**:
+  - Simplified workflow for resource creation
+  - Added inline validation feedback
+
+### Database Changes
+- **Migrations**:
+  - `001_add_resources_table.sql` - New resource storage
+  - `002_add_resource_indexes.sql` - Performance indexes
+- **Model Changes**:
+  - Added Resource entity with relations
+
+### Tests Added
+- **Unit Tests**: 15 new tests for resource service
+- **Integration Tests**: API endpoint coverage
+- **E2E Tests**: Full user workflow validation
+
+## Testing Instructions
+
+### API Testing
+
+1. Create a new resource:
+   ```bash
+   curl -X POST http://localhost:8080/api/v1/resource \
+     -H "Content-Type: application/json" \
+     -d '{"name": "Test Resource", "type": "example"}'
+   ```
+   Expected: 201 Created with resource ID
+
+2. Retrieve the resource:
+   ```bash
+   curl http://localhost:8080/api/v1/resource/{id}
+   ```
+   Expected: 200 OK with resource data
+
+### UI Testing
+
+1. Navigate to Dashboard
+2. Click "Add Resource" button
+3. Fill form with test data
+4. Submit and verify success message
+5. Check resource appears in list
+
+### Database Verification
+
+```sql
+-- Verify migration success
+SELECT * FROM schema_version ORDER BY installed_on DESC LIMIT 2;
+
+-- Check data integrity
+SELECT COUNT(*) FROM resources;
+```
+
+## Screenshots
+
+### Before
+[Dashboard without resource management]
+
+### After
+[Dashboard with new resource section]
+[Resource creation form]
+[Success state]
+
+## Review Checklist
+
+### For Reviewers
+- [ ] API contracts match documentation
+- [ ] Error handling is comprehensive
+- [ ] UI follows design system
+- [ ] Tests provide adequate coverage
+- [ ] Performance impact is acceptable
+- [ ] Security best practices followed
+
+### Pre-Merge Checklist
+- [ ] All CI checks passing
+- [ ] Documentation updated
+- [ ] CHANGELOG entry added
+- [ ] No console.log or debug code
+- [ ] Breaking changes communicated
+
+## Deployment Notes
+
+- **Database**: Run migrations before deploying code
+- **Config**: Add `RESOURCE_FEATURE_FLAG=true` to enable
+- **Rollback**: Feature flag can disable without code rollback
+
+## Related Issues
+
+Closes #123 - Add resource management
+Relates to #100 - Overall admin improvements
+
+---
+
+**Questions for Reviewers**:
+1. Should we add pagination to the resource list immediately?
+2. Any concerns about the permission model?
+```
+
+### 5. Anti-Tunnel Vision Checklist
+
+Verify before finalizing:
+
+**Content Coverage**:
+- [ ] All commits explained
+- [ ] All files accounted for
+- [ ] All work streams documented
+- [ ] Cross-functional impacts noted
+
+**Technical Completeness**:
+- [ ] API changes detailed with examples
+- [ ] UI changes shown visually
+- [ ] Database changes include migrations
+- [ ] Config changes documented
+- [ ] Tests described
+
+**Review Readiness**:
+- [ ] Testing steps are reproducible
+- [ ] Focus areas highlighted
+- [ ] Deployment notes included
+- [ ] Breaking changes clear
+- [ ] Questions for reviewers listed
+
+### 6. Execution
+
+1. Generate PR description using template
+2. Include all evidence gathered
+3. Add screenshots/recordings
+4. Review completeness
+5. Present to user for approval
+6. User creates PR on platform
+
+## Key Principles
+
+- **Comprehensive Coverage**: Document all changes, not just primary
+- **Reviewer Empathy**: Make review process efficient
+- **Visual Evidence**: Screenshots/GIFs for UI changes
+- **Reproducible Testing**: Clear, step-by-step instructions
+- **Future Reference**: Context for why decisions were made
+
+## Memory Bank Integration
+
+After PR is merged:
+- Major features: Update `progress.md` with completed features
+- Architecture changes: Update `systemPatterns.md`
+- Tech updates: Update `techContext.md`
+- Breaking changes: Update relevant Memory Bank files
+- Consider comprehensive `update-memory-bank` for significant PRs
+==================== END: .bmad-core/tasks/create-comprehensive-pr.md ====================
+
+==================== START: .bmad-core/tasks/update-memory-bank.md ====================
+# Update Memory Bank
+
+This task updates the Memory Bank documentation based on recent project activities. The Memory Bank ensures AI agents maintain context across sessions by preserving project knowledge in structured files.
+
+## Purpose
+
+Update the Memory Bank to reflect:
+- Recent development activities and decisions
+- Architectural changes and patterns
+- Technical context updates
+- Progress and current work state
+- Lessons learned and insights
+
+## Data Sources
+
+The update draws from multiple sources:
+- **Dev Journal Entries**: Daily development narratives in `docs/devJournal/`
+- **CHANGELOG.md**: Recent changes and version history
+- **README Files**: Project documentation updates
+- **ADRs**: Architectural Decision Records in `docs/adr/`
+- **Source Code**: Actual implementation changes
+- **Test Results**: Quality and coverage updates
+
+## Update Process
+
+### 1. Gather Recent Changes
+
+```bash
+# Review dev journals from recent sessions
+ls -la docs/devJournal/*.md | tail -5
+
+# Check recent ADRs
+ls -la docs/adr/*.md | tail -5
+
+# Review CHANGELOG
+head -50 CHANGELOG.md
+
+# Check README updates
+find . -name "README*.md" -mtime -7
+```
+
+### 2. Analyze Impact
+
+For each source, identify:
+- What changed and why
+- Impact on system architecture
+- New patterns or conventions
+- Technical decisions made
+- Open questions resolved
+- New dependencies or constraints
+
+### 3. Update Memory Bank Files
+
+Update relevant files based on changes:
+
+#### 3.1 Project Brief (`projectbrief.md`)
+Update if:
+- Core requirements changed
+- Project goals refined
+- Success criteria modified
+- New constraints identified
+
+#### 3.2 Product Context (`productContext.md`)
+Update if:
+- User needs clarified
+- Problem understanding evolved
+- Expected outcomes changed
+- UX goals modified
+
+#### 3.3 System Patterns (`systemPatterns.md`)
+Update if:
+- Architecture decisions made (check ADRs)
+- New design patterns adopted
+- Component relationships changed
+- Integration points modified
+- Critical paths identified
+
+#### 3.4 Tech Context (`techContext.md`)
+Update if:
+- Dependencies added/updated
+- Tools or frameworks changed
+- Build process modified
+- Technical constraints discovered
+- Environment changes
+
+#### 3.5 Active Context (`activeContext.md`)
+ALWAYS update with:
+- Current work items
+- Recent completions
+- Active decisions
+- Next priorities
+- Open questions
+- Important patterns discovered
+- Learnings from dev journals
+
+#### 3.6 Progress (`progress.md`)
+Update with:
+- Features completed
+- Work in progress status
+- Issues discovered/resolved
+- Technical debt changes
+- Decision evolution
+
+### 4. Validation
+
+After updates:
+1. **Cross-Reference Check**: Ensure consistency across all files
+2. **Accuracy Verification**: Confirm updates match source material
+3. **Completeness Review**: No critical information omitted
+4. **Clarity Assessment**: Clear for future AI sessions
+
+### 5. Update Guidelines
+
+- **Be Concise**: Capture essence without excessive detail
+- **Be Comprehensive**: Include all significant changes
+- **Be Accurate**: Reflect actual state, not aspirations
+- **Maintain Consistency**: Align with existing memory bank content
+- **Use British English**: For consistency across documentation
+
+## Selective vs Comprehensive Updates
+
+### Selective Update
+Triggered by specific events:
+- Story completion → Update progress and activeContext
+- ADR creation → Update systemPatterns
+- Major decision → Update relevant sections
+- Architecture change → Update systemPatterns and techContext
+
+### Comprehensive Update
+Triggered by:
+- End of sprint/iteration
+- Major milestone reached
+- Explicit user request
+- Significant project pivot
+- Before major feature work
+
+**Sprint Review Integration**: For sprint-end updates, use the `sprint-review-checklist.md` to ensure all sprint accomplishments, learnings, and technical decisions are captured in the Memory Bank.
+
+## Quality Checklist
+
+- [ ] All recent dev journals reviewed
+- [ ] ADRs incorporated into systemPatterns
+- [ ] CHANGELOG reflected in progress
+- [ ] Active work items current
+- [ ] Technical decisions documented
+- [ ] No contradictions between files
+- [ ] Next steps clearly defined
+- [ ] British English used throughout
+
+## Integration Points
+
+This task integrates with:
+- **Dev Journal Creation**: Triggers selective activeContext update
+- **ADR Creation**: Triggers systemPatterns update
+- **Story Completion**: Triggers progress update
+- **Sprint End**: Triggers comprehensive update (use `sprint-review-checklist.md`)
+- **Architecture Changes**: Triggers multiple file updates
+- **Sprint Reviews**: Reference `sprint-review-checklist.md` to ensure comprehensive capture of sprint outcomes
+
+## Example Update Flow
+
+```mermaid
+flowchart TD
+    Start[Gather Sources] --> Analyze[Analyze Changes]
+    Analyze --> Categorize[Categorize by Impact]
+    
+    Categorize --> Brief{Project Brief?}
+    Categorize --> Product{Product Context?}
+    Categorize --> System{System Patterns?}
+    Categorize --> Tech{Tech Context?}
+    Categorize --> Active[Active Context]
+    Categorize --> Progress[Progress]
+    
+    Brief -->|If changed| UpdateBrief[Update projectbrief.md]
+    Product -->|If changed| UpdateProduct[Update productContext.md]
+    System -->|If changed| UpdateSystem[Update systemPatterns.md]
+    Tech -->|If changed| UpdateTech[Update techContext.md]
+    Active --> UpdateActive[Update activeContext.md]
+    Progress --> UpdateProgress[Update progress.md]
+    
+    UpdateBrief --> Validate
+    UpdateProduct --> Validate
+    UpdateSystem --> Validate
+    UpdateTech --> Validate
+    UpdateActive --> Validate
+    UpdateProgress --> Validate
+    
+    Validate[Validate Consistency] --> Complete[Update Complete]
+```
+
+## Notes
+
+- Memory Bank is critical for AI session continuity
+- Updates should capture reality, not ideals
+- Focus on information that helps future sessions
+- Balance detail with conciseness
+- Remember: This is the AI's only link to past work after memory reset
+==================== END: .bmad-core/tasks/update-memory-bank.md ====================
+
+==================== START: .bmad-core/tasks/session-kickoff.md ====================
+# Session Kickoff
+
+This task ensures AI agents have complete project context and understanding before starting work. It provides systematic session initialization across all agent types.
+
+## Purpose
+
+- Establish comprehensive project understanding
+- Validate documentation consistency
+- Identify current project state and priorities
+- Recommend next steps based on evidence
+- Prevent context gaps that lead to suboptimal decisions
+
+## Process
+
+### 1. Memory Bank Review (Primary Context)
+
+**Priority Order**:
+1. **Memory Bank Files** (if they exist): `docs/memory-bank/`
+   - `projectbrief.md` - Project foundation and scope
+   - `activeContext.md` - Current work and immediate priorities
+   - `progress.md` - Project state and completed features
+   - `systemPatterns.md` - Architecture and technical decisions
+   - `techContext.md` - Technology stack and constraints
+   - `productContext.md` - Problem space and user needs
+
+**Analysis Required**:
+- When were these last updated?
+- Is information current and accurate?
+- Any apparent inconsistencies between files?
+
+### 2. Architecture Documentation Review
+
+**Primary References** (check which exists):
+- `/docs/architecture.md` - General backend/system architecture (greenfield)
+- `/docs/brownfield-architecture.md` - Enhancement architecture for existing systems
+- `/docs/frontend-architecture.md` - Frontend-specific architecture
+- `/docs/fullstack-architecture.md` - Complete full-stack architecture
+
+**Key Elements to Review**:
+- Core architectural decisions and patterns
+- System design and component relationships
+- Technology choices and constraints
+- Integration points and data flows
+- API documentation
+- Database schemas
+
+### 3. Development History Review
+
+**Recent Dev Journals**: `docs/devJournal/`
+- Read last 3-5 entries to understand recent work
+- Identify patterns in challenges and decisions
+- Note any unresolved issues or technical debt
+- Understand development velocity and blockers
+
+**Current ADRs**: `docs/adr/`
+- Review recent architectural decisions
+- Check for pending or superseded decisions
+- Validate alignment with current architecture
+- Skip archived ADRs (consolidated in architecture docs)
+
+### 4. Project Documentation Scan
+
+**Core Documentation**:
+- `README.md` - Project overview and setup
+- `CHANGELOG.md` - Recent changes and releases
+- Package manifests (`package.json`, `requirements.txt`, etc.)
+- Configuration files
+
+**Additional Context**:
+- Issue trackers or project boards
+- Recent commits and branches
+- Test results and coverage reports
+
+### 5. Current State Assessment
+
+**Development Environment**:
+```bash
+# Check git status
+git status
+git log --oneline -10
+
+# Check current branch and commits
+git branch -v
+
+# Review recent changes
+git diff --name-status HEAD~5
+```
+
+**Project Health**:
+- Are there failing tests or builds?
+- Any urgent issues or blockers?
+- Current sprint/iteration status
+- Outstanding pull requests
+
+### 6. Consistency Validation
+
+**Cross-Reference Checks**:
+- Does Memory Bank align with actual codebase?
+- Are ADRs reflected in current architecture?
+- Do dev journals match git history?
+- Is documentation current with recent changes?
+
+**Identify Gaps**:
+- Missing or outdated documentation
+- Undocumented architectural decisions
+- Inconsistencies between sources
+- Knowledge gaps requiring clarification
+
+### 7. Agent-Specific Context
+
+**For Architect Agent**:
+- Focus on architectural decisions and system design
+- Review technical debt and improvement opportunities
+- Assess scalability and performance considerations
+
+**For Developer Agent**:
+- Focus on current work items and immediate tasks
+- Review recent implementation patterns
+- Understand testing and deployment processes
+
+**For Product Owner Agent**:
+- Focus on requirements and user stories
+- Review product roadmap and priorities
+- Assess feature completion and user feedback
+
+### 8. Next Steps Recommendation
+
+**Based on Evidence**:
+- What are the most urgent priorities?
+- Are there any blockers or dependencies?
+- What documentation needs updating?
+- What architectural decisions are pending?
+
+**Recommended Actions**:
+1. **Immediate Tasks** - Ready to start now
+2. **Dependency Resolution** - What needs clarification
+3. **Documentation Updates** - What needs to be updated
+4. **Strategic Items** - Longer-term considerations
+
+## Quality Checklist
+
+- [ ] Memory Bank reviewed (or noted if missing)
+- [ ] Architecture documentation understood
+- [ ] Recent development history reviewed
+- [ ] Current project state assessed
+- [ ] Documentation inconsistencies identified
+- [ ] Agent-specific context established
+- [ ] Next steps clearly recommended
+- [ ] Any urgent issues flagged
+
+## Output Template
+
+```markdown
+# Session Kickoff Summary
+
+## Project Understanding
+- **Project**: [Name and core purpose]
+- **Current Phase**: [Development stage]
+- **Last Updated**: [When Memory Bank was last updated]
+
+## Documentation Health
+- **Memory Bank**: [Exists/Missing/Outdated]
+- **Architecture Docs**: [Current/Needs Update]
+- **Dev Journals**: [Last entry date]
+- **ADRs**: [Recent decisions noted]
+
+## Current State
+- **Active Branch**: [Git branch]
+- **Recent Work**: [Summary from dev journals]
+- **Project Health**: [Green/Yellow/Red with reasons]
+- **Immediate Blockers**: [Any urgent issues]
+
+## Inconsistencies Found
+[List any documentation inconsistencies or gaps]
+
+## Agent-Specific Context
+[Relevant context for current agent role]
+
+## Recommended Next Steps
+1. [Most urgent priority]
+2. [Secondary priority]
+3. [Documentation updates needed]
+```
+
+## Integration Points
+
+This task integrates with:
+- **Memory Bank**: Primary source of project context
+- **All Agents**: Universal session initialization
+- **Document Project**: Can trigger if documentation missing
+- **Update Memory Bank**: Can trigger if information outdated
+- **Agent Activation**: Called at start of agent sessions
+
+## Usage Patterns
+
+**New Agent Session**:
+1. Agent activates
+2. Runs `session-kickoff` task
+3. Reviews output and confirms understanding
+4. Proceeds with informed context
+
+**Project Handoff**:
+1. New team member or AI session
+2. Runs comprehensive kickoff
+3. Identifies knowledge gaps
+4. Updates documentation as needed
+
+**Quality Gate**:
+1. Before major feature work
+2. After significant time gap
+3. When context seems incomplete
+4. As part of regular project health checks
+
+## Notes
+
+- This task should be lightweight for daily use but comprehensive for major handoffs
+- Adapt depth based on project complexity and available time
+- Can be automated as part of agent startup routines
+- Helps prevent tunnel vision and context loss
+==================== END: .bmad-core/tasks/session-kickoff.md ====================
+
+==================== START: .bmad-core/templates/dev-journal-tmpl.yaml ====================
+template:
+  id: dev-journal-template-v1
+  name: Development Journal Entry
+  version: 1.0
+  output:
+    format: markdown
+    filename: docs/devJournal/{{journal_filename}}.md
+    title: "Dev Journal Entry: {{journal_filename}}"
+  description: |
+    Template for creating comprehensive development journal entries to document 
+    session work, decisions, and progress for knowledge sharing and continuity.
+
+workflow:
+  mode: guided
+  instruction: |
+    Document a development session with comprehensive details including work streams,
+    decisions, challenges, and learnings. Gather context from git history and 
+    session notes before starting.
+
+sections:
+  - id: header
+    title: Session Header
+    instruction: Capture session metadata and overview
+    template: |
+      # Dev Journal Entry: {{journal_filename}}
+
+      **Date:** {{session_date}}  
+      **Session Duration:** {{start_time}} - {{end_time}}  
+      **Branch:** {{git_branch}}  
+      **Developer:** {{developer_name}}  
+      **Session Type:** {{session_type}}
+
+  - id: session-overview
+    title: Session Overview
+    instruction: Provide a brief summary of accomplishments
+    template: |
+      ## Session Overview
+
+      {{session_summary}}
+
+  - id: context
+    title: Context & Starting Point
+    instruction: Document where the session started and objectives
+    template: |
+      ## Context & Starting Point
+
+      ### Previous Session Reference
+      {{#if previous_entry}}
+      - **Last Entry:** {{previous_entry}}
+      {{/if}}
+      - **Starting State:** {{starting_state}}
+
+      ### Session Goals
+      {{#each session_goals}}
+      - {{this}}
+      {{/each}}
+
+  - id: journey
+    title: The Journey
+    instruction: Document the detailed work process
+    template: |
+      ## The Journey
+
+      ### Initial Problem/Task
+
+      {{initial_problem}}
+
+      ### Investigation & Analysis
+
+      {{investigation_process}}
+
+  - id: work-streams
+    title: Work Streams
+    instruction: Detail each major area of work with specific changes
+    template: |
+      ### Work Streams
+
+      {{#each work_streams}}
+      #### Stream {{@index + 1}}: {{this.name}}
+      **Type:** {{this.type}}  
+      **Files Affected:**
+      {{#each this.files}}
+      - {{this}}
+      {{/each}}
+
+      **What Changed:**
+      {{this.what_changed}}
+
+      **Why It Changed:**
+      {{this.why_changed}}
+
+      **How It Changed:**
+      {{this.how_changed}}
+
+      **Impact:**
+      {{this.impact}}
+
+      {{/each}}
+
+  - id: breakthroughs
+    title: Key Breakthroughs & Decisions
+    instruction: Document significant insights and decisions made
+    template: |
+      ### Key Breakthroughs & Decisions
+
+      {{#each breakthroughs}}
+      {{@index + 1}}. **{{this.name}}**
+         - **Context:** {{this.context}}
+         - **Insight:** {{this.insight}}
+         - **Resolution:** {{this.resolution}}
+
+      {{/each}}
+
+  - id: implementation
+    title: Implementation Details
+    instruction: Technical details of what was implemented
+    template: |
+      ### Implementation Details
+
+      #### Code Changes
+      ```
+      {{code_changes_summary}}
+      ```
+
+      {{#if architecture_changes}}
+      #### Architecture/Pattern Changes
+      {{architecture_changes}}
+      {{/if}}
+
+      {{#if config_updates}}
+      #### Configuration Updates
+      {{config_updates}}
+      {{/if}}
+
+  - id: validation
+    title: Validation & Testing
+    instruction: Document testing and validation performed
+    template: |
+      ## Validation & Testing
+
+      ### Tests Added/Modified
+      {{#each tests_modified}}
+      - {{this}}
+      {{/each}}
+
+      ### Manual Testing Performed
+      {{#each manual_testing}}
+      - {{this}}
+      {{/each}}
+
+      ### Validation Results
+      - **Working:** {{validation_working}}
+      {{#if remaining_issues}}
+      - **Remaining Issues:** {{remaining_issues}}
+      {{/if}}
+
+  - id: documentation
+    title: Documentation Updates
+    instruction: Document any documentation changes made
+    template: |
+      ## Documentation Updates
+
+      - **Code Documentation:** {{code_documentation}}
+      - **Project Documentation:** {{project_documentation}}
+      {{#if adr_updates}}
+      - **Architecture Decisions:** {{adr_updates}}
+      {{/if}}
+
+  - id: git-activity
+    title: Git Activity
+    instruction: Summarize git commits and file changes
+    template: |
+      ## Git Activity
+
+      ### Commits Made
+      ```bash
+      {{#each commits}}
+      {{this.hash}} - {{this.message}}
+      {{/each}}
+      ```
+
+      ### Files Summary
+      - **Added:** {{files_added}} files
+      - **Modified:** {{files_modified}} files  
+      - **Deleted:** {{files_deleted}} files
+
+  - id: challenges-learnings
+    title: Challenges & Learnings
+    instruction: Capture challenges faced and knowledge gained
+    template: |
+      ## Challenges & Learnings
+
+      ### Challenges Encountered
+      {{#each challenges}}
+      {{@index + 1}}. {{this}}
+      {{/each}}
+
+      ### Key Learnings
+      {{#each learnings}}
+      {{@index + 1}}. {{this}}
+      {{/each}}
+
+      {{#if patterns_established}}
+      ### Patterns Established
+      {{patterns_established}}
+      {{/if}}
+
+  - id: current-state
+    title: Current State & Next Steps
+    instruction: Document current project state and future priorities
+    template: |
+      ## Current State & Next Steps
+
+      ### What's Working
+      {{#each working_features}}
+      - {{this}}
+      {{/each}}
+
+      {{#if known_issues}}
+      ### Known Issues
+      {{#each known_issues}}
+      - {{this}}
+      {{/each}}
+      {{/if}}
+
+      {{#if technical_debt}}
+      ### Technical Debt
+      {{#each technical_debt}}
+      - {{this}}
+      {{/each}}
+      {{/if}}
+
+      ### Immediate Next Steps
+      {{#each immediate_next_steps}}
+      {{@index + 1}}. {{this}}
+      {{/each}}
+
+      {{#if future_considerations}}
+      ### Future Considerations
+      {{#each future_considerations}}
+      - {{this}}
+      {{/each}}
+      {{/if}}
+
+  - id: metrics
+    title: Session Metrics
+    instruction: Quantify session accomplishments
+    template: |
+      ## Session Metrics
+
+      - **Story Tasks Completed:** {{story_tasks_completed}}
+      - **Tests Written:** {{tests_written}}
+      {{#if code_coverage}}
+      - **Code Coverage:** {{code_coverage}}
+      {{/if}}
+      {{#if performance_impact}}
+      - **Performance Impact:** {{performance_impact}}
+      {{/if}}
+
+  - id: notes
+    title: Notes for Future Sessions
+    instruction: Important context for future developers
+    template: |
+      ## Notes for Future Sessions
+
+      {{future_session_notes}}
+
+  - id: cross-references
+    title: Cross-References
+    instruction: Link to related work and resources
+    template: |
+      ---
+
+      ### Cross-References
+      {{#if related_stories}}
+      - **Related Stories:** {{related_stories}}
+      {{/if}}
+      {{#if related_adrs}}
+      - **Related ADRs:** {{related_adrs}}
+      {{/if}}
+      {{#if related_prs}}
+      - **Related PRs:** {{related_prs}}
+      {{/if}}
+      {{#if external_resources}}
+      - **External Resources:** {{external_resources}}
+      {{/if}}
+
+validation:
+  required_fields:
+    - session_date
+    - git_branch
+    - developer_name
+    - session_type
+    - session_summary
+    - starting_state
+    - session_goals
+    - work_streams
+
+prompts:
+  # Session metadata
+  journal_filename: "Journal filename (YYYYMMDD-NN format)"
+  session_date: "Session date (YYYY-MM-DD)"
+  start_time: "Session start time"
+  end_time: "Session end time"
+  git_branch: "Git branch worked on"
+  developer_name: "Developer name (agent or human)"
+  session_type: "Session type (Implementation, Bug Fix, Refactoring, Feature Development, Investigation)"
+
+  # Session overview
+  session_summary: "Brief 2-3 sentence summary of session accomplishments"
+  starting_state: "State of the project at session start"
+  session_goals: "List session objectives"
+  previous_entry: "Link to previous journal entry (if applicable)"
+
+  # Work details
+  initial_problem: "Initial request, problem, or task description"
+  investigation_process: "Detail exploration process, tools used, dead ends"
+  work_streams: "List work streams with details (name, type, files, changes, rationale, impact)"
+  breakthroughs: "Key discoveries and decisions with context and resolution"
+
+  # Implementation
+  code_changes_summary: "Summary of significant code changes"
+  architecture_changes: "New patterns or architectural decisions"
+  config_updates: "Environment variables, build configs, dependencies"
+
+  # Testing
+  tests_modified: "List test files created or updated"
+  manual_testing: "User flows and edge cases tested"
+  validation_working: "What was confirmed working"
+  remaining_issues: "Any remaining issues"
+
+  # Documentation
+  code_documentation: "Inline comments, JSDoc updates"
+  project_documentation: "README, Wiki, API docs updated"
+  adr_updates: "ADRs created or updated"
+
+  # Git activity
+  commits: "List commits with hash and message"
+  files_added: "Number of files added"
+  files_modified: "Number of files modified"
+  files_deleted: "Number of files deleted"
+
+  # Learning
+  challenges: "List challenges and how overcome"
+  learnings: "Technical insights or patterns discovered"
+  patterns_established: "New coding patterns or conventions"
+
+  # State and next steps
+  working_features: "Completed features or fixes that are functional"
+  known_issues: "Bugs or limitations discovered but not resolved"
+  technical_debt: "Shortcuts taken that need future attention"
+  immediate_next_steps: "Most urgent tasks for next session"
+  future_considerations: "Longer-term improvements or refactoring needs"
+
+  # Metrics
+  story_tasks_completed: "Number of story tasks completed (X of Y)"
+  tests_written: "Number of tests written"
+  code_coverage: "Code coverage percentage (if measured)"
+  performance_impact: "Performance impact (if relevant)"
+
+  # References
+  future_session_notes: "Important context, gotchas, or reminders"
+  related_stories: "Story IDs or links"
+  related_adrs: "ADR numbers if applicable"
+  related_prs: "Pull request references"
+  external_resources: "Helpful links or documentation consulted"
+==================== END: .bmad-core/templates/dev-journal-tmpl.yaml ====================
+
+==================== START: .bmad-core/templates/activeContext-tmpl.yaml ====================
+template:
+  id: memory-bank-activecontext-v1
+  name: Memory Bank - Active Context
+  version: 1.0
+  output:
+    format: markdown
+    filename: docs/memory-bank/activeContext.md
+    title: "Active Context"
+  description: |
+    Current work focus, recent changes, and immediate priorities.
+    This document is the most frequently updated. It represents the current state and immediate context needed to continue work effectively.
+
+workflow:
+  mode: guided
+  instruction: |
+    Document the current state of work, active decisions, and immediate next steps.
+    This file should be updated frequently to maintain accurate context.
+
+sections:
+  - id: current-sprint
+    title: Current Sprint/Iteration
+    instruction: Capture current sprint information
+    template: |
+      **Sprint**: {{sprint_name}}  
+      **Duration**: {{start_date}} - {{end_date}}  
+      **Theme**: {{sprint_theme}}  
+      **Status**: {{sprint_status}}
+
+  - id: active-work
+    title: Active Work Items
+    instruction: Document what's currently being worked on
+    template: |
+      ### In Progress
+      | Item | Type | Assignee | Status | Notes |
+      |------|------|----------|--------|-------|
+      {{#each in_progress_items}}
+      | {{this.id}}: {{this.title}} | {{this.type}} | {{this.assignee}} | {{this.completion}}% complete | {{this.notes}} |
+      {{/each}}
+
+      ### Up Next (Priority Order)
+      {{#each upcoming_items}}
+      {{@index + 1}}. **{{this.id}}: {{this.title}}** - {{this.description}}
+         - Dependencies: {{this.dependencies}}
+         - Estimate: {{this.estimate}}
+      {{/each}}
+
+      ### Recently Completed
+      | Item | Completed | Key Changes |
+      |------|-----------|-------------|
+      {{#each recent_completions}}
+      | {{this.id}}: {{this.title}} | {{this.date}} | {{this.changes}} |
+      {{/each}}
+
+  - id: recent-decisions
+    title: Recent Decisions
+    instruction: Document decisions made recently
+    template: |
+      {{#each recent_decisions}}
+      ### Decision {{@index + 1}}: {{this.title}}
+      - **Date**: {{this.date}}
+      - **Context**: {{this.context}}
+      - **Choice**: {{this.choice}}
+      - **Impact**: {{this.impact}}
+      {{#if this.adr_link}}
+      - **ADR**: {{this.adr_link}}
+      {{/if}}
+
+      {{/each}}
+
+  - id: technical-focus
+    title: Current Technical Focus
+    instruction: Document active development areas
+    template: |
+      ### Active Development Areas
+      {{#each active_areas}}
+      - **{{this.area}}**: {{this.description}}
+        - Changes: {{this.changes}}
+        - Approach: {{this.approach}}
+        - Progress: {{this.progress}}
+
+      {{/each}}
+
+      {{#if refactoring_work}}
+      ### Refactoring/Tech Debt
+      {{#each refactoring_work}}
+      - **Area**: {{this.area}}
+        - Reason: {{this.reason}}
+        - Scope: {{this.scope}}
+        - Status: {{this.status}}
+
+      {{/each}}
+      {{/if}}
+
+  - id: patterns-preferences
+    title: Important Patterns & Preferences
+    instruction: Document coding patterns and team preferences discovered
+    template: |
+      ### Coding Patterns
+      {{#each coding_patterns}}
+      - **{{this.pattern}}**: {{this.description}}
+        {{#if this.example}}
+        - Example: {{this.example}}
+        {{/if}}
+        - When to use: {{this.usage_guidance}}
+
+      {{/each}}
+
+      ### Team Preferences
+      - **Code Style**: {{code_style_preferences}}
+      - **PR Process**: {{pr_process}}
+      - **Communication**: {{communication_style}}
+      - **Documentation**: {{documentation_approach}}
+
+  - id: learnings-insights
+    title: Recent Learnings & Insights
+    instruction: Capture technical discoveries and process improvements
+    template: |
+      ### Technical Discoveries
+      {{#each technical_discoveries}}
+      {{@index + 1}}. **Learning**: {{this.learning}}
+         - Context: {{this.context}}
+         - Application: {{this.application}}
+
+      {{/each}}
+
+      {{#if process_improvements}}
+      ### Process Improvements
+      {{#each process_improvements}}
+      - **What Changed**: {{this.change}}
+      - **Why**: {{this.reason}}
+      - **Result**: {{this.result}}
+
+      {{/each}}
+      {{/if}}
+
+  - id: open-questions
+    title: Open Questions & Investigations
+    instruction: Document unresolved questions and ongoing investigations
+    template: |
+      ### Technical Questions
+      {{#each technical_questions}}
+      {{@index + 1}}. **Question**: {{this.question}}
+         - Context: {{this.context}}
+         - Options: {{this.options}}
+         - Timeline: {{this.timeline}}
+
+      {{/each}}
+
+      {{#if product_questions}}
+      ### Product Questions
+      {{#each product_questions}}
+      - **Clarification Needed**: {{this.clarification}}
+        - Impact: {{this.impact}}
+        - Who to ask: {{this.contact}}
+
+      {{/each}}
+      {{/if}}
+
+  - id: blockers-risks
+    title: Blockers & Risks
+    instruction: Document current blockers and active risks
+    template: |
+      ### Current Blockers
+      | Blocker | Impact | Owner | ETA |
+      |---------|--------|-------|-----|
+      {{#each blockers}}
+      | {{this.description}} | {{this.impact}} | {{this.owner}} | {{this.eta}} |
+      {{/each}}
+
+      ### Active Risks
+      | Risk | Probability | Impact | Mitigation |
+      |------|-------------|--------|------------|
+      {{#each risks}}
+      | {{this.description}} | {{this.probability}} | {{this.impact}} | {{this.mitigation}} |
+      {{/each}}
+
+  - id: environment-updates
+    title: Environment & Tool Updates
+    instruction: Document recent and pending environment changes
+    template: |
+      {{#if recent_changes}}
+      ### Recent Changes
+      {{#each recent_changes}}
+      - **{{this.change}}**: {{this.description}}
+        - Date: {{this.date}}
+        - Impact: {{this.impact}}
+        - Action: {{this.required_action}}
+
+      {{/each}}
+      {{/if}}
+
+      {{#if pending_updates}}
+      ### Pending Updates
+      {{#each pending_updates}}
+      - **{{this.update}}**: {{this.description}}
+        - Timeline: {{this.timeline}}
+        - Preparation: {{this.preparation}}
+
+      {{/each}}
+      {{/if}}
+
+  - id: next-session
+    title: Next Session Priorities
+    instruction: Set up context for the next work session
+    template: |
+      ### Immediate Next Steps
+      {{#each next_steps}}
+      {{@index + 1}}. {{this}}
+      {{/each}}
+
+      ### Context for Next Session
+      - **Where we left off**: {{current_state}}
+      - **Key files**: {{key_files}}
+      - **Gotchas**: {{gotchas}}
+      - **Dependencies**: {{dependencies_check}}
+
+  - id: communication-log
+    title: Communication Log
+    instruction: Track important messages and pending communications
+    template: |
+      {{#if recent_messages}}
+      ### Recent Important Messages
+      {{#each recent_messages}}
+      - **{{this.date}}**: {{this.message}}
+      {{/each}}
+      {{/if}}
+
+      {{#if pending_communications}}
+      ### Pending Communications
+      {{#each pending_communications}}
+      - **Need to inform**: {{this.recipient}} about {{this.topic}}
+      {{/each}}
+      {{/if}}
+
+prompts:
+  sprint_name: "Current sprint name/number"
+  start_date: "Sprint start date"
+  end_date: "Sprint end date"
+  sprint_theme: "Main focus of this sprint"
+  sprint_status: "Current sprint status (On Track/At Risk/Blocked)"
+  in_progress_items: "List items currently being worked on"
+  upcoming_items: "List prioritized upcoming items"
+  recent_completions: "List recently completed items"
+  recent_decisions: "List recent technical/product decisions"
+  active_areas: "What modules/components are being actively developed?"
+  refactoring_work: "Any refactoring or tech debt work in progress?"
+  coding_patterns: "Important coding patterns discovered/established"
+  code_style_preferences: "Key code style preferences beyond standards"
+  pr_process: "How the team handles pull requests"
+  communication_style: "How the team coordinates"
+  documentation_approach: "What gets documented and when"
+  technical_discoveries: "Recent technical learnings"
+  process_improvements: "Process changes made recently"
+  technical_questions: "Open technical questions"
+  product_questions: "Product clarifications needed"
+  blockers: "Current blocking issues"
+  risks: "Active risks to track"
+  recent_changes: "Recent environment/tool changes"
+  pending_updates: "Planned environment updates"
+  next_steps: "Immediate priorities for next session"
+  current_state: "Where work was left off"
+  key_files: "Important files to review"
+  gotchas: "Things to remember/watch out for"
+  dependencies_check: "What to verify first"
+  recent_messages: "Important recent communications"
+  pending_communications: "Who needs to be informed about what"
+==================== END: .bmad-core/templates/activeContext-tmpl.yaml ====================
+
+==================== START: .bmad-core/templates/progress-tmpl.yaml ====================
+template:
+  id: memory-bank-progress-v1
+  name: Memory Bank - Progress
+  version: 1.0
+  output:
+    format: markdown
+    filename: docs/memory-bank/progress.md
+    title: "Progress"
+  description: |
+    Project state tracking - what's done, what's in progress, known issues, and evolution.
+    This document tracks project progress and evolution. It provides historical context and current status for planning and decision-making.
+
+workflow:
+  mode: guided
+  instruction: |
+    Document the complete project progress including completed features, ongoing work, 
+    technical metrics, and the evolution of decisions over time.
+
+sections:
+  - id: project-status
+    title: Project Status Overview
+    instruction: High-level project status
+    template: |
+      **Overall Completion**: {{completion_percentage}}%  
+      **Phase**: {{current_phase}}  
+      **Health**: {{project_health}}  
+      **Last Updated**: {{last_updated}}
+
+  - id: feature-completion
+    title: Feature Completion Status
+    instruction: Track feature delivery status
+    template: |
+      ### Completed Features
+      | Feature | Version | Completed | Key Capabilities |
+      |---------|---------|-----------|------------------|
+      {{#each completed_features}}
+      | {{this.name}} | {{this.version}} | {{this.date}} | {{this.capabilities}} |
+      {{/each}}
+
+      ### In Progress Features
+      | Feature | Progress | Target | Status | Notes |
+      |---------|----------|--------|--------|--------|
+      {{#each in_progress_features}}
+      | {{this.name}} | {{this.progress}}% | {{this.target}} | {{this.status}} | {{this.notes}} |
+      {{/each}}
+
+      ### Upcoming Features
+      | Feature | Priority | Planned Start | Dependencies |
+      |---------|----------|---------------|--------------|
+      {{#each upcoming_features}}
+      | {{this.name}} | {{this.priority}} | {{this.planned_start}} | {{this.dependencies}} |
+      {{/each}}
+
+  - id: sprint-history
+    title: Sprint/Iteration History
+    instruction: Track sprint performance and velocity
+    template: |
+      ### Recent Sprints
+      | Sprint | Duration | Completed | Velocity | Key Achievements |
+      |--------|----------|-----------|----------|------------------|
+      {{#each recent_sprints}}
+      | {{this.name}} | {{this.duration}} | {{this.completed}} | {{this.velocity}} | {{this.achievements}} |
+      {{/each}}
+
+      ### Velocity Trend
+      - **Average Velocity**: {{average_velocity}}
+      - **Trend**: {{velocity_trend}}
+      - **Factors**: {{velocity_factors}}
+
+  - id: quality-metrics
+    title: Quality Metrics
+    instruction: Track test coverage and code quality
+    template: |
+      ### Test Coverage
+      | Type | Coverage | Target | Status |
+      |------|----------|--------|--------|
+      {{#each test_coverage}}
+      | {{this.type}} | {{this.coverage}}% | {{this.target}}% | {{this.status}} |
+      {{/each}}
+
+      ### Code Quality
+      - **Technical Debt**: {{technical_debt_level}}
+      - **Code Coverage**: {{code_coverage}}%
+      - **Complexity**: {{complexity_metrics}}
+      - **Standards Compliance**: {{standards_compliance}}
+
+  - id: known-issues
+    title: Known Issues & Bugs
+    instruction: Track critical and major issues
+    template: |
+      ### Critical Issues
+      | Issue | Impact | Workaround | Fix ETA |
+      |-------|--------|------------|---------|
+      {{#each critical_issues}}
+      | {{this.description}} | {{this.impact}} | {{this.workaround}} | {{this.eta}} |
+      {{/each}}
+
+      ### Major Issues
+      | Issue | Component | Status | Assigned |
+      |-------|-----------|--------|----------|
+      {{#each major_issues}}
+      | {{this.description}} | {{this.component}} | {{this.status}} | {{this.assigned}} |
+      {{/each}}
+
+      ### Technical Debt Registry
+      | Debt Item | Impact | Effort | Priority | Plan |
+      |-----------|--------|--------|----------|------|
+      {{#each technical_debt}}
+      | {{this.item}} | {{this.impact}} | {{this.effort}} | {{this.priority}} | {{this.plan}} |
+      {{/each}}
+
+  - id: decision-evolution
+    title: Evolution of Key Decisions
+    instruction: Track how major decisions have evolved over time
+    template: |
+      ### Architecture Evolution
+      | Version | Change | Rationale | Impact |
+      |---------|--------|-----------|---------|
+      {{#each architecture_evolution}}
+      | {{this.version}} | {{this.change}} | {{this.rationale}} | {{this.impact}} |
+      {{/each}}
+
+      ### Technology Changes
+      | Date | From | To | Reason | Status |
+      |------|------|-----|--------|--------|
+      {{#each technology_changes}}
+      | {{this.date}} | {{this.from}} | {{this.to}} | {{this.reason}} | {{this.status}} |
+      {{/each}}
+
+      ### Process Evolution
+      | Change | When | Why | Result |
+      |--------|------|-----|--------|
+      {{#each process_changes}}
+      | {{this.change}} | {{this.date}} | {{this.reason}} | {{this.result}} |
+      {{/each}}
+
+  - id: release-history
+    title: Release History
+    instruction: Track releases and what was delivered
+    template: |
+      ### Recent Releases
+      | Version | Date | Major Changes | Breaking Changes |
+      |---------|------|---------------|------------------|
+      {{#each recent_releases}}
+      | {{this.version}} | {{this.date}} | {{this.changes}} | {{this.breaking}} |
+      {{/each}}
+
+      ### Upcoming Releases
+      | Version | Target Date | Planned Features | Risks |
+      |---------|-------------|------------------|--------|
+      {{#each upcoming_releases}}
+      | {{this.version}} | {{this.date}} | {{this.features}} | {{this.risks}} |
+      {{/each}}
+
+  - id: performance-trends
+    title: Performance Trends
+    instruction: Track system and user metrics over time
+    template: |
+      ### System Performance
+      | Metric | Current | Target | Trend | Notes |
+      |--------|---------|--------|--------|-------|
+      {{#each system_metrics}}
+      | {{this.metric}} | {{this.current}} | {{this.target}} | {{this.trend}} | {{this.notes}} |
+      {{/each}}
+
+      ### User Metrics
+      | Metric | Current | Last Month | Trend |
+      |--------|---------|------------|--------|
+      {{#each user_metrics}}
+      | {{this.metric}} | {{this.current}} | {{this.previous}} | {{this.trend}} |
+      {{/each}}
+
+  - id: lessons-learned
+    title: Lessons Learned
+    instruction: Capture what's working well and what needs improvement
+    template: |
+      ### What's Working Well
+      {{#each successes}}
+      {{@index + 1}}. **{{this.practice}}**: {{this.description}}
+         - Result: {{this.result}}
+         - Continue: {{this.why_continue}}
+
+      {{/each}}
+
+      ### What Needs Improvement
+      {{#each improvements_needed}}
+      {{@index + 1}}. **{{this.challenge}}**: {{this.description}}
+         - Impact: {{this.impact}}
+         - Plan: {{this.improvement_plan}}
+
+      {{/each}}
+
+  - id: risk-register
+    title: Risk Register
+    instruction: Track mitigated and active risks
+    template: |
+      ### Mitigated Risks
+      | Risk | Mitigation | Result |
+      |------|------------|--------|
+      {{#each mitigated_risks}}
+      | {{this.risk}} | {{this.mitigation}} | {{this.result}} |
+      {{/each}}
+
+      ### Active Risks
+      | Risk | Probability | Impact | Mitigation Plan |
+      |------|-------------|--------|-----------------|
+      {{#each active_risks}}
+      | {{this.risk}} | {{this.probability}} | {{this.impact}} | {{this.mitigation}} |
+      {{/each}}
+
+prompts:
+  completion_percentage: "Overall project completion percentage"
+  current_phase: "Current project phase name"
+  project_health: "Project health status (Green/Yellow/Red)"
+  last_updated: "When was this last updated?"
+  completed_features: "List completed features with details"
+  in_progress_features: "List features currently in development"
+  upcoming_features: "List planned upcoming features"
+  recent_sprints: "List recent sprints with performance data"
+  average_velocity: "Average team velocity (points/stories per sprint)"
+  velocity_trend: "Is velocity increasing, stable, or decreasing?"
+  velocity_factors: "What factors are affecting velocity?"
+  test_coverage: "Test coverage by type (unit, integration, e2e)"
+  technical_debt_level: "Current technical debt level (High/Medium/Low)"
+  code_coverage: "Overall code coverage percentage"
+  complexity_metrics: "Code complexity metrics"
+  standards_compliance: "Compliance with coding standards"
+  critical_issues: "List critical issues that need immediate attention"
+  major_issues: "List major issues in backlog"
+  technical_debt: "Technical debt items with priority"
+  architecture_evolution: "How has the architecture evolved?"
+  technology_changes: "Technology stack changes over time"
+  process_changes: "Process improvements made"
+  recent_releases: "Recent versions released"
+  upcoming_releases: "Planned future releases"
+  system_metrics: "System performance metrics (response time, throughput, errors)"
+  user_metrics: "User metrics (active users, feature adoption, satisfaction)"
+  successes: "What practices/decisions are working well?"
+  improvements_needed: "What challenges need to be addressed?"
+  mitigated_risks: "Risks that have been successfully mitigated"
+  active_risks: "Current risks being tracked"
+==================== END: .bmad-core/templates/progress-tmpl.yaml ====================
+
 ==================== START: .bmad-core/checklists/story-dod-checklist.md ====================
 # Story Definition of Done (DoD) Checklist
 
@@ -385,11 +2377,15 @@ The goal is quality delivery, not just checking boxes.]]
 
 5. **Story Administration:**
 
-   [[LLM: Documentation helps the next developer. What should they know?]]
+   [[LLM: Documentation helps the next developer. What should they know? Update Memory Bank and Dev Journal]]
 
    - [ ] All tasks within the story file are marked as complete.
    - [ ] Any clarifications or decisions made during development are documented in the story file or linked appropriately.
    - [ ] The story wrap up section has been completed with notes of changes or information relevant to the next story or overall project, the agent model that was primarily used during development, and the changelog of any changes is properly updated.
+   - [ ] Dev Journal entry created documenting implementation decisions and challenges
+   - [ ] Memory Bank updated with new patterns, decisions, or technical context
+   - [ ] ADR created if significant architectural decisions were made
+   - [ ] Comprehensive commit workflow followed with descriptive commit messages
 
 6. **Dependencies, Build & Configuration:**
 
@@ -426,3 +2422,631 @@ Be honest - it's better to flag issues now than have them discovered later.]]
 
 - [ ] I, the Developer Agent, confirm that all applicable items above have been addressed.
 ==================== END: .bmad-core/checklists/story-dod-checklist.md ====================
+
+==================== START: .bmad-core/checklists/session-kickoff-checklist.md ====================
+# Session Kickoff Checklist
+
+This checklist ensures AI agents have complete project context and understanding before starting work. It provides systematic session initialization across all agent types.
+
+[[LLM: INITIALIZATION INSTRUCTIONS - SESSION KICKOFF
+
+This is the FIRST checklist to run when starting any new AI agent session. It prevents context gaps, reduces mistakes, and ensures efficient work.
+
+IMPORTANT: This checklist is mandatory for:
+- New AI sessions on existing projects
+- After significant time gaps (>24 hours)
+- When switching between major project areas
+- After major changes or pivots
+- When onboarding new team members
+
+The goal is to establish complete context BEFORE any work begins.]]
+
+## 1. MEMORY BANK REVIEW
+
+[[LLM: Memory Bank is the primary source of project truth. Review systematically, noting dates and potential staleness.]]
+
+### 1.1 Core Memory Bank Files
+
+- [ ] **projectbrief.md** reviewed - Project foundation, goals, and scope understood
+- [ ] **activeContext.md** reviewed - Current priorities and immediate work identified
+- [ ] **progress.md** reviewed - Project state and completed features understood
+- [ ] **systemPatterns.md** reviewed - Architecture patterns and decisions noted
+- [ ] **techContext.md** reviewed - Technology stack and constraints clear
+- [ ] **productContext.md** reviewed - Problem space and user needs understood
+- [ ] Last update timestamps noted for each file
+- [ ] Potential inconsistencies between files identified
+
+### 1.2 Memory Bank Health Assessment
+
+- [ ] Files exist and are accessible
+- [ ] Information appears current (updated within last sprint)
+- [ ] No major gaps in documentation identified
+- [ ] Cross-references between files are consistent
+- [ ] Action items for updates noted if needed
+
+### 1.3 Project Structure Verification
+
+[[LLM: Reference project-scaffolding-preference.md for standard project structure. Verify actual structure aligns with BMAD conventions.]]
+
+- [ ] Project follows standard directory structure
+- [ ] BMAD-specific directories exist (docs/memory-bank, docs/adr, docs/devJournal)
+- [ ] Documentation directories properly organized
+- [ ] Source code organization follows conventions
+- [ ] Test structure aligns with project type
+
+## 2. ARCHITECTURE DOCUMENTATION
+
+[[LLM: Architecture drives implementation. Understand the system design thoroughly.]]
+
+### 2.1 Architecture Documents
+
+- [ ] Primary architecture document located and reviewed
+- [ ] Document type identified (greenfield, brownfield, frontend, fullstack)
+- [ ] Core architectural decisions understood
+- [ ] System components and relationships clear
+- [ ] Technology choices and versions noted
+- [ ] API documentation reviewed if exists
+- [ ] Database schemas understood if applicable
+
+### 2.2 Architecture Alignment
+
+- [ ] Architecture aligns with Memory Bank information
+- [ ] Recent changes or updates identified
+- [ ] ADRs reviewed for architectural decisions
+- [ ] Integration points clearly understood
+- [ ] Deployment architecture reviewed
+
+## 3. DEVELOPMENT HISTORY
+
+[[LLM: Recent history provides context for current work and challenges.]]
+
+### 3.1 Dev Journal Review
+
+- [ ] Located Dev Journal entries (last 3-5)
+- [ ] Recent work and decisions understood
+- [ ] Challenges and blockers identified
+- [ ] Technical debt or issues noted
+- [ ] Patterns in development identified
+- [ ] Key learnings extracted
+
+### 3.2 ADR Review
+
+- [ ] Recent ADRs reviewed (last 3-5)
+- [ ] Current architectural decisions understood
+- [ ] Superseded decisions noted
+- [ ] Pending decisions identified
+- [ ] ADR alignment with architecture verified
+
+## 4. CURRENT PROJECT STATE
+
+[[LLM: Understanding the current state prevents duplicate work and conflicts.]]
+
+### 4.1 Git Status Check
+
+- [ ] Current branch identified
+- [ ] Clean working directory confirmed
+- [ ] Recent commits reviewed (last 10)
+- [ ] Outstanding changes understood
+- [ ] Merge conflicts checked
+- [ ] Remote synchronization status
+
+### 4.2 Project Health
+
+- [ ] Build status checked
+- [ ] Test suite status verified
+- [ ] Known failing tests documented
+- [ ] Blocking issues identified
+- [ ] Dependencies up to date
+- [ ] Security vulnerabilities checked
+
+## 5. SPRINT/ITERATION CONTEXT
+
+[[LLM: Align work with current sprint goals and priorities.]]
+
+### 5.1 Sprint Status
+
+- [ ] Current sprint identified
+- [ ] Sprint goals understood
+- [ ] User stories in progress identified
+- [ ] Completed stories this sprint noted
+- [ ] Sprint timeline clear
+- [ ] Team velocity understood
+
+### 5.2 Priority Alignment
+
+- [ ] Immediate priorities identified
+- [ ] Blockers and dependencies clear
+- [ ] Next planned work understood
+- [ ] Risk areas identified
+- [ ] Resource constraints noted
+
+## 6. CONSISTENCY VALIDATION
+
+[[LLM: Inconsistencies cause confusion and errors. Identify and flag them.]]
+
+### 6.1 Cross-Reference Check
+
+- [ ] Memory Bank aligns with codebase reality
+- [ ] Architecture matches implementation
+- [ ] ADRs reflected in current code
+- [ ] Dev Journal matches git history
+- [ ] Documentation current with changes
+
+### 6.2 Gap Identification
+
+- [ ] Missing documentation identified
+- [ ] Outdated sections flagged
+- [ ] Undocumented decisions noted
+- [ ] Knowledge gaps listed
+- [ ] Update requirements documented
+
+## 7. AGENT-SPECIFIC CONTEXT
+
+[[LLM: Different agents need different context emphasis.]]
+
+### 7.1 Role-Based Focus
+
+**For Architect:**
+- [ ] Architectural decisions and rationale clear
+- [ ] Technical debt understood
+- [ ] Scalability considerations reviewed
+- [ ] System boundaries defined
+
+**For Developer:**
+- [ ] Current implementation tasks clear
+- [ ] Coding patterns understood
+- [ ] Testing requirements known
+- [ ] Local setup verified
+
+**For PM/PO:**
+- [ ] Requirements alignment verified
+- [ ] User stories prioritized
+- [ ] Stakeholder needs understood
+- [ ] Timeline constraints clear
+
+**For QA:**
+- [ ] Test coverage understood
+- [ ] Quality gates defined
+- [ ] Known issues documented
+- [ ] Testing strategy clear
+
+### 7.2 Handoff Context
+
+- [ ] Previous agent's work understood
+- [ ] Pending decisions identified
+- [ ] Open questions documented
+- [ ] Next steps clear
+
+## 8. RECOMMENDED ACTIONS
+
+[[LLM: Based on the review, what should happen next?]]
+
+### 8.1 Immediate Actions
+
+- [ ] Most urgent task identified
+- [ ] Blockers that need resolution listed
+- [ ] Quick wins available noted
+- [ ] Risk mitigation needed specified
+
+### 8.2 Documentation Updates
+
+- [ ] Memory Bank updates needed listed
+- [ ] Architecture updates required noted
+- [ ] ADRs to be created identified
+- [ ] Dev Journal entries planned
+
+### 8.3 Strategic Considerations
+
+- [ ] Technical debt to address
+- [ ] Architectural improvements needed
+- [ ] Process improvements suggested
+- [ ] Knowledge gaps to fill
+
+## SESSION KICKOFF SUMMARY
+
+[[LLM: Generate a concise summary report with:
+
+1. **Project Context**
+   - Project name and purpose
+   - Current phase/sprint
+   - Key technologies
+
+2. **Documentation Health**
+   - Memory Bank status (Current/Outdated/Missing)
+   - Architecture status
+   - Overall documentation quality
+
+3. **Current State**
+   - Active work items
+   - Recent completions
+   - Immediate blockers
+
+4. **Inconsistencies Found**
+   - List any misalignments
+   - Documentation gaps
+   - Update requirements
+
+5. **Recommended Next Steps**
+   - Priority order
+   - Estimated effort
+   - Dependencies
+
+Keep it action-oriented and concise.]]
+
+### Summary Report
+
+**Status:** [Complete/Partial/Blocked]
+
+**Key Findings:**
+- Documentation Health: [Good/Fair/Poor]
+- Project State: [On Track/At Risk/Blocked]
+- Context Quality: [Complete/Adequate/Insufficient]
+
+**Priority Actions:**
+1. [Most urgent action]
+2. [Second priority]
+3. [Third priority]
+
+**Blockers:**
+- [List any blocking issues]
+
+**Agent Ready:** [Yes/No - with reason if No]
+==================== END: .bmad-core/checklists/session-kickoff-checklist.md ====================
+
+==================== START: .bmad-core/data/coding-standards.md ====================
+# Coding Standards and Principles
+
+> **Purpose:** This document defines the core coding standards and principles that apply to all development work in BMAD projects. These are fundamental rules of software craftsmanship that ensure consistency, quality, and maintainability.
+
+## Core Coding Principles
+
+### Simplicity and Readability
+- **[SF] Simplicity First:** Always choose the simplest viable solution. Complex patterns require explicit justification.
+- **[RP] Readability Priority:** Code must be immediately understandable by both humans and AI.
+- **[CA] Clean Architecture:** Generate cleanly formatted, logically structured code with consistent patterns.
+
+### Dependency Management
+- **[DM] Dependency Minimalism:** No new libraries without explicit request or compelling justification.
+- **[DM-1] Security Reviews:** Review third-party dependencies for vulnerabilities quarterly.
+- **[DM-2] Package Verification:** Prefer signed or verified packages.
+- **[DM-3] Cleanup:** Remove unused or outdated dependencies promptly.
+- **[DM-4] Documentation:** Document dependency updates in changelog.
+
+### Development Workflow
+- **[WF-FOCUS] Task Focus:** Focus on areas of code relevant to the task.
+- **[WF-SCOPE] Scope Control:** Do not touch code unrelated to the task.
+- **[WF-TEST] Testing:** Write thorough tests for all major functionality.
+- **[WF-ARCH] Architecture Stability:** Avoid major changes to working patterns unless explicitly requested.
+- **[WF-IMPACT] Impact Analysis:** Consider effects on other methods and code areas.
+
+### Code Quality Standards
+- **[DRY] DRY Principle:** No duplicate code. Reuse or extend existing functionality.
+- **[REH] Error Handling:** Robust error handling for all edge cases and external interactions.
+- **[CSD] Code Smell Detection:** Proactively identify and refactor:
+  - Functions exceeding 30 lines
+  - Files exceeding 300 lines
+  - Nested conditionals beyond 2 levels
+  - Classes with more than 5 public methods
+
+### Security Principles
+- **[IV] Input Validation:** All external data must be validated before processing.
+- **[SFT] Security-First:** Implement proper authentication, authorization, and data protection.
+- **[RL] Rate Limiting:** Rate limit all API endpoints.
+- **[RLS] Row-Level Security:** Use row-level security always.
+- **[CAP] Captcha Protection:** Captcha on all auth routes/signup pages.
+- **[WAF] WAF Protection:** Enable attack challenge on hosting WAF when available.
+- **[SEC-1] Sensitive Files:** DO NOT read or modify without prior approval:
+  - .env files
+  - */config/secrets.*
+  - Any file containing API keys or credentials
+
+### Performance and Resources
+- **[PA] Performance Awareness:** Consider computational complexity and resource usage.
+- **[RM] Resource Management:** Close connections and free resources appropriately.
+- **[CMV] Constants Over Magic Values:** No magic strings or numbers. Use named constants.
+
+### Commit Standards
+- **[AC] Atomic Changes:** Make small, self-contained modifications.
+- **[CD] Commit Discipline:** Use conventional commit format:
+  ```
+  type(scope): concise description
+  
+  [optional body with details]
+  
+  [optional footer with breaking changes/issue references]
+  ```
+  Types: feat, fix, docs, style, refactor, perf, test, chore
+
+### Testing Standards
+- **[TDT] Test-Driven Thinking:** Design all code to be easily testable from inception.
+- **[ISA] Industry Standards:** Follow established conventions for the language and tech stack.
+
+## Application to AI Development
+
+### Communication Guidelines
+- **[RAT] Rule Application Tracking:** Tag rule applications with abbreviations (e.g., [SF], [DRY]).
+- **[EDC] Explanation Depth Control:** Scale explanation detail based on complexity.
+- **[AS] Alternative Suggestions:** Offer alternative approaches with pros/cons when relevant.
+- **[KBT] Knowledge Boundary Transparency:** Clearly communicate capability limits.
+
+### Context Management
+- **[TR] Transparent Reasoning:** Explicitly reference which rules influenced decisions.
+- **[CWM] Context Window Management:** Be mindful of AI context limitations.
+- **[SD] Strategic Documentation:** Comment only complex logic or critical functions.
+
+## Integration with BMAD Workflows
+
+These coding standards should be:
+1. Referenced during architecture design decisions
+2. Applied during story implementation
+3. Validated during code reviews
+4. Enforced through automated tooling where possible
+5. Updated based on team learnings and retrospectives
+==================== END: .bmad-core/data/coding-standards.md ====================
+
+==================== START: .bmad-core/data/project-scaffolding-preference.md ====================
+# Project Scaffolding Preferences
+
+This document defines generic, technology-agnostic project scaffolding preferences that can be applied to any software project. These preferences promote consistency, maintainability, and best practices across different technology stacks.
+
+## Documentation Structure
+
+### Core Documentation
+- **README**: Primary project documentation with setup instructions, architecture overview, and contribution guidelines
+- **CHANGELOG**: Maintain detailed changelog following semantic versioning principles
+- **LICENSE**: Clear licensing information for the project
+- **Contributing Guidelines**: How to contribute, code standards, and review process
+
+### BMAD Documentation Structure
+- **Product Requirements Document (PRD)**:
+  - Single source file: `docs/prd.md`
+  - Can be sharded into `docs/prd/` directory by level 2 sections
+  - Contains epics, stories, requirements
+  
+- **Architecture Documentation**:
+  - Single source file: `docs/architecture.md` or `docs/brownfield-architecture.md`
+  - Can be sharded into `docs/architecture/` directory
+  - For brownfield: Document actual state including technical debt
+  
+- **Memory Bank** (AI Context Persistence):
+  - Location: `docs/memory-bank/`
+  - Core files: projectbrief.md, productContext.md, systemPatterns.md, techContext.md, activeContext.md, progress.md
+  - Provides persistent context across AI sessions
+
+### Architectural Documentation
+- **Architecture Decision Records (ADRs)**: Document significant architectural decisions
+  - Location: `docs/adr/`
+  - When to create: Major dependency changes, pattern changes, integration approaches, schema modifications
+  - Follow consistent ADR template (e.g., Michael Nygard format)
+  - Number sequentially (e.g., adr-0001.md)
+  - Maintain an index
+  
+### Development Documentation
+- **Development Journals**: Track daily/session work, decisions, and challenges
+  - Location: `docs/devJournal/`
+  - Named with date format: `YYYYMMDD-NN.md`
+  - Include work completed, decisions made, blockers encountered
+  - Reference relevant ADRs and feature documentation
+  - Create after significant work sessions
+
+### Feature Documentation
+- **Roadmap**: High-level project direction and planned features
+  - Location: `docs/roadmap/`
+  - Feature details in `docs/roadmap/features/`
+- **Epics and Stories**:
+  - Epics extracted from PRD to `docs/epics/`
+  - Stories created from epics to `docs/stories/`
+  - Follow naming: `epic-N-story-M.md`
+
+## Source Code Organization
+
+### Separation of Concerns
+- **Frontend/UI**: Dedicated location for user interface components
+- **Backend/API**: Separate backend logic and API implementations
+- **Shared Utilities**: Common functionality used across layers
+- **Configuration**: Centralized configuration management
+- **Scripts**: Automation and utility scripts
+
+### Testing Structure
+- **Unit Tests**: Close to source code or in dedicated test directories
+- **Integration Tests**: Test component interactions
+- **End-to-End Tests**: Full workflow testing
+- **Test Utilities**: Shared test helpers and fixtures
+- **Test Documentation**: How to run tests, test strategies
+
+## Project Root Structure
+
+### Essential Files
+- Version control ignore files (e.g., .gitignore)
+- Editor/IDE configuration files
+- Dependency management files
+- Build/deployment configuration
+- Environment configuration templates (never commit actual secrets)
+
+### Standard Directories
+```
+/docs
+  /adr           # Architecture Decision Records
+  /devJournal    # Development journals  
+  /memory-bank   # Persistent AI context (BMAD-specific)
+  /prd           # Sharded Product Requirements Documents
+  /architecture  # Sharded Architecture Documents
+  /stories       # User stories (from epics)
+  /epics         # Epic documents
+  /api           # API documentation
+  /roadmap       # Project roadmap and features
+
+/src
+  /[frontend]    # UI/frontend code
+  /[backend]     # Backend/API code
+  /[shared]      # Shared utilities
+  /[config]      # Configuration
+
+/tests
+  /unit          # Unit tests
+  /integration   # Integration tests
+  /e2e           # End-to-end tests
+
+/scripts         # Build, deployment, utility scripts
+/tools           # Development tools and utilities
+/.bmad          # BMAD-specific configuration and overrides
+```
+
+## Development Practices
+
+### Code Organization
+- Keep files focused and manageable (typically under 300 lines)
+- Prefer composition over inheritance
+- Avoid code duplication - check for existing implementations
+- Use clear, consistent naming conventions throughout
+- Document complex logic and non-obvious decisions
+
+### Documentation Discipline
+- Update documentation alongside code changes
+- Document the "why" not just the "what"
+- Keep examples current and working
+- Review documentation in code reviews
+- Maintain templates for consistency
+
+### Security Considerations
+- Never commit secrets or credentials
+- Use environment variables for configuration
+- Implement proper input validation
+- Manage resources appropriately (close connections, free memory)
+- Follow principle of least privilege
+- Document security considerations
+
+### Quality Standards
+- All code must pass linting and formatting checks
+- Automated testing at multiple levels
+- Code review required before merging
+- Continuous integration for all changes
+- Regular dependency updates
+
+## Accessibility & Inclusion
+
+### Universal Design
+- Consider accessibility from the start
+- Follow established accessibility standards (e.g., WCAG)
+- Ensure keyboard navigation support
+- Provide appropriate text alternatives
+- Test with assistive technologies
+
+### Inclusive Practices
+- Use clear, inclusive language in documentation
+- Consider diverse user needs and contexts
+- Document accessibility requirements
+- Include accessibility in testing
+
+## Database/Data Management
+
+### Schema Management
+- Version control all schema changes
+- Use migration tools for consistency
+- Document schema decisions in ADRs
+- Maintain data dictionary
+- Never make manual production changes
+
+### Data Documentation
+- Maintain current entity relationship diagrams
+- Document data flows and dependencies
+- Explain business rules and constraints
+- Keep sample data separate from production
+
+## Environment Management
+
+### Environment Parity
+- Development, test, and production should be as similar as possible
+- Use same deployment process across environments
+- Configuration through environment variables
+- Document environment-specific settings
+- Automate environment setup
+
+### Local Development
+- Provide scripted setup process
+- Document all prerequisites
+- Include reset/cleanup scripts
+- Maintain environment templates
+- Support multiple development environments
+
+## Branching & Release Strategy
+
+### Version Control
+- Define clear branching strategy
+- Use semantic versioning
+- Tag all releases
+- Maintain release notes
+- Document hotfix procedures
+
+### Release Process
+- Automated build and deployment
+- Staged rollout capabilities
+- Rollback procedures documented
+- Release communication plan
+- Post-release verification
+
+## Incident Management
+
+### Incident Response
+- Maintain incident log
+- Document root cause analyses
+- Update runbooks based on incidents
+- Conduct retrospectives
+- Share learnings across team
+
+### Monitoring & Observability
+- Define key metrics
+- Implement appropriate logging
+- Set up alerting thresholds
+- Document troubleshooting guides
+- Regular review of metrics
+
+## Compliance & Governance
+
+### Data Privacy
+- Document data handling practices
+- Implement privacy by design
+- Regular compliance reviews
+- Clear data retention policies
+- User consent management
+
+### Audit Trail
+- Maintain change history
+- Document decision rationale
+- Track access and modifications
+- Regular security reviews
+- Compliance documentation
+
+## BMAD-Specific Considerations
+
+### Session Management
+- **Session Kickoff**: Always start new AI sessions with proper context initialization
+- **Memory Bank Maintenance**: Keep context files current throughout development
+- **Dev Journal Creation**: Document significant work sessions
+- **Sprint Reviews**: Regular quality and progress assessments
+
+### Document Sharding
+- **When to Shard**: Large PRDs and architecture documents (>1000 lines)
+- **How to Shard**: By level 2 sections, maintaining index.md
+- **Naming Convention**: Convert section headings to lowercase-dash-case
+- **Tool Support**: Use markdown-tree-parser when available
+
+### Brownfield vs Greenfield
+- **Greenfield**: Start with PRD → Architecture → Implementation
+- **Brownfield**: Document existing → Create focused PRD → Enhance
+- **Documentation Focus**: Brownfield docs capture actual state, not ideal
+- **Technical Debt**: Always document workarounds and constraints
+
+## Best Practices Summary
+
+1. **Simplicity First**: Choose the simplest solution that works
+2. **Documentation as Code**: Treat documentation with same rigor as code
+3. **Automate Everything**: If it's done twice, automate it
+4. **Security by Default**: Consider security implications in every decision
+5. **Test Early and Often**: Multiple levels of testing for confidence
+6. **Continuous Improvement**: Regular retrospectives and improvements
+7. **Accessibility Always**: Build inclusive solutions from the start
+8. **Clean as You Go**: Maintain code quality continuously
+9. **Context Persistence**: Maintain Memory Bank for AI continuity
+10. **Reality Over Ideals**: Document what exists, not what should be
+==================== END: .bmad-core/data/project-scaffolding-preference.md ====================

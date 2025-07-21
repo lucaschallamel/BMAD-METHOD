@@ -1,0 +1,256 @@
+template:
+  id: sprint-review-template-v1
+  name: Sprint Review & Retrospective
+  version: 1.0
+  output:
+    format: markdown
+    filename: docs/devJournal/{{sprint_end_date}}-sprint-review.md
+    title: "Sprint Review: {{sprint_start_date}} - {{sprint_end_date}}"
+  description: |
+    Template for conducting comprehensive sprint reviews and retrospectives,
+    capturing achievements, learnings, and action items for continuous improvement.
+
+workflow:
+  mode: guided
+  instruction: |
+    Conduct a thorough sprint review by gathering metrics, reviewing achievements,
+    facilitating retrospective, and planning improvements. Use git commands to
+    gather accurate metrics before starting.
+
+sections:
+  - id: header
+    title: Sprint Review Header
+    instruction: Capture sprint metadata
+    template: |
+      # Sprint Review: {{sprint_start_date}} - {{sprint_end_date}}
+
+      **Sprint Name:** {{sprint_name}}  
+      **Sprint Goal:** {{sprint_goal}}  
+      **Duration:** {{sprint_duration}} weeks  
+      **Date of Review:** {{review_date}}
+
+  - id: overview
+    title: Sprint Overview
+    instruction: Summarize the sprint context
+    template: |
+      ## 1. Sprint Overview
+
+      - **Sprint Dates:** {{sprint_start_date}} – {{sprint_end_date}}
+      - **Sprint Goal:** {{sprint_goal_detailed}}
+      - **Participants:** {{participants}}
+      - **Branch/Release:** {{branch_release}}
+
+  - id: achievements
+    title: Achievements & Deliverables
+    instruction: Document what was accomplished
+    template: |
+      ## 2. Achievements & Deliverables
+
+      ### Major Features Completed
+      {{#each features_completed}}
+      - {{this.feature}} ({{this.pr_link}})
+      {{/each}}
+
+      ### Technical Milestones
+      {{#each technical_milestones}}
+      - {{this}}
+      {{/each}}
+
+      ### Documentation Updates
+      {{#each documentation_updates}}
+      - {{this}}
+      {{/each}}
+
+      ### Testing & Quality
+      - **Tests Added:** {{tests_added}}
+      - **Coverage Change:** {{coverage_change}}
+      - **Bugs Fixed:** {{bugs_fixed}}
+
+  - id: metrics
+    title: Sprint Metrics
+    instruction: Present quantitative sprint data
+    template: |
+      ## 3. Sprint Metrics
+
+      | Metric | Count | Details |
+      |--------|-------|---------|
+      | Commits | {{commit_count}} | {{commit_details}} |
+      | PRs Merged | {{pr_count}} | {{pr_details}} |
+      | Issues Closed | {{issues_closed}} | {{issue_details}} |
+      | Story Points Completed | {{story_points}} | {{velocity_trend}} |
+
+      ### Git Activity Summary
+      ```
+      {{git_summary}}
+      ```
+
+  - id: goal-review
+    title: Review of Sprint Goals
+    instruction: Assess goal completion honestly
+    template: |
+      ## 4. Review of Sprint Goals
+
+      ### What Was Planned
+      {{sprint_planned}}
+
+      ### What Was Achieved
+      {{sprint_achieved}}
+
+      ### What Was Not Completed
+      {{#each incomplete_items}}
+      - **{{this.item}}**: {{this.reason}}
+      {{/each}}
+
+      **Goal Completion:** {{completion_percentage}}%
+
+  - id: demo
+    title: Demo & Walkthrough
+    instruction: Provide demonstration materials if available
+    template: |
+      ## 5. Demo & Walkthrough
+
+      {{#if has_screenshots}}
+      ### Screenshots/Videos
+      {{demo_links}}
+      {{/if}}
+
+      ### How to Review Features
+      {{review_instructions}}
+
+  - id: retrospective
+    title: Retrospective
+    instruction: Facilitate honest team reflection
+    template: |
+      ## 6. Retrospective
+
+      ### What Went Well 🎉
+      {{#each went_well}}
+      - {{this}}
+      {{/each}}
+
+      ### What Didn't Go Well 😔
+      {{#each didnt_go_well}}
+      - {{this}}
+      {{/each}}
+
+      ### What We Learned 💡
+      {{#each learnings}}
+      - {{this}}
+      {{/each}}
+
+      ### What We'll Try Next 🚀
+      {{#each improvements}}
+      - {{this}}
+      {{/each}}
+
+  - id: action-items
+    title: Action Items & Next Steps
+    instruction: Define concrete improvements
+    template: |
+      ## 7. Action Items & Next Steps
+
+      | Action | Owner | Deadline | Priority |
+      |--------|-------|----------|----------|
+      {{#each action_items}}
+      | {{this.action}} | {{this.owner}} | {{this.deadline}} | {{this.priority}} |
+      {{/each}}
+
+      ### Next Sprint Preparation
+      - **Next Sprint Goal:** {{next_sprint_goal}}
+      - **Key Focus Areas:** {{next_focus_areas}}
+
+  - id: references
+    title: References
+    instruction: Link to supporting documentation
+    template: |
+      ## 8. References
+
+      ### Dev Journal Entries
+      {{#each dev_journals}}
+      - [{{this.date}}]({{this.path}}) - {{this.summary}}
+      {{/each}}
+
+      ### ADRs Created/Updated
+      {{#each adrs}}
+      - [{{this.number}} - {{this.title}}]({{this.path}})
+      {{/each}}
+
+      ### Other Documentation
+      - [CHANGELOG.md](../../CHANGELOG.md) - {{changelog_summary}}
+      - [Memory Bank - Progress](../memory-bank/progress.md) - Updated with sprint outcomes
+      - [Memory Bank - Active Context](../memory-bank/activeContext.md) - Updated with current state
+
+      ---
+
+      *Sprint review conducted by {{facilitator}} on {{review_date}}*
+
+validation:
+  required_fields:
+    - sprint_start_date
+    - sprint_end_date
+    - sprint_goal
+    - participants
+    - features_completed
+    - went_well
+    - didnt_go_well
+    - learnings
+    - action_items
+
+prompts:
+  # Sprint metadata
+  sprint_start_date: "Sprint start date (YYYY-MM-DD)"
+  sprint_end_date: "Sprint end date (YYYY-MM-DD)"
+  sprint_name: "Sprint name or number"
+  sprint_goal: "Brief sprint goal"
+  sprint_goal_detailed: "Detailed sprint goal description"
+  sprint_duration: "Sprint duration in weeks"
+  review_date: "Date of this review"
+  participants: "List of sprint participants"
+  branch_release: "Active branches or release tags"
+
+  # Achievements
+  features_completed: "List major features completed with PR links"
+  technical_milestones: "List technical achievements"
+  documentation_updates: "List documentation improvements"
+  tests_added: "Number of tests added"
+  coverage_change: "Test coverage change (e.g., +5%)"
+  bugs_fixed: "Number of bugs fixed"
+
+  # Metrics
+  commit_count: "Total commits in sprint"
+  commit_details: "Brief summary of commit types"
+  pr_count: "Number of PRs merged"
+  pr_details: "Notable PRs"
+  issues_closed: "Number of issues closed"
+  issue_details: "Types of issues resolved"
+  story_points: "Story points completed"
+  velocity_trend: "Velocity compared to previous sprints"
+  git_summary: "Git log summary or statistics"
+
+  # Goal review
+  sprint_planned: "What was originally planned for the sprint"
+  sprint_achieved: "Summary of what was actually achieved"
+  incomplete_items: "List items not completed with reasons"
+  completion_percentage: "Estimated percentage of goal completion"
+
+  # Demo
+  has_screenshots: "Are there screenshots or videos? (true/false)"
+  demo_links: "Links to demo materials"
+  review_instructions: "How to test or review the new features"
+
+  # Retrospective
+  went_well: "List what went well during the sprint"
+  didnt_go_well: "List challenges and issues"
+  learnings: "List key learnings and insights"
+  improvements: "List experiments for next sprint"
+
+  # Action items
+  action_items: "List action items with owner, deadline, priority"
+  next_sprint_goal: "Proposed goal for next sprint"
+  next_focus_areas: "Key areas to focus on"
+
+  # References
+  dev_journals: "List relevant dev journal entries"
+  adrs: "List ADRs created or updated"
+  changelog_summary: "Brief summary of CHANGELOG updates"
+  facilitator: "Person facilitating this review"

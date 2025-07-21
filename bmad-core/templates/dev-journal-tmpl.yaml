@@ -1,0 +1,366 @@
+template:
+  id: dev-journal-template-v1
+  name: Development Journal Entry
+  version: 1.0
+  output:
+    format: markdown
+    filename: docs/devJournal/{{journal_filename}}.md
+    title: "Dev Journal Entry: {{journal_filename}}"
+  description: |
+    Template for creating comprehensive development journal entries to document 
+    session work, decisions, and progress for knowledge sharing and continuity.
+
+workflow:
+  mode: guided
+  instruction: |
+    Document a development session with comprehensive details including work streams,
+    decisions, challenges, and learnings. Gather context from git history and 
+    session notes before starting.
+
+sections:
+  - id: header
+    title: Session Header
+    instruction: Capture session metadata and overview
+    template: |
+      # Dev Journal Entry: {{journal_filename}}
+
+      **Date:** {{session_date}}  
+      **Session Duration:** {{start_time}} - {{end_time}}  
+      **Branch:** {{git_branch}}  
+      **Developer:** {{developer_name}}  
+      **Session Type:** {{session_type}}
+
+  - id: session-overview
+    title: Session Overview
+    instruction: Provide a brief summary of accomplishments
+    template: |
+      ## Session Overview
+
+      {{session_summary}}
+
+  - id: context
+    title: Context & Starting Point
+    instruction: Document where the session started and objectives
+    template: |
+      ## Context & Starting Point
+
+      ### Previous Session Reference
+      {{#if previous_entry}}
+      - **Last Entry:** {{previous_entry}}
+      {{/if}}
+      - **Starting State:** {{starting_state}}
+
+      ### Session Goals
+      {{#each session_goals}}
+      - {{this}}
+      {{/each}}
+
+  - id: journey
+    title: The Journey
+    instruction: Document the detailed work process
+    template: |
+      ## The Journey
+
+      ### Initial Problem/Task
+
+      {{initial_problem}}
+
+      ### Investigation & Analysis
+
+      {{investigation_process}}
+
+  - id: work-streams
+    title: Work Streams
+    instruction: Detail each major area of work with specific changes
+    template: |
+      ### Work Streams
+
+      {{#each work_streams}}
+      #### Stream {{@index + 1}}: {{this.name}}
+      **Type:** {{this.type}}  
+      **Files Affected:**
+      {{#each this.files}}
+      - {{this}}
+      {{/each}}
+
+      **What Changed:**
+      {{this.what_changed}}
+
+      **Why It Changed:**
+      {{this.why_changed}}
+
+      **How It Changed:**
+      {{this.how_changed}}
+
+      **Impact:**
+      {{this.impact}}
+
+      {{/each}}
+
+  - id: breakthroughs
+    title: Key Breakthroughs & Decisions
+    instruction: Document significant insights and decisions made
+    template: |
+      ### Key Breakthroughs & Decisions
+
+      {{#each breakthroughs}}
+      {{@index + 1}}. **{{this.name}}**
+         - **Context:** {{this.context}}
+         - **Insight:** {{this.insight}}
+         - **Resolution:** {{this.resolution}}
+
+      {{/each}}
+
+  - id: implementation
+    title: Implementation Details
+    instruction: Technical details of what was implemented
+    template: |
+      ### Implementation Details
+
+      #### Code Changes
+      ```
+      {{code_changes_summary}}
+      ```
+
+      {{#if architecture_changes}}
+      #### Architecture/Pattern Changes
+      {{architecture_changes}}
+      {{/if}}
+
+      {{#if config_updates}}
+      #### Configuration Updates
+      {{config_updates}}
+      {{/if}}
+
+  - id: validation
+    title: Validation & Testing
+    instruction: Document testing and validation performed
+    template: |
+      ## Validation & Testing
+
+      ### Tests Added/Modified
+      {{#each tests_modified}}
+      - {{this}}
+      {{/each}}
+
+      ### Manual Testing Performed
+      {{#each manual_testing}}
+      - {{this}}
+      {{/each}}
+
+      ### Validation Results
+      - **Working:** {{validation_working}}
+      {{#if remaining_issues}}
+      - **Remaining Issues:** {{remaining_issues}}
+      {{/if}}
+
+  - id: documentation
+    title: Documentation Updates
+    instruction: Document any documentation changes made
+    template: |
+      ## Documentation Updates
+
+      - **Code Documentation:** {{code_documentation}}
+      - **Project Documentation:** {{project_documentation}}
+      {{#if adr_updates}}
+      - **Architecture Decisions:** {{adr_updates}}
+      {{/if}}
+
+  - id: git-activity
+    title: Git Activity
+    instruction: Summarize git commits and file changes
+    template: |
+      ## Git Activity
+
+      ### Commits Made
+      ```bash
+      {{#each commits}}
+      {{this.hash}} - {{this.message}}
+      {{/each}}
+      ```
+
+      ### Files Summary
+      - **Added:** {{files_added}} files
+      - **Modified:** {{files_modified}} files  
+      - **Deleted:** {{files_deleted}} files
+
+  - id: challenges-learnings
+    title: Challenges & Learnings
+    instruction: Capture challenges faced and knowledge gained
+    template: |
+      ## Challenges & Learnings
+
+      ### Challenges Encountered
+      {{#each challenges}}
+      {{@index + 1}}. {{this}}
+      {{/each}}
+
+      ### Key Learnings
+      {{#each learnings}}
+      {{@index + 1}}. {{this}}
+      {{/each}}
+
+      {{#if patterns_established}}
+      ### Patterns Established
+      {{patterns_established}}
+      {{/if}}
+
+  - id: current-state
+    title: Current State & Next Steps
+    instruction: Document current project state and future priorities
+    template: |
+      ## Current State & Next Steps
+
+      ### What's Working
+      {{#each working_features}}
+      - {{this}}
+      {{/each}}
+
+      {{#if known_issues}}
+      ### Known Issues
+      {{#each known_issues}}
+      - {{this}}
+      {{/each}}
+      {{/if}}
+
+      {{#if technical_debt}}
+      ### Technical Debt
+      {{#each technical_debt}}
+      - {{this}}
+      {{/each}}
+      {{/if}}
+
+      ### Immediate Next Steps
+      {{#each immediate_next_steps}}
+      {{@index + 1}}. {{this}}
+      {{/each}}
+
+      {{#if future_considerations}}
+      ### Future Considerations
+      {{#each future_considerations}}
+      - {{this}}
+      {{/each}}
+      {{/if}}
+
+  - id: metrics
+    title: Session Metrics
+    instruction: Quantify session accomplishments
+    template: |
+      ## Session Metrics
+
+      - **Story Tasks Completed:** {{story_tasks_completed}}
+      - **Tests Written:** {{tests_written}}
+      {{#if code_coverage}}
+      - **Code Coverage:** {{code_coverage}}
+      {{/if}}
+      {{#if performance_impact}}
+      - **Performance Impact:** {{performance_impact}}
+      {{/if}}
+
+  - id: notes
+    title: Notes for Future Sessions
+    instruction: Important context for future developers
+    template: |
+      ## Notes for Future Sessions
+
+      {{future_session_notes}}
+
+  - id: cross-references
+    title: Cross-References
+    instruction: Link to related work and resources
+    template: |
+      ---
+
+      ### Cross-References
+      {{#if related_stories}}
+      - **Related Stories:** {{related_stories}}
+      {{/if}}
+      {{#if related_adrs}}
+      - **Related ADRs:** {{related_adrs}}
+      {{/if}}
+      {{#if related_prs}}
+      - **Related PRs:** {{related_prs}}
+      {{/if}}
+      {{#if external_resources}}
+      - **External Resources:** {{external_resources}}
+      {{/if}}
+
+validation:
+  required_fields:
+    - session_date
+    - git_branch
+    - developer_name
+    - session_type
+    - session_summary
+    - starting_state
+    - session_goals
+    - work_streams
+
+prompts:
+  # Session metadata
+  journal_filename: "Journal filename (YYYYMMDD-NN format)"
+  session_date: "Session date (YYYY-MM-DD)"
+  start_time: "Session start time"
+  end_time: "Session end time"
+  git_branch: "Git branch worked on"
+  developer_name: "Developer name (agent or human)"
+  session_type: "Session type (Implementation, Bug Fix, Refactoring, Feature Development, Investigation)"
+
+  # Session overview
+  session_summary: "Brief 2-3 sentence summary of session accomplishments"
+  starting_state: "State of the project at session start"
+  session_goals: "List session objectives"
+  previous_entry: "Link to previous journal entry (if applicable)"
+
+  # Work details
+  initial_problem: "Initial request, problem, or task description"
+  investigation_process: "Detail exploration process, tools used, dead ends"
+  work_streams: "List work streams with details (name, type, files, changes, rationale, impact)"
+  breakthroughs: "Key discoveries and decisions with context and resolution"
+
+  # Implementation
+  code_changes_summary: "Summary of significant code changes"
+  architecture_changes: "New patterns or architectural decisions"
+  config_updates: "Environment variables, build configs, dependencies"
+
+  # Testing
+  tests_modified: "List test files created or updated"
+  manual_testing: "User flows and edge cases tested"
+  validation_working: "What was confirmed working"
+  remaining_issues: "Any remaining issues"
+
+  # Documentation
+  code_documentation: "Inline comments, JSDoc updates"
+  project_documentation: "README, Wiki, API docs updated"
+  adr_updates: "ADRs created or updated"
+
+  # Git activity
+  commits: "List commits with hash and message"
+  files_added: "Number of files added"
+  files_modified: "Number of files modified"
+  files_deleted: "Number of files deleted"
+
+  # Learning
+  challenges: "List challenges and how overcome"
+  learnings: "Technical insights or patterns discovered"
+  patterns_established: "New coding patterns or conventions"
+
+  # State and next steps
+  working_features: "Completed features or fixes that are functional"
+  known_issues: "Bugs or limitations discovered but not resolved"
+  technical_debt: "Shortcuts taken that need future attention"
+  immediate_next_steps: "Most urgent tasks for next session"
+  future_considerations: "Longer-term improvements or refactoring needs"
+
+  # Metrics
+  story_tasks_completed: "Number of story tasks completed (X of Y)"
+  tests_written: "Number of tests written"
+  code_coverage: "Code coverage percentage (if measured)"
+  performance_impact: "Performance impact (if relevant)"
+
+  # References
+  future_session_notes: "Important context, gotchas, or reminders"
+  related_stories: "Story IDs or links"
+  related_adrs: "ADR numbers if applicable"
+  related_prs: "Pull request references"
+  external_resources: "Helpful links or documentation consulted"

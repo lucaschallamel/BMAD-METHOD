@@ -273,7 +273,7 @@ You are the "Vibe CEO" - thinking like a CEO with unlimited resources and a sing
 ### Core Development Team
 
 | Agent       | Role               | Primary Functions                       | When to Use                            |
-| ----------- | ------------------ | --------------------------------------- | -------------------------------------- |
+|-------------|--------------------|-----------------------------------------|----------------------------------------|
 | `analyst`   | Business Analyst   | Market research, requirements gathering | Project planning, competitive analysis |
 | `pm`        | Product Manager    | PRD creation, feature prioritization    | Strategic planning, roadmaps           |
 | `architect` | Solution Architect | System design, technical architecture   | Complex systems, scalability planning  |
@@ -286,7 +286,7 @@ You are the "Vibe CEO" - thinking like a CEO with unlimited resources and a sing
 ### Meta Agents
 
 | Agent               | Role             | Primary Functions                     | When to Use                       |
-| ------------------- | ---------------- | ------------------------------------- | --------------------------------- |
+|---------------------|------------------|---------------------------------------|-----------------------------------|
 | `bmad-orchestrator` | Team Coordinator | Multi-agent workflows, role switching | Complex multi-role tasks          |
 | `bmad-master`       | Universal Expert | All capabilities without switching    | Single-session comprehensive work |
 
@@ -349,6 +349,104 @@ You are the "Vibe CEO" - thinking like a CEO with unlimited resources and a sing
 - **Use Case**: Backend services, APIs, system development
 - **Bundle**: `team-no-ui.txt`
 
+## Recent Enhancements (Quad Damage)
+
+### Memory Bank Pattern
+
+The Memory Bank provides persistent context across AI sessions, ensuring continuity when AI memory resets:
+
+**Core Files** (in `docs/memory-bank/`):
+- `projectbrief.md` - Project foundation and goals
+- `productContext.md` - Problem space and user needs  
+- `systemPatterns.md` - Architecture and technical decisions
+- `techContext.md` - Technology stack and constraints
+- `activeContext.md` - Current work and priorities
+- `progress.md` - Features completed and status
+
+**Key Features**:
+- Session initialization with `session-kickoff` task
+- Automatic updates through `update-memory-bank` task
+- Integration with dev journals and ADRs
+- All agents have Memory Bank awareness
+
+### Architectural Decision Records (ADRs)
+
+Formal documentation of significant architectural decisions:
+
+**Features**:
+- Michael Nygard format in `docs/adr/`
+- Numbered sequence (0001, 0002, etc.)
+- Comprehensive template with alternatives analysis
+- Integration with architect agent
+- Triggers documented for when to create ADRs
+
+### Development Journals
+
+Session documentation for knowledge sharing:
+
+**Features**:
+- Daily entries in `docs/devJournal/`
+- Comprehensive session narratives
+- Work stream tracking
+- Technical decision documentation
+- Anti-tunnel vision mechanisms
+
+### Enhanced Commit and PR Workflows
+
+Professional git workflows with comprehensive context:
+
+**Features**:
+- Multi-stream commit synthesis
+- Conventional Commits 1.0 standard
+- Anti-tunnel vision checks
+- Comprehensive PR descriptions
+- Cross-reference integration
+
+### Technical Principles Integration
+
+Three sets of architectural and coding principles:
+
+**1. Coding Standards** (`data/coding-standards.md`):
+- Core principles with tags ([SF], [DRY], etc.)
+- Security best practices
+- Testing standards
+- Commit conventions
+
+**2. Twelve-Factor Principles** (`data/twelve-factor-principles.md`):
+- Cloud-native application design
+- Environment parity
+- Stateless processes
+- Configuration management
+
+**3. Microservice Patterns** (`data/microservice-patterns.md`):
+- Service decomposition strategies
+- Communication patterns
+- Data management approaches
+- Testing and deployment patterns
+
+### Session Kickoff Protocol
+
+Universal initialization for all agents:
+
+**Process**:
+1. Memory Bank review
+2. Architecture documentation scan
+3. Dev journal history check
+4. ADR review
+5. Current state assessment
+6. Consistency validation
+7. Next steps recommendation
+
+**Usage**: Run `*session-kickoff` at start of any agent session
+
+### Integration Points
+
+All enhancements work together:
+- Memory Bank ← Dev Journals ← ADRs ← Code Changes
+- Session Kickoff → Memory Bank → Agent Context
+- Technical Principles → Architecture Decisions → ADRs
+- Commit/PR Workflows → Dev Journals → Memory Bank
+
 ## Core Architecture
 
 ### System Overview
@@ -381,7 +479,7 @@ The BMad-Method is built around a modular architecture centered on the `bmad-cor
 - **Templates** (`bmad-core/templates/`): Markdown templates for PRDs, architecture specs, user stories
 - **Tasks** (`bmad-core/tasks/`): Instructions for specific repeatable actions like "shard-doc" or "create-next-story"
 - **Checklists** (`bmad-core/checklists/`): Quality assurance checklists for validation and review
-- **Data** (`bmad-core/data/`): Core knowledge base and technical preferences
+- **Data** (`bmad-core/data/`): Core knowledge base, technical preferences, and project scaffolding guidelines
 
 ### Dual Environment Architecture
 
@@ -409,12 +507,19 @@ BMad employs a sophisticated template system with three key components:
 
 ### Technical Preferences Integration
 
-The `technical-preferences.md` file serves as a persistent technical profile that:
+The framework includes two key preference files:
 
+**`technical-preferences.md`** - Technology choices and patterns:
 - Ensures consistency across all agents and projects
 - Eliminates repetitive technology specification
 - Provides personalized recommendations aligned with user preferences
 - Evolves over time with lessons learned
+
+**`project-scaffolding-preference.md`** - Project structure and organization:
+- Defines standard directory structure for all projects
+- Provides technology-agnostic scaffolding guidelines
+- Ensures consistency in documentation organization
+- Supports BMAD-specific structures (Memory Bank, ADRs, Dev Journals)
 
 ### Build and Delivery Process
 

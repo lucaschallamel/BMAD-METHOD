@@ -14,6 +14,18 @@ workflow:
     - simple-service
 
   sequence:
+    - step: session_initialization
+      agent: bmad-master
+      action: session_kickoff
+      uses: session-kickoff
+      notes: |
+        Initialize AI session context:
+        - Review Memory Bank if exists
+        - Understand project state and technical principles
+        - Check recent dev journals and ADRs
+        - Review sprint context if applicable
+        Required for new sessions or after 24+ hour gaps
+
     - agent: analyst
       creates: project-brief.md
       optional_steps:
@@ -48,6 +60,17 @@ workflow:
       updates: any_flagged_documents
       condition: po_checklist_issues
       notes: "If PO finds issues, return to relevant agent to fix and re-export updated documents to docs/ folder."
+
+    - step: sprint_planning_check
+      agent: sm
+      action: verify_sprint_context
+      condition: development_ready
+      notes: |
+        If part of sprint:
+        - Align with sprint goals
+        - Update sprint backlog
+        - Plan for sprint review
+        - Create ADRs for significant API/service decisions
 
     - agent: po
       action: shard_documents
@@ -113,6 +136,19 @@ workflow:
         - Dev Agent (New Chat): Address remaining items
         - Return to QA for final approval
 
+    - agent: dev
+      creates: dev_journal_entry
+      action: document_session_work
+      uses: create-dev-journal
+      condition: significant_work_completed
+      notes: |
+        Create dev journal for:
+        - Major API/service endpoint completion
+        - Complex backend problem solutions
+        - Service architectural decisions (trigger ADR creation)
+        - End of work session
+        Updates Memory Bank activeContext
+
     - repeat_development_cycle:
       action: continue_for_all_stories
       notes: |
@@ -130,12 +166,24 @@ workflow:
         - Validate epic was completed correctly
         - Document learnings and improvements
 
+    - agent: sm
+      action: conduct_sprint_review
+      uses: conduct-sprint-review
+      condition: sprint_boundary
+      notes: |
+        At sprint end:
+        - Review service/API accomplishments using sprint-review-checklist
+        - Document backend learnings and technical decisions
+        - Update Memory Bank comprehensively
+        - Create sprint summary documentation
+        - Plan next sprint service priorities
+
     - workflow_end:
       action: project_complete
       notes: |
         All stories implemented and reviewed!
         Service development phase complete.
-        
+
         Reference: {root}/data/bmad-kb.md#IDE Development Workflow
 
   flow_diagram: |

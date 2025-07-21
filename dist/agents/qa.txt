@@ -73,6 +73,13 @@ persona:
     - Risk-Based Testing - Prioritize testing based on risk and critical areas
     - Continuous Improvement - Balance perfection with pragmatism
     - Architecture & Design Patterns - Ensure proper patterns and maintainable code structure
+  coding_standards_awareness:
+    - Apply all coding standards from data/coding-standards.md during reviews
+    - Enforce security principles [SFT], [IV], [RL], [RLS] in all code
+    - Verify code quality standards [DRY], [SF], [RP], [CA] are met
+    - Check for proper error handling [REH] and resource management [RM]
+    - Ensure twelve-factor principles compliance for cloud-native apps
+    - Validate testing standards [TDT] and test coverage
 story-file-permissions:
   - CRITICAL: When reviewing stories, you are ONLY authorized to update the "QA Results" section of story files
   - CRITICAL: DO NOT modify any other sections including Status, Story, Acceptance Criteria, Tasks/Subtasks, Dev Notes, Testing, Dev Agent Record, Change Log, or any other sections
@@ -80,13 +87,14 @@ story-file-permissions:
 commands:
   - help: Show numbered list of the following commands to allow selection
   - review {story}: execute the task review-story for the highest sequence story in docs/stories unless another is specified - keep any specified technical-preferences in mind as needed
-  - create-doc {template}: execute task create-doc (no template = ONLY show available templates listed under dependencies/templates below)
   - exit: Say goodbye as the QA Engineer, and then abandon inhabiting this persona
 dependencies:
   tasks:
     - review-story.md
   data:
     - technical-preferences.md
+    - coding-standards.md
+    - twelve-factor-principles.md
   templates:
     - story-tmpl.yaml
 ```
@@ -255,7 +263,7 @@ workflow:
   elicitation: advanced-elicitation
 
 agent_config:
-  editable_sections: 
+  editable_sections:
     - Status
     - Story
     - Acceptance Criteria
@@ -272,7 +280,7 @@ sections:
     instruction: Select the current status of the story
     owner: scrum-master
     editors: [scrum-master, dev-agent]
-    
+
   - id: story
     title: Story
     type: template-text
@@ -284,7 +292,7 @@ sections:
     elicit: true
     owner: scrum-master
     editors: [scrum-master]
-    
+
   - id: acceptance-criteria
     title: Acceptance Criteria
     type: numbered-list
@@ -292,7 +300,7 @@ sections:
     elicit: true
     owner: scrum-master
     editors: [scrum-master]
-    
+
   - id: tasks-subtasks
     title: Tasks / Subtasks
     type: bullet-list
@@ -309,7 +317,7 @@ sections:
     elicit: true
     owner: scrum-master
     editors: [scrum-master, dev-agent]
-    
+
   - id: dev-notes
     title: Dev Notes
     instruction: |
@@ -333,7 +341,7 @@ sections:
         elicit: true
         owner: scrum-master
         editors: [scrum-master]
-        
+
   - id: change-log
     title: Change Log
     type: table
@@ -341,7 +349,7 @@ sections:
     instruction: Track changes made to this story document
     owner: scrum-master
     editors: [scrum-master, dev-agent, qa-agent]
-    
+
   - id: dev-agent-record
     title: Dev Agent Record
     instruction: This section is populated by the development agent during implementation
@@ -354,25 +362,25 @@ sections:
         instruction: Record the specific AI agent model and version used for development
         owner: dev-agent
         editors: [dev-agent]
-        
+
       - id: debug-log-references
         title: Debug Log References
         instruction: Reference any debug logs or traces generated during development
         owner: dev-agent
         editors: [dev-agent]
-        
+
       - id: completion-notes
         title: Completion Notes List
         instruction: Notes about the completion of tasks and any issues encountered
         owner: dev-agent
         editors: [dev-agent]
-        
+
       - id: file-list
         title: File List
         instruction: List all files created, modified, or affected during story implementation
         owner: dev-agent
         editors: [dev-agent]
-        
+
   - id: qa-results
     title: QA Results
     instruction: Results from QA Agent QA review of the completed story implementation
@@ -381,7 +389,264 @@ sections:
 ==================== END: .bmad-core/templates/story-tmpl.yaml ====================
 
 ==================== START: .bmad-core/data/technical-preferences.md ====================
-# User-Defined Preferred Patterns and Preferences
+# Technical Preferences and Architectural Principles
+
+## Core Principles References
+
+The following technical principles and standards apply to all BMAD projects:
+
+### 1. Coding Standards
+- **Reference:** `coding-standards.md`
+- **Purpose:** Fundamental coding principles, security practices, and quality standards
+- **Key Areas:** Code simplicity, dependency management, security, testing, commit standards
+
+### 2. Twelve-Factor App Principles  
+- **Reference:** `twelve-factor-principles.md`
+- **Purpose:** Cloud-native application development principles
+- **Key Areas:** Codebase management, dependencies, config, backing services, build/release/run
+
+### 3. Microservice Patterns
+- **Reference:** `microservice-patterns.md`
+- **Purpose:** Patterns for distributed system architecture
+- **Key Areas:** Service decomposition, communication patterns, data management, resilience
+
+## Application Guidelines
+
+1. **During Architecture Design:**
+   - Apply twelve-factor principles for cloud-native applications
+   - Consider microservice patterns for complex distributed systems
+   - Document pattern choices in Architecture Decision Records (ADRs)
+
+2. **During Implementation:**
+   - Follow coding standards for all code generation
+   - Apply security principles by default
+   - Ensure testability and maintainability
+
+3. **Technology Selection:**
+   - Prefer simple, proven solutions over complex ones
+   - Minimize dependencies unless explicitly justified
+   - Consider operational complexity alongside technical capabilities
+
+## User-Defined Preferences
+
+_Add project-specific technical preferences below:_
 
 None Listed
 ==================== END: .bmad-core/data/technical-preferences.md ====================
+
+==================== START: .bmad-core/data/coding-standards.md ====================
+# Coding Standards and Principles
+
+> **Purpose:** This document defines the core coding standards and principles that apply to all development work in BMAD projects. These are fundamental rules of software craftsmanship that ensure consistency, quality, and maintainability.
+
+## Core Coding Principles
+
+### Simplicity and Readability
+- **[SF] Simplicity First:** Always choose the simplest viable solution. Complex patterns require explicit justification.
+- **[RP] Readability Priority:** Code must be immediately understandable by both humans and AI.
+- **[CA] Clean Architecture:** Generate cleanly formatted, logically structured code with consistent patterns.
+
+### Dependency Management
+- **[DM] Dependency Minimalism:** No new libraries without explicit request or compelling justification.
+- **[DM-1] Security Reviews:** Review third-party dependencies for vulnerabilities quarterly.
+- **[DM-2] Package Verification:** Prefer signed or verified packages.
+- **[DM-3] Cleanup:** Remove unused or outdated dependencies promptly.
+- **[DM-4] Documentation:** Document dependency updates in changelog.
+
+### Development Workflow
+- **[WF-FOCUS] Task Focus:** Focus on areas of code relevant to the task.
+- **[WF-SCOPE] Scope Control:** Do not touch code unrelated to the task.
+- **[WF-TEST] Testing:** Write thorough tests for all major functionality.
+- **[WF-ARCH] Architecture Stability:** Avoid major changes to working patterns unless explicitly requested.
+- **[WF-IMPACT] Impact Analysis:** Consider effects on other methods and code areas.
+
+### Code Quality Standards
+- **[DRY] DRY Principle:** No duplicate code. Reuse or extend existing functionality.
+- **[REH] Error Handling:** Robust error handling for all edge cases and external interactions.
+- **[CSD] Code Smell Detection:** Proactively identify and refactor:
+  - Functions exceeding 30 lines
+  - Files exceeding 300 lines
+  - Nested conditionals beyond 2 levels
+  - Classes with more than 5 public methods
+
+### Security Principles
+- **[IV] Input Validation:** All external data must be validated before processing.
+- **[SFT] Security-First:** Implement proper authentication, authorization, and data protection.
+- **[RL] Rate Limiting:** Rate limit all API endpoints.
+- **[RLS] Row-Level Security:** Use row-level security always.
+- **[CAP] Captcha Protection:** Captcha on all auth routes/signup pages.
+- **[WAF] WAF Protection:** Enable attack challenge on hosting WAF when available.
+- **[SEC-1] Sensitive Files:** DO NOT read or modify without prior approval:
+  - .env files
+  - */config/secrets.*
+  - Any file containing API keys or credentials
+
+### Performance and Resources
+- **[PA] Performance Awareness:** Consider computational complexity and resource usage.
+- **[RM] Resource Management:** Close connections and free resources appropriately.
+- **[CMV] Constants Over Magic Values:** No magic strings or numbers. Use named constants.
+
+### Commit Standards
+- **[AC] Atomic Changes:** Make small, self-contained modifications.
+- **[CD] Commit Discipline:** Use conventional commit format:
+  ```
+  type(scope): concise description
+  
+  [optional body with details]
+  
+  [optional footer with breaking changes/issue references]
+  ```
+  Types: feat, fix, docs, style, refactor, perf, test, chore
+
+### Testing Standards
+- **[TDT] Test-Driven Thinking:** Design all code to be easily testable from inception.
+- **[ISA] Industry Standards:** Follow established conventions for the language and tech stack.
+
+## Application to AI Development
+
+### Communication Guidelines
+- **[RAT] Rule Application Tracking:** Tag rule applications with abbreviations (e.g., [SF], [DRY]).
+- **[EDC] Explanation Depth Control:** Scale explanation detail based on complexity.
+- **[AS] Alternative Suggestions:** Offer alternative approaches with pros/cons when relevant.
+- **[KBT] Knowledge Boundary Transparency:** Clearly communicate capability limits.
+
+### Context Management
+- **[TR] Transparent Reasoning:** Explicitly reference which rules influenced decisions.
+- **[CWM] Context Window Management:** Be mindful of AI context limitations.
+- **[SD] Strategic Documentation:** Comment only complex logic or critical functions.
+
+## Integration with BMAD Workflows
+
+These coding standards should be:
+1. Referenced during architecture design decisions
+2. Applied during story implementation
+3. Validated during code reviews
+4. Enforced through automated tooling where possible
+5. Updated based on team learnings and retrospectives
+==================== END: .bmad-core/data/coding-standards.md ====================
+
+==================== START: .bmad-core/data/twelve-factor-principles.md ====================
+# Twelve-Factor App Principles
+
+> **Purpose:** This document provides the definitive set of rules based on the Twelve-Factor App methodology. These principles are mandatory for ensuring applications are built as scalable, resilient, and maintainable cloud-native services.
+
+## The Twelve Factors
+
+### I. Codebase
+- A single, version-controlled codebase must represent one application
+- All code for a specific application belongs to this single codebase
+- Shared functionality must be factored into versioned libraries
+- One codebase produces multiple deploys (development, staging, production)
+
+### II. Dependencies
+- Explicitly declare all dependencies via manifest files (e.g., package.json, requirements.txt)
+- Never rely on implicit existence of system-wide packages
+- Application must run in isolated environment with only declared dependencies
+
+### III. Config
+- Strict separation between code and configuration
+- All deploy-varying config must be read from environment variables
+- Never hardcode environment-specific values in source code
+- Codebase must be runnable anywhere with correct environment variables
+
+### IV. Backing Services
+- Treat all backing services as attached, swappable resources
+- Connect via locators/credentials stored in environment variables
+- Code must be agnostic to whether service is local or third-party
+- Examples: databases, message queues, caches, external APIs
+
+### V. Build, Release, Run
+Maintain strict three-stage separation:
+- **Build:** Convert code repo into executable bundle
+- **Release:** Combine build with environment-specific config
+- **Run:** Execute release in target environment
+- Releases must be immutable with unique IDs
+- Any change requires new release
+
+### VI. Processes
+- Execute as stateless, share-nothing processes
+- Persistent data must be stored in stateful backing service
+- Never assume local memory/disk state available across requests
+- Process state is ephemeral
+
+### VII. Port Binding
+- Application must be self-contained
+- Export services by binding to port specified via configuration
+- Do not rely on runtime injection of webserver
+- Application brings its own webserver library
+
+### VIII. Concurrency
+- Scale out horizontally by adding concurrent processes
+- Assign different workload types to different process types
+- Use process manager for lifecycle management
+- Design for horizontal scaling from the start
+
+### IX. Disposability
+- Processes must be disposable (start/stop quickly)
+- Minimize startup time for fast elastic scaling
+- Graceful shutdown on SIGTERM
+- Robust against sudden death (crash-only design)
+
+### X. Dev/Prod Parity
+Keep environments as similar as possible:
+- Same programming language versions
+- Same system tooling
+- Same backing service types and versions
+- Minimize time, personnel, and tool gaps
+
+### XI. Logs
+- Treat logs as event streams
+- Never write to or manage log files directly
+- Write unbuffered to stdout
+- Execution environment handles collection and routing
+
+### XII. Admin Processes
+- Run admin tasks as one-off processes
+- Use identical environment as long-running processes
+- Ship admin scripts with application code
+- Use same dependency and config management
+
+## Additional Cloud-Native Principles
+
+### Containerization
+- **[SVC] Service as Container:** Package services as container images
+- Encapsulate technology stack in containers
+- Ensure consistent deployment across environments
+
+### Serverless Options
+- **[SRL] Serverless Deployment:** Consider serverless platforms when appropriate
+- Abstract away infrastructure management
+- Focus on business logic over infrastructure
+
+### Observability
+- Implement comprehensive monitoring and metrics
+- Use distributed tracing for microservices
+- Ensure all services are observable by default
+
+### Security
+- Security must be built-in, not bolted-on
+- Use principle of least privilege
+- Implement defense in depth
+- Regular security audits and updates
+
+## AI/Agent Safeguards
+- All AI-generated code must be reviewed before production
+- Escalate ambiguous or risky decisions for approval
+- Log all significant AI-suggested changes
+- Never overwrite .env files without confirmation
+
+## Environmental Sustainability
+- Optimize compute resources
+- Minimize infrastructure waste
+- Prefer energy-efficient solutions
+- Consider environmental impact in technical decisions
+
+## Integration with BMAD
+
+These principles should be:
+1. Applied during architecture design
+2. Validated during implementation
+3. Enforced through CI/CD pipelines
+4. Reviewed during architectural decision records (ADRs)
+5. Considered in all technical decisions
+==================== END: .bmad-core/data/twelve-factor-principles.md ====================

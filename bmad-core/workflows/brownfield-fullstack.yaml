@@ -12,6 +12,18 @@ workflow:
     - integration-enhancement
 
   sequence:
+    - step: session_initialization
+      agent: bmad-master
+      action: session_kickoff
+      uses: session-kickoff
+      notes: |
+        Initialize AI session context:
+        - Review Memory Bank if exists
+        - Understand project state and technical principles
+        - Check recent dev journals and ADRs
+        - Review sprint context if applicable
+        Required for new sessions or after 24+ hour gaps
+
     - step: enhancement_classification
       agent: analyst
       action: classify enhancement scope
@@ -20,7 +32,7 @@ workflow:
         - Single story (< 4 hours) → Use brownfield-create-story task
         - Small feature (1-3 stories) → Use brownfield-create-epic task  
         - Major enhancement (multiple epics) → Continue with full workflow
-        
+
         Ask user: "Can you describe the enhancement scope? Is this a small fix, a feature addition, or a major enhancement requiring architectural changes?"
 
     - step: routing_decision
@@ -93,6 +105,17 @@ workflow:
       condition: po_checklist_issues
       notes: "If PO finds issues, return to relevant agent to fix and re-export updated documents to docs/ folder."
 
+    - step: sprint_planning_check
+      agent: sm
+      action: verify_sprint_context
+      condition: development_ready
+      notes: |
+        If part of sprint:
+        - Align with sprint goals
+        - Update sprint backlog
+        - Plan for sprint review
+        - Create ADRs for significant decisions
+
     - agent: po
       action: shard_documents
       creates: sharded_docs
@@ -159,6 +182,19 @@ workflow:
         - Dev Agent (New Chat): Address remaining items
         - Return to QA for final approval
 
+    - agent: dev
+      creates: dev_journal_entry
+      action: document_session_work
+      uses: create-dev-journal
+      condition: significant_work_completed
+      notes: |
+        Create dev journal for:
+        - Major feature completion
+        - Complex problem solutions
+        - Architectural decisions (trigger ADR creation)
+        - End of work session
+        Updates Memory Bank activeContext
+
     - repeat_development_cycle:
       action: continue_for_all_stories
       notes: |
@@ -176,18 +212,32 @@ workflow:
         - Validate epic was completed correctly
         - Document learnings and improvements
 
+    - agent: sm
+      action: conduct_sprint_review
+      uses: conduct-sprint-review
+      condition: sprint_boundary
+      notes: |
+        At sprint end:
+        - Review accomplishments using sprint-review-checklist
+        - Document learnings and technical decisions
+        - Update Memory Bank comprehensively
+        - Create sprint summary documentation
+        - Plan next sprint priorities
+
     - workflow_end:
       action: project_complete
       notes: |
         All stories implemented and reviewed!
         Project development phase complete.
-        
+        Memory Bank and documentation updated.
+
         Reference: {root}/data/bmad-kb.md#IDE Development Workflow
 
   flow_diagram: |
     ```mermaid
     graph TD
-        A[Start: Brownfield Enhancement] --> B[analyst: classify enhancement scope]
+        A[Start: Brownfield Enhancement] --> A1[bmad-master: session kickoff]
+        A1 --> B[analyst: classify enhancement scope]
         B --> C{Enhancement Size?}
         
         C -->|Single Story| D[pm: brownfield-create-story]
@@ -209,8 +259,9 @@ workflow:
         
         L --> M{PO finds issues?}
         M -->|Yes| N[Fix issues]
-        M -->|No| O[po: shard documents]
+        M -->|No| SP[sm: sprint planning]
         N --> L
+        SP --> O[po: shard documents]
         
         O --> P[sm: create story]
         P --> Q{Story Type?}
@@ -231,10 +282,14 @@ workflow:
         Z -->|No| Y
         AA --> X
         Y -->|Yes| P
-        Y -->|No| AB{Retrospective?}
+        Y -->|No| DJ[dev: dev journal]
+        DJ --> AB{Retrospective?}
         AB -->|Yes| AC[po: retrospective]
-        AB -->|No| AD[Complete]
-        AC --> AD
+        AB -->|No| SR{Sprint boundary?}
+        AC --> SR
+        SR -->|Yes| SRV[sm: sprint review]
+        SR -->|No| AD[Complete]
+        SRV --> AD
 
         style AD fill:#90EE90
         style END1 fill:#90EE90
@@ -265,33 +320,33 @@ workflow:
       {{if single_story}}: Proceeding with brownfield-create-story task for immediate implementation.
       {{if small_feature}}: Creating focused epic with brownfield-create-epic task.
       {{if major_enhancement}}: Continuing with comprehensive planning workflow.
-    
+
     documentation_assessment: |
       Documentation assessment complete:
       {{if adequate}}: Existing documentation is sufficient. Proceeding directly to PRD creation.
       {{if inadequate}}: Running document-project to capture current system state before PRD.
-    
+
     document_project_to_pm: |
       Project analysis complete. Key findings documented in:
       - {{document_list}}
       Use these findings to inform PRD creation and avoid re-analyzing the same aspects.
-    
+
     pm_to_architect_decision: |
       PRD complete and saved as docs/prd.md. 
       Architectural changes identified: {{yes/no}}
       {{if yes}}: Proceeding to create architecture document for: {{specific_changes}}
       {{if no}}: No architectural changes needed. Proceeding to validation.
-    
+
     architect_to_po: "Architecture complete. Save it as docs/architecture.md. Please validate all artifacts for integration safety."
-    
+
     po_to_sm: |
       All artifacts validated. 
       Documentation type available: {{sharded_prd / brownfield_docs}}
       {{if sharded}}: Use standard create-next-story task.
       {{if brownfield}}: Use create-brownfield-story task to handle varied documentation formats.
-    
+
     sm_story_creation: |
       Creating story from {{documentation_type}}.
       {{if missing_context}}: May need to gather additional context from user during story creation.
-    
+
     complete: "All planning artifacts validated and development can begin. Stories will be created based on available documentation format."

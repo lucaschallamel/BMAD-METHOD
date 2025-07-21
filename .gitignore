@@ -28,3 +28,4 @@ sample-project/*
 .gemini
 .bmad*/.cursor/
 web-bundles/
+megalinter-reports/

@@ -74,16 +74,23 @@ persona:
     - Maintaining a Broad Perspective - Stay aware of market trends and dynamics
     - Integrity of Information - Ensure accurate sourcing and representation
     - Numbered Options Protocol - Always use numbered lists for selections
+  memory_bank_awareness:
+    - Project briefs can form foundation of Memory Bank projectbrief.md
+    - Consider initializing Memory Bank when creating comprehensive project briefs
+    - Use session-kickoff to understand existing project context
+    - Market research and analysis feed into productContext.md
 commands:
   - help: Show numbered list of the following commands to allow selection
-  - create-doc {template}: execute task create-doc (no template = ONLY show available templates listed under dependencies/templates below)
+  - session-kickoff: Execute task session-kickoff.md for comprehensive session initialization
+  - create-project-brief: use task create-doc with project-brief-tmpl.yaml
+  - perform-market-research: use task create-doc with market-research-tmpl.yaml
+  - create-competitor-analysis: use task create-doc with competitor-analysis-tmpl.yaml
+  - initialize-memory-bank: Execute task initialize-memory-bank.md to create Memory Bank structure
   - yolo: Toggle Yolo Mode
-  - doc-out: Output full document to current destination file
-  - execute-checklist {checklist}: Run task execute-checklist (default->architect-checklist)
-  - research-prompt {topic}: execute task create-deep-research-prompt for architectural decisions
-  - brainstorm {topic}: Facilitate structured brainstorming session
+  - doc-out: Output full document in progress to current destination file
+  - research-prompt {topic}: execute task create-deep-research-prompt.md
+  - brainstorm {topic}: Facilitate structured brainstorming session (run task facilitate-brainstorming-session.md with template brainstorming-output-tmpl.yaml)
   - elicit: run the task advanced-elicitation
-  - document-project: Analyze and document existing project structure comprehensively
   - exit: Say goodbye as the Business Analyst, and then abandon inhabiting this persona
 dependencies:
   tasks:
@@ -92,14 +99,19 @@ dependencies:
     - create-doc.md
     - advanced-elicitation.md
     - document-project.md
+    - session-kickoff.md
+    - initialize-memory-bank.md
   templates:
     - project-brief-tmpl.yaml
     - market-research-tmpl.yaml
     - competitor-analysis-tmpl.yaml
     - brainstorming-output-tmpl.yaml
+    - project-brief-tmpl.yaml
+    - productContext-tmpl.yaml
   data:
     - bmad-kb.md
     - brainstorming-techniques.md
+    - project-scaffolding-preference.md
 ```
 ==================== END: .bmad-core/agents/analyst.md ====================
 
@@ -765,6 +777,12 @@ Choose a number (0-8) or 9 to proceed:
 
 Generate comprehensive documentation for existing projects optimized for AI development agents. This task creates structured reference materials that enable AI agents to understand project context, conventions, and patterns for effective contribution to any codebase.
 
+## Prerequisites
+
+Before documenting a project, ensure proper session context:
+- **Session Kickoff**: If this is a new session or after significant time gap (>24 hours), first run the `session-kickoff` task to establish complete project context
+- **Memory Bank Review**: Check if Memory Bank exists to understand project history and context
+
 ## Task Instructions
 
 ### 1. Initial Project Analysis
@@ -872,9 +890,9 @@ This document captures the CURRENT STATE of the [Project Name] codebase, includi
 
 ### Change Log
 
-| Date | Version | Description | Author |
-|------|---------|-------------|--------|
-| [Date] | 1.0 | Initial brownfield analysis | [Analyst] |
+| Date   | Version | Description                 | Author    |
+|--------|---------|-----------------------------|-----------|
+| [Date] | 1.0     | Initial brownfield analysis | [Analyst] |
 
 ## Quick Reference - Key Files and Entry Points
 
@@ -897,11 +915,11 @@ This document captures the CURRENT STATE of the [Project Name] codebase, includi
 
 ### Actual Tech Stack (from package.json/requirements.txt)
 
-| Category | Technology | Version | Notes |
-|----------|------------|---------|--------|
-| Runtime | Node.js | 16.x | [Any constraints] |
-| Framework | Express | 4.18.2 | [Custom middleware?] |
-| Database | PostgreSQL | 13 | [Connection pooling setup] |
+| Category  | Technology | Version | Notes                      |
+|-----------|------------|---------|----------------------------|
+| Runtime   | Node.js    | 16.x    | [Any constraints]          |
+| Framework | Express    | 4.18.2  | [Custom middleware?]       |
+| Database  | PostgreSQL | 13      | [Connection pooling setup] |
 
 etc...
 
@@ -969,10 +987,10 @@ Instead of duplicating, reference actual model files:
 
 ### External Services
 
-| Service | Purpose | Integration Type | Key Files |
-|---------|---------|------------------|-----------|
-| Stripe | Payments | REST API | `src/integrations/stripe/` |
-| SendGrid | Emails | SDK | `src/services/emailService.js` |
+| Service  | Purpose  | Integration Type | Key Files                      |
+|----------|----------|------------------|--------------------------------|
+| Stripe   | Payments | REST API         | `src/integrations/stripe/`     |
+| SendGrid | Emails   | SDK              | `src/services/emailService.js` |
 
 etc...
 
@@ -1093,6 +1111,18 @@ Apply the advanced elicitation task after major sections to refine based on user
 - Document enables AI agents to navigate and understand the actual codebase
 - Technical constraints and "gotchas" are clearly documented
 
+## Memory Bank Integration
+
+After documenting a project:
+1. Ensure proper session context via `session-kickoff` task (references `session-kickoff-checklist.md`)
+2. Consider initializing Memory Bank if not exists (`initialize-memory-bank` task)
+3. Use the brownfield architecture document to populate:
+   - `projectbrief.md` - Extract project goals and constraints
+   - `systemPatterns.md` - Document architecture and patterns
+   - `techContext.md` - Capture technology stack and environment
+   - `progress.md` - Note current state and technical debt
+4. This provides AI agents with both detailed architecture docs and quick-reference Memory Bank
+
 ## Notes
 
 - This task creates ONE document that captures the TRUE state of the system
@@ -1100,23 +1130,438 @@ Apply the advanced elicitation task after major sections to refine based on user
 - Documents technical debt, workarounds, and constraints honestly
 - For brownfield projects with PRD: Provides clear enhancement impact analysis
 - The goal is PRACTICAL documentation for AI agents doing real work
+- Memory Bank provides quick context; architecture doc provides deep detail
 ==================== END: .bmad-core/tasks/document-project.md ====================
+
+==================== START: .bmad-core/tasks/session-kickoff.md ====================
+# Session Kickoff
+
+This task ensures AI agents have complete project context and understanding before starting work. It provides systematic session initialization across all agent types.
+
+## Purpose
+
+- Establish comprehensive project understanding
+- Validate documentation consistency
+- Identify current project state and priorities
+- Recommend next steps based on evidence
+- Prevent context gaps that lead to suboptimal decisions
+
+## Process
+
+### 1. Memory Bank Review (Primary Context)
+
+**Priority Order**:
+1. **Memory Bank Files** (if they exist): `docs/memory-bank/`
+   - `projectbrief.md` - Project foundation and scope
+   - `activeContext.md` - Current work and immediate priorities
+   - `progress.md` - Project state and completed features
+   - `systemPatterns.md` - Architecture and technical decisions
+   - `techContext.md` - Technology stack and constraints
+   - `productContext.md` - Problem space and user needs
+
+**Analysis Required**:
+- When were these last updated?
+- Is information current and accurate?
+- Any apparent inconsistencies between files?
+
+### 2. Architecture Documentation Review
+
+**Primary References** (check which exists):
+- `/docs/architecture.md` - General backend/system architecture (greenfield)
+- `/docs/brownfield-architecture.md` - Enhancement architecture for existing systems
+- `/docs/frontend-architecture.md` - Frontend-specific architecture
+- `/docs/fullstack-architecture.md` - Complete full-stack architecture
+
+**Key Elements to Review**:
+- Core architectural decisions and patterns
+- System design and component relationships
+- Technology choices and constraints
+- Integration points and data flows
+- API documentation
+- Database schemas
+
+### 3. Development History Review
+
+**Recent Dev Journals**: `docs/devJournal/`
+- Read last 3-5 entries to understand recent work
+- Identify patterns in challenges and decisions
+- Note any unresolved issues or technical debt
+- Understand development velocity and blockers
+
+**Current ADRs**: `docs/adr/`
+- Review recent architectural decisions
+- Check for pending or superseded decisions
+- Validate alignment with current architecture
+- Skip archived ADRs (consolidated in architecture docs)
+
+### 4. Project Documentation Scan
+
+**Core Documentation**:
+- `README.md` - Project overview and setup
+- `CHANGELOG.md` - Recent changes and releases
+- Package manifests (`package.json`, `requirements.txt`, etc.)
+- Configuration files
+
+**Additional Context**:
+- Issue trackers or project boards
+- Recent commits and branches
+- Test results and coverage reports
+
+### 5. Current State Assessment
+
+**Development Environment**:
+```bash
+# Check git status
+git status
+git log --oneline -10
+
+# Check current branch and commits
+git branch -v
+
+# Review recent changes
+git diff --name-status HEAD~5
+```
+
+**Project Health**:
+- Are there failing tests or builds?
+- Any urgent issues or blockers?
+- Current sprint/iteration status
+- Outstanding pull requests
+
+### 6. Consistency Validation
+
+**Cross-Reference Checks**:
+- Does Memory Bank align with actual codebase?
+- Are ADRs reflected in current architecture?
+- Do dev journals match git history?
+- Is documentation current with recent changes?
+
+**Identify Gaps**:
+- Missing or outdated documentation
+- Undocumented architectural decisions
+- Inconsistencies between sources
+- Knowledge gaps requiring clarification
+
+### 7. Agent-Specific Context
+
+**For Architect Agent**:
+- Focus on architectural decisions and system design
+- Review technical debt and improvement opportunities
+- Assess scalability and performance considerations
+
+**For Developer Agent**:
+- Focus on current work items and immediate tasks
+- Review recent implementation patterns
+- Understand testing and deployment processes
+
+**For Product Owner Agent**:
+- Focus on requirements and user stories
+- Review product roadmap and priorities
+- Assess feature completion and user feedback
+
+### 8. Next Steps Recommendation
+
+**Based on Evidence**:
+- What are the most urgent priorities?
+- Are there any blockers or dependencies?
+- What documentation needs updating?
+- What architectural decisions are pending?
+
+**Recommended Actions**:
+1. **Immediate Tasks** - Ready to start now
+2. **Dependency Resolution** - What needs clarification
+3. **Documentation Updates** - What needs to be updated
+4. **Strategic Items** - Longer-term considerations
+
+## Quality Checklist
+
+- [ ] Memory Bank reviewed (or noted if missing)
+- [ ] Architecture documentation understood
+- [ ] Recent development history reviewed
+- [ ] Current project state assessed
+- [ ] Documentation inconsistencies identified
+- [ ] Agent-specific context established
+- [ ] Next steps clearly recommended
+- [ ] Any urgent issues flagged
+
+## Output Template
+
+```markdown
+# Session Kickoff Summary
+
+## Project Understanding
+- **Project**: [Name and core purpose]
+- **Current Phase**: [Development stage]
+- **Last Updated**: [When Memory Bank was last updated]
+
+## Documentation Health
+- **Memory Bank**: [Exists/Missing/Outdated]
+- **Architecture Docs**: [Current/Needs Update]
+- **Dev Journals**: [Last entry date]
+- **ADRs**: [Recent decisions noted]
+
+## Current State
+- **Active Branch**: [Git branch]
+- **Recent Work**: [Summary from dev journals]
+- **Project Health**: [Green/Yellow/Red with reasons]
+- **Immediate Blockers**: [Any urgent issues]
+
+## Inconsistencies Found
+[List any documentation inconsistencies or gaps]
+
+## Agent-Specific Context
+[Relevant context for current agent role]
+
+## Recommended Next Steps
+1. [Most urgent priority]
+2. [Secondary priority]
+3. [Documentation updates needed]
+```
+
+## Integration Points
+
+This task integrates with:
+- **Memory Bank**: Primary source of project context
+- **All Agents**: Universal session initialization
+- **Document Project**: Can trigger if documentation missing
+- **Update Memory Bank**: Can trigger if information outdated
+- **Agent Activation**: Called at start of agent sessions
+
+## Usage Patterns
+
+**New Agent Session**:
+1. Agent activates
+2. Runs `session-kickoff` task
+3. Reviews output and confirms understanding
+4. Proceeds with informed context
+
+**Project Handoff**:
+1. New team member or AI session
+2. Runs comprehensive kickoff
+3. Identifies knowledge gaps
+4. Updates documentation as needed
+
+**Quality Gate**:
+1. Before major feature work
+2. After significant time gap
+3. When context seems incomplete
+4. As part of regular project health checks
+
+## Notes
+
+- This task should be lightweight for daily use but comprehensive for major handoffs
+- Adapt depth based on project complexity and available time
+- Can be automated as part of agent startup routines
+- Helps prevent tunnel vision and context loss
+==================== END: .bmad-core/tasks/session-kickoff.md ====================
+
+==================== START: .bmad-core/tasks/initialize-memory-bank.md ====================
+# Initialize Memory Bank
+
+This task creates and initializes the Memory Bank structure for maintaining context across AI sessions. The Memory Bank ensures continuity and deep understanding of the project even when AI memory resets.
+
+## Purpose
+
+The Memory Bank serves as persistent memory for AI agents, containing:
+- Project foundation and goals
+- Current work context
+- System architecture and patterns
+- Technical decisions and constraints
+- Progress tracking
+
+## Initial Setup
+
+### 1. Create Directory Structure
+
+[[LLM: The Memory Bank location follows the standard defined in project-scaffolding-preference.md]]
+
+```bash
+mkdir -p docs/memory-bank
+```
+
+### 2. Determine Initialization Type
+
+Ask the user:
+- Is this a new project? → Create from scratch
+- Is this an existing project? → Analyze and populate
+- Do you have existing documentation? → Import and adapt
+
+### 3. Create Core Memory Bank Files
+
+The Memory Bank consists of 6 core files that build upon each other:
+
+#### 3.1 Project Brief (`projectbrief.md`)
+Foundation document - the source of truth for project scope:
+- Core requirements and goals
+- Project vision and objectives
+- Success criteria
+- Constraints and boundaries
+
+**Note**: Use `project-brief-tmpl.yaml` template in **Memory Bank mode** to generate this file. This ensures compatibility with both standalone project briefs and Memory Bank integration.
+
+#### 3.2 Product Context (`productContext.md`)
+The "why" behind the project:
+- Problems being solved
+- User needs and pain points
+- Expected outcomes
+- User experience goals
+
+#### 3.3 System Patterns (`systemPatterns.md`)
+Technical architecture and decisions:
+- System architecture overview
+- Key design patterns
+- Component relationships
+- Integration points
+- Critical implementation paths
+
+#### 3.4 Tech Context (`techContext.md`)
+Technology stack and environment:
+- Languages and frameworks
+- Development tools
+- Dependencies and versions
+- Technical constraints
+- Build and deployment
+
+#### 3.5 Active Context (`activeContext.md`)
+Current work focus:
+- Active work items
+- Recent changes
+- Current decisions
+- Next priorities
+- Open questions
+
+#### 3.6 Progress (`progress.md`)
+Project state tracking:
+- Completed features
+- Work in progress
+- Known issues
+- Technical debt
+- Evolution of decisions
+
+## Process
+
+### For New Projects
+
+1. **Gather Project Information**
+   - Interview user about project goals
+   - Understand target users
+   - Define success criteria
+   - Identify constraints
+
+2. **Create Initial Files**
+   - Start with projectbrief.md
+   - Populate product context
+   - Define initial architecture
+   - Document tech stack
+   - Set initial active context
+   - Initialize progress tracking
+
+### For Existing Projects
+
+1. **Analyze Current State**
+   ```bash
+   # Review existing documentation
+   - README files
+   - Architecture docs
+   - ADRs
+   - Dev journals
+   - Changelogs
+   ```
+
+2. **Extract Key Information**
+   - Project purpose and goals
+   - Current architecture
+   - Technology decisions
+   - Recent work
+   - Known issues
+
+3. **Populate Memory Bank**
+   - Synthesize findings into 6 core files
+   - Maintain accuracy to reality
+   - Document technical debt
+   - Capture current priorities
+
+### 4. Validation
+
+After creating initial files:
+1. Review with user for accuracy
+2. Ensure consistency across files
+3. Verify no critical information missing
+4. Confirm next steps are clear
+
+## Templates
+
+Use the memory bank templates from `bmad-core/templates/`:
+- `project-brief-tmpl.yaml` (use Memory Bank mode)
+- `productContext-tmpl.yaml`
+- `systemPatterns-tmpl.yaml`
+- `techContext-tmpl.yaml`
+- `activeContext-tmpl.yaml`
+- `progress-tmpl.yaml`
+
+## Integration Points
+
+The Memory Bank integrates with:
+- **Session Start**: Agents read memory bank first
+- **Dev Journals**: Update activeContext and progress
+- **ADRs**: Update systemPatterns with decisions
+- **Story Completion**: Update progress and activeContext
+- **Architecture Changes**: Update systemPatterns
+
+## Quality Checklist
+
+- [ ] All 6 core files created
+- [ ] Information is accurate and current
+- [ ] Files follow hierarchical structure
+- [ ] No contradictions between files
+- [ ] Next steps clearly defined
+- [ ] Technical decisions documented
+- [ ] Progress accurately reflected
+- [ ] Verified against session-kickoff-checklist.md requirements
+
+## Notes
+
+- Memory Bank is the foundation for AI continuity
+- Must be updated regularly to maintain value
+- All agents should read before starting work (via session-kickoff task)
+- Updates should be comprehensive but concise
+- British English for consistency
+- Use session-kickoff-checklist.md to verify proper initialization
+==================== END: .bmad-core/tasks/initialize-memory-bank.md ====================
 
 ==================== START: .bmad-core/templates/project-brief-tmpl.yaml ====================
 template:
-  id: project-brief-template-v2
-  name: Project Brief
-  version: 2.0
+  id: unified-project-brief-v3
+  name: Unified Project Brief
+  version: 3.0
   output:
     format: markdown
-    filename: docs/brief.md
+    filename: "{{output_path}}"
     title: "Project Brief: {{project_name}}"
+  description: |
+    Comprehensive project brief template supporting multiple workflows:
+    - Product development with elicitation and MVP planning
+    - Memory bank foundation document for AI context
+    - Rapid project documentation for quick starts
 
 workflow:
-  mode: interactive
+  mode_selection:
+    instruction: |
+      Choose the workflow mode that best fits your needs:
+
+      1. **Comprehensive Mode** - Full product development brief with guided elicitation
+         Output: docs/brief.md
+         
+      2. **Memory Bank Mode** - Foundation document for Memory Bank system
+         Output: docs/memory-bank/projectbrief.md
+         
+      3. **Rapid Mode** - Quick project documentation with structured prompts
+         Output: docs/brief.md
+
   elicitation: advanced-elicitation
   custom_elicitation:
-    title: "Project Brief Elicitation Actions"
+    title: "Project Brief Enhancement Actions"
+    condition: "mode == 'comprehensive'"
     options:
       - "Expand section with more specific details"
       - "Validate against similar successful products"
@@ -1131,199 +1576,325 @@ workflow:
 
 sections:
   - id: introduction
+    condition: "mode == 'comprehensive'"
     instruction: |
-      This template guides creation of a comprehensive Project Brief that serves as the foundational input for product development.
-      
-      Start by asking the user which mode they prefer:
-      
-      1. **Interactive Mode** - Work through each section collaboratively
-      2. **YOLO Mode** - Generate complete draft for review and refinement
-      
-      Before beginning, understand what inputs are available (brainstorming results, market research, competitive analysis, initial ideas) and gather project context.
+      This template guides creation of a comprehensive Project Brief for product development.
+      Understand what inputs are available (brainstorming results, market research, competitive analysis) 
+      and gather project context before beginning.
 
-  - id: executive-summary
-    title: Executive Summary
-    instruction: |
-      Create a concise overview that captures the essence of the project. Include:
-      - Product concept in 1-2 sentences
-      - Primary problem being solved
-      - Target market identification
-      - Key value proposition
-    template: "{{executive_summary_content}}"
+  - id: project-overview
+    title: Project Overview
+    instruction: Capture essential project information and core purpose
+    template: |
+      {{#if is_memory_bank_mode}}
+      **Project Name**: {{project_name}}  
+      **Version**: {{version | default: "1.0"}}  
+      **Last Updated**: {{current_date}}  
+      **Status**: {{status | options: "Active, Planning, On Hold"}}
+      {{else}}
+      ## Executive Summary
+      {{executive_summary_content}}
+      {{/if}}
+
+      ## Core Purpose
+      {{core_purpose_description}}
 
   - id: problem-statement
     title: Problem Statement
     instruction: |
-      Articulate the problem with clarity and evidence. Address:
-      - Current state and pain points
-      - Impact of the problem (quantify if possible)
-      - Why existing solutions fall short
-      - Urgency and importance of solving this now
-    template: "{{detailed_problem_description}}"
+      {{#if is_comprehensive_mode}}
+      Articulate the problem with clarity and evidence. Address current state, impact, 
+      why existing solutions fall short, and urgency of solving this now.
+      {{else}}
+      Describe the main problem this project solves and its impact.
+      {{/if}}
+    template: |
+      {{#if is_comprehensive_mode}}
+      {{detailed_problem_description}}
+      {{else}}
+      {{problem_description}}
+      {{/if}}
 
   - id: proposed-solution
     title: Proposed Solution
-    instruction: |
-      Describe the solution approach at a high level. Include:
-      - Core concept and approach
-      - Key differentiators from existing solutions
-      - Why this solution will succeed where others haven't
-      - High-level vision for the product
-    template: "{{solution_description}}"
+    condition: "mode != 'memory_bank'"
+    instruction: Describe the solution approach and key differentiators
+    template: |
+      {{solution_description}}
 
   - id: target-users
     title: Target Users
-    instruction: |
-      Define and characterize the intended users with specificity. For each user segment include:
-      - Demographic/firmographic profile
-      - Current behaviors and workflows
-      - Specific needs and pain points
-      - Goals they're trying to achieve
-    sections:
-      - id: primary-segment
-        title: "Primary User Segment: {{segment_name}}"
-        template: "{{primary_user_description}}"
-      - id: secondary-segment
-        title: "Secondary User Segment: {{segment_name}}"
-        condition: Has secondary user segment
-        template: "{{secondary_user_description}}"
+    instruction: Define and characterize the intended users
+    template: |
+      ### Primary Users
+      {{#if is_memory_bank_mode}}
+      - **User Type**: {{primary_user_type}}
+      - **Needs**: {{primary_user_needs}}
+      - **Volume**: {{primary_user_volume}}
+      {{else}}
+      {{primary_user_description}}
+      {{/if}}
 
-  - id: goals-metrics
-    title: Goals & Success Metrics
-    instruction: Establish clear objectives and how to measure success. Make goals SMART (Specific, Measurable, Achievable, Relevant, Time-bound)
-    sections:
-      - id: business-objectives
-        title: Business Objectives
-        type: bullet-list
-        template: "- {{objective_with_metric}}"
-      - id: user-success-metrics
-        title: User Success Metrics
-        type: bullet-list
-        template: "- {{user_metric}}"
-      - id: kpis
-        title: Key Performance Indicators (KPIs)
-        type: bullet-list
-        template: "- {{kpi}}: {{definition_and_target}}"
+      {{#if secondary_users}}
+      ### Secondary Users
+      {{#if is_memory_bank_mode}}
+      - **User Type**: {{secondary_user_type}}
+      - **Needs**: {{secondary_user_needs}}
+      {{else}}
+      {{secondary_user_description}}
+      {{/if}}
+      {{/if}}
 
-  - id: mvp-scope
-    title: MVP Scope
-    instruction: Define the minimum viable product clearly. Be specific about what's in and what's out. Help user distinguish must-haves from nice-to-haves.
-    sections:
-      - id: core-features
-        title: Core Features (Must Have)
-        type: bullet-list
-        template: "- **{{feature}}:** {{description_and_rationale}}"
-      - id: out-of-scope
-        title: Out of Scope for MVP
-        type: bullet-list
-        template: "- {{feature_or_capability}}"
-      - id: mvp-success-criteria
-        title: MVP Success Criteria
-        template: "{{mvp_success_definition}}"
+  - id: goals-objectives
+    title: Goals & Objectives
+    instruction: Define primary goals and measurable success criteria
+    template: |
+      ### Primary Goals
+      {{#each primary_goals}}
+      {{@index + 1}}. {{this}}
+      {{/each}}
 
-  - id: post-mvp-vision
-    title: Post-MVP Vision
-    instruction: Outline the longer-term product direction without overcommitting to specifics
-    sections:
-      - id: phase-2-features
-        title: Phase 2 Features
-        template: "{{next_priority_features}}"
-      - id: long-term-vision
-        title: Long-term Vision
-        template: "{{one_two_year_vision}}"
-      - id: expansion-opportunities
-        title: Expansion Opportunities
-        template: "{{potential_expansions}}"
+      ### Success Criteria
+      {{#each success_criteria}}
+      - [ ] {{this}}
+      {{/each}}
 
-  - id: technical-considerations
-    title: Technical Considerations
-    instruction: Document known technical constraints and preferences. Note these are initial thoughts, not final decisions.
-    sections:
-      - id: platform-requirements
-        title: Platform Requirements
-        template: |
-          - **Target Platforms:** {{platforms}}
-          - **Browser/OS Support:** {{specific_requirements}}
-          - **Performance Requirements:** {{performance_specs}}
-      - id: technology-preferences
-        title: Technology Preferences
-        template: |
-          - **Frontend:** {{frontend_preferences}}
-          - **Backend:** {{backend_preferences}}
-          - **Database:** {{database_preferences}}
-          - **Hosting/Infrastructure:** {{infrastructure_preferences}}
-      - id: architecture-considerations
-        title: Architecture Considerations
-        template: |
-          - **Repository Structure:** {{repo_thoughts}}
-          - **Service Architecture:** {{service_thoughts}}
-          - **Integration Requirements:** {{integration_needs}}
-          - **Security/Compliance:** {{security_requirements}}
+      {{#if is_comprehensive_mode}}
+      ### Key Performance Indicators (KPIs)
+      {{#each kpis}}
+      - {{this}}
+      {{/each}}
+      {{/if}}
 
-  - id: constraints-assumptions
-    title: Constraints & Assumptions
-    instruction: Clearly state limitations and assumptions to set realistic expectations
-    sections:
-      - id: constraints
-        title: Constraints
-        template: |
-          - **Budget:** {{budget_info}}
-          - **Timeline:** {{timeline_info}}
-          - **Resources:** {{resource_info}}
-          - **Technical:** {{technical_constraints}}
-      - id: key-assumptions
-        title: Key Assumptions
-        type: bullet-list
-        template: "- {{assumption}}"
+  - id: scope
+    title: Scope
+    instruction: Clearly define what's in and out of scope
+    template: |
+      ### In Scope
+      {{#each in_scope}}
+      - {{this}}
+      {{/each}}
 
-  - id: risks-questions
-    title: Risks & Open Questions
-    instruction: Identify unknowns and potential challenges proactively
-    sections:
-      - id: key-risks
-        title: Key Risks
-        type: bullet-list
-        template: "- **{{risk}}:** {{description_and_impact}}"
-      - id: open-questions
-        title: Open Questions
-        type: bullet-list
-        template: "- {{question}}"
-      - id: research-areas
-        title: Areas Needing Further Research
-        type: bullet-list
-        template: "- {{research_topic}}"
+      ### Out of Scope
+      {{#each out_scope}}
+      - {{this}}
+      {{/each}}
+
+      {{#if is_comprehensive_mode}}
+      ### MVP Scope
+      {{#each mvp_scope}}
+      - {{this}}
+      {{/each}}
+      {{/if}}
+
+  - id: constraints
+    title: Constraints
+    instruction: Document constraints affecting the project
+    template: |
+      ### Technical Constraints
+      {{#each technical_constraints}}
+      - {{this}}
+      {{/each}}
+
+      ### Business Constraints
+      {{#each business_constraints}}
+      - {{this}}
+      {{/each}}
+
+      {{#if regulatory_constraints}}
+      ### Regulatory/Compliance
+      {{#each regulatory_constraints}}
+      - {{this}}
+      {{/each}}
+      {{/if}}
+
+  - id: requirements
+    title: Key Requirements
+    condition: "mode != 'rapid'"
+    instruction: List functional and non-functional requirements
+    template: |
+      ### Functional Requirements
+      {{#each functional_requirements}}
+      {{@index + 1}}. {{this}}
+      {{/each}}
+
+      ### Non-Functional Requirements
+      - **Performance**: {{performance_requirements}}
+      - **Security**: {{security_requirements}}
+      - **Scalability**: {{scalability_requirements}}
+      - **Reliability**: {{reliability_requirements}}
+
+  - id: stakeholders
+    title: Stakeholders
+    condition: "mode == 'memory_bank' || mode == 'comprehensive'"
+    instruction: Identify stakeholders and decision makers
+    template: |
+      ### Primary Stakeholders
+      {{#each stakeholders}}
+      - **{{this.role}}**: {{this.name}} - {{this.interest}}
+      {{/each}}
+
+      ### Key Decision Makers
+      {{#each decision_makers}}
+      - **{{this.role}}**: {{this.name}} - {{this.decisions}}
+      {{/each}}
+
+  - id: timeline
+    title: Timeline & Milestones
+    condition: "mode != 'rapid'"
+    instruction: Define timeline and major milestones
+    template: |
+      ### Major Milestones
+      | Milestone | Target Date | Description |
+      |-----------|-------------|-------------|
+      {{#each milestones}}
+      | {{this.name}} | {{this.date}} | {{this.description}} |
+      {{/each}}
+
+      ### Current Phase
+      {{current_phase_description}}
+
+  - id: technology-considerations
+    title: Technology Considerations
+    condition: "mode == 'comprehensive'"
+    instruction: Document technology stack preferences and constraints
+    template: |
+      ### Technology Preferences
+      {{#each tech_preferences}}
+      - **{{this.category}}**: {{this.preference}} - {{this.rationale}}
+      {{/each}}
+
+      ### Technical Architecture
+      {{technical_architecture_notes}}
+
+  - id: risks-assumptions
+    title: Risks & Assumptions
+    condition: "mode == 'comprehensive'"
+    instruction: Document key risks and assumptions
+    template: |
+      ### Key Assumptions
+      {{#each assumptions}}
+      {{@index + 1}}. {{this}}
+      {{/each}}
+
+      ### Primary Risks
+      {{#each risks}}
+      - **Risk**: {{this.risk}}
+      - **Impact**: {{this.impact}}
+      - **Mitigation**: {{this.mitigation}}
+      {{/each}}
+
+  - id: post-mvp
+    title: Post-MVP Planning
+    condition: "mode == 'comprehensive'"
+    instruction: Plan beyond MVP for future development
+    template: |
+      ### Phase 2 Features
+      {{#each phase2_features}}
+      - {{this}}
+      {{/each}}
+
+      ### Long-term Vision
+      {{long_term_vision}}
+
+  - id: references
+    title: References
+    condition: "mode != 'rapid'"
+    instruction: Link to supporting documentation
+    template: |
+      {{#each references}}
+      - {{this}}
+      {{/each}}
 
   - id: appendices
     title: Appendices
-    sections:
-      - id: research-summary
-        title: A. Research Summary
-        condition: Has research findings
-        instruction: |
-          If applicable, summarize key findings from:
-          - Market research
-          - Competitive analysis
-          - User interviews
-          - Technical feasibility studies
-      - id: stakeholder-input
-        title: B. Stakeholder Input
-        condition: Has stakeholder feedback
-        template: "{{stakeholder_feedback}}"
-      - id: references
-        title: C. References
-        template: "{{relevant_links_and_docs}}"
+    condition: "mode == 'comprehensive'"
+    instruction: Include supporting research and analysis
+    template: |
+      {{#if research_summary}}
+      ### Research Summary
+      {{research_summary}}
+      {{/if}}
 
-  - id: next-steps
-    title: Next Steps
-    sections:
-      - id: immediate-actions
-        title: Immediate Actions
-        type: numbered-list
-        template: "{{action_item}}"
-      - id: pm-handoff
-        title: PM Handoff
-        content: |
-          This Project Brief provides the full context for {{project_name}}. Please start in 'PRD Generation Mode', review the brief thoroughly to work with the user to create the PRD section by section as the template indicates, asking for any necessary clarification or suggesting improvements.
+      {{#if competitive_analysis}}
+      ### Competitive Analysis
+      {{competitive_analysis}}
+      {{/if}}
+
+validation:
+  required_fields:
+    - project_name
+    - core_purpose_description
+    - primary_goals
+    - in_scope
+    - primary_user_type
+  comprehensive_required:
+    - executive_summary_content
+    - detailed_problem_description
+    - solution_description
+    - mvp_scope
+  memory_bank_required:
+    - stakeholders
+    - milestones
+    - current_phase_description
+
+prompts:
+  # Core prompts (all modes)
+  project_name: "What is the project name?"
+  core_purpose_description: "Describe in one paragraph what this project is and why it exists"
+  primary_goals: "List 3-5 primary goals for this project"
+  success_criteria: "Define 3-5 measurable success criteria"
+  in_scope: "What is IN scope for this project?"
+  out_scope: "What is explicitly OUT of scope?"
+
+  # User-related prompts
+  primary_user_type: "Describe the primary user type"
+  primary_user_needs: "What do primary users need from this system?"
+  primary_user_volume: "Expected number of primary users"
+  primary_user_description: "Detailed description of primary users (comprehensive mode)"
+  secondary_user_type: "Describe secondary user types (if any)"
+  secondary_user_needs: "What do secondary users need?"
+  secondary_user_description: "Detailed description of secondary users"
+
+  # Comprehensive mode prompts
+  executive_summary_content: "Create executive summary (product concept, problem, target market, value proposition)"
+  detailed_problem_description: "Detailed problem statement with evidence and impact"
+  solution_description: "Describe the solution approach and key differentiators"
+  mvp_scope: "Define MVP scope - what's the minimum viable product?"
+  kpis: "List key performance indicators"
+
+  # Technical prompts
+  technical_constraints: "List technical constraints"
+  business_constraints: "List business constraints"
+  regulatory_constraints: "List regulatory/compliance requirements"
+  functional_requirements: "List core functional requirements"
+  performance_requirements: "Define performance targets"
+  security_requirements: "Define security requirements"
+  scalability_requirements: "Define scalability expectations"
+  reliability_requirements: "Define reliability/uptime requirements"
+
+  # Stakeholder prompts (memory bank mode)
+  stakeholders: "List primary stakeholders with roles and interests"
+  decision_makers: "List key decision makers and what they decide"
+  milestones: "Define major milestones with dates and descriptions"
+  current_phase_description: "Describe the current project phase"
+
+  # Risk and planning prompts (comprehensive mode)
+  assumptions: "List key assumptions"
+  risks: "List primary risks with impact and mitigation"
+  tech_preferences: "List technology preferences by category"
+  technical_architecture_notes: "Technical architecture considerations"
+  phase2_features: "Features planned for Phase 2"
+  long_term_vision: "Long-term vision for the product"
+
+  # Support prompts
+  references: "List links to supporting documentation"
+  research_summary: "Summary of research conducted"
+  competitive_analysis: "Competitive analysis findings"
+
+  # Mode selection
+  workflow_mode: "Choose workflow mode: comprehensive, memory_bank, or rapid"
+  output_path: "Output file path (auto-set based on mode if not specified)"
 ==================== END: .bmad-core/templates/project-brief-tmpl.yaml ====================
 
 ==================== START: .bmad-core/templates/market-research-tmpl.yaml ====================
@@ -1459,7 +2030,7 @@ sections:
         instruction: Map the end-to-end customer experience for primary segments
         template: |
           For primary customer segment:
-          
+
           1. **Awareness:** {{discovery_process}}
           2. **Consideration:** {{evaluation_criteria}}
           3. **Purchase:** {{decision_triggers}}
@@ -1660,7 +2231,7 @@ sections:
         title: Competitor Prioritization Matrix
         instruction: |
           Help categorize competitors by market share and strategic threat level
-          
+
           Create a 2x2 matrix:
           - Priority 1 (Core Competitors): High Market Share + High Threat
           - Priority 2 (Emerging Threats): Low Market Share + High Threat
@@ -1725,7 +2296,14 @@ sections:
         title: Feature Comparison Matrix
         instruction: Create a detailed comparison table of key features across competitors
         type: table
-        columns: ["Feature Category", "{{your_company}}", "{{competitor_1}}", "{{competitor_2}}", "{{competitor_3}}"]
+        columns:
+          [
+            "Feature Category",
+            "{{your_company}}",
+            "{{competitor_1}}",
+            "{{competitor_2}}",
+            "{{competitor_3}}",
+          ]
         rows:
           - category: "Core Functionality"
             items:
@@ -1737,7 +2315,13 @@ sections:
               - ["Onboarding Time", "{{time}}", "{{time}}", "{{time}}", "{{time}}"]
           - category: "Integration & Ecosystem"
             items:
-              - ["API Availability", "{{availability}}", "{{availability}}", "{{availability}}", "{{availability}}"]
+              - [
+                  "API Availability",
+                  "{{availability}}",
+                  "{{availability}}",
+                  "{{availability}}",
+                  "{{availability}}",
+                ]
               - ["Third-party Integrations", "{{number}}", "{{number}}", "{{number}}", "{{number}}"]
           - category: "Pricing & Plans"
             items:
@@ -1764,7 +2348,7 @@ sections:
         title: Positioning Map
         instruction: |
           Describe competitor positions on key dimensions
-          
+
           Create a positioning description using 2 key dimensions relevant to the market, such as:
           - Price vs. Features
           - Ease of Use vs. Power
@@ -1799,7 +2383,7 @@ sections:
         title: Blue Ocean Opportunities
         instruction: |
           Identify uncontested market spaces
-          
+
           List opportunities to create new market space:
           - Underserved segments
           - Unaddressed use cases
@@ -1903,11 +2487,11 @@ sections:
       - id: summary-details
         template: |
           **Topic:** {{session_topic}}
-          
+
           **Session Goals:** {{stated_goals}}
-          
+
           **Techniques Used:** {{techniques_list}}
-          
+
           **Total Ideas Generated:** {{total_ideas}}
       - id: key-themes
         title: "Key Themes Identified:"
@@ -2032,9 +2616,572 @@ sections:
   - id: footer
     content: |
       ---
-      
+
       *Session facilitated using the BMAD-METHOD brainstorming framework*
 ==================== END: .bmad-core/templates/brainstorming-output-tmpl.yaml ====================
+
+==================== START: .bmad-core/templates/project-brief-tmpl.yaml ====================
+template:
+  id: unified-project-brief-v3
+  name: Unified Project Brief
+  version: 3.0
+  output:
+    format: markdown
+    filename: "{{output_path}}"
+    title: "Project Brief: {{project_name}}"
+  description: |
+    Comprehensive project brief template supporting multiple workflows:
+    - Product development with elicitation and MVP planning
+    - Memory bank foundation document for AI context
+    - Rapid project documentation for quick starts
+
+workflow:
+  mode_selection:
+    instruction: |
+      Choose the workflow mode that best fits your needs:
+
+      1. **Comprehensive Mode** - Full product development brief with guided elicitation
+         Output: docs/brief.md
+         
+      2. **Memory Bank Mode** - Foundation document for Memory Bank system
+         Output: docs/memory-bank/projectbrief.md
+         
+      3. **Rapid Mode** - Quick project documentation with structured prompts
+         Output: docs/brief.md
+
+  elicitation: advanced-elicitation
+  custom_elicitation:
+    title: "Project Brief Enhancement Actions"
+    condition: "mode == 'comprehensive'"
+    options:
+      - "Expand section with more specific details"
+      - "Validate against similar successful products"
+      - "Stress test assumptions with edge cases"
+      - "Explore alternative solution approaches"
+      - "Analyze resource/constraint trade-offs"
+      - "Generate risk mitigation strategies"
+      - "Challenge scope from MVP minimalist view"
+      - "Brainstorm creative feature possibilities"
+      - "If only we had [resource/capability/time]..."
+      - "Proceed to next section"
+
+sections:
+  - id: introduction
+    condition: "mode == 'comprehensive'"
+    instruction: |
+      This template guides creation of a comprehensive Project Brief for product development.
+      Understand what inputs are available (brainstorming results, market research, competitive analysis) 
+      and gather project context before beginning.
+
+  - id: project-overview
+    title: Project Overview
+    instruction: Capture essential project information and core purpose
+    template: |
+      {{#if is_memory_bank_mode}}
+      **Project Name**: {{project_name}}  
+      **Version**: {{version | default: "1.0"}}  
+      **Last Updated**: {{current_date}}  
+      **Status**: {{status | options: "Active, Planning, On Hold"}}
+      {{else}}
+      ## Executive Summary
+      {{executive_summary_content}}
+      {{/if}}
+
+      ## Core Purpose
+      {{core_purpose_description}}
+
+  - id: problem-statement
+    title: Problem Statement
+    instruction: |
+      {{#if is_comprehensive_mode}}
+      Articulate the problem with clarity and evidence. Address current state, impact, 
+      why existing solutions fall short, and urgency of solving this now.
+      {{else}}
+      Describe the main problem this project solves and its impact.
+      {{/if}}
+    template: |
+      {{#if is_comprehensive_mode}}
+      {{detailed_problem_description}}
+      {{else}}
+      {{problem_description}}
+      {{/if}}
+
+  - id: proposed-solution
+    title: Proposed Solution
+    condition: "mode != 'memory_bank'"
+    instruction: Describe the solution approach and key differentiators
+    template: |
+      {{solution_description}}
+
+  - id: target-users
+    title: Target Users
+    instruction: Define and characterize the intended users
+    template: |
+      ### Primary Users
+      {{#if is_memory_bank_mode}}
+      - **User Type**: {{primary_user_type}}
+      - **Needs**: {{primary_user_needs}}
+      - **Volume**: {{primary_user_volume}}
+      {{else}}
+      {{primary_user_description}}
+      {{/if}}
+
+      {{#if secondary_users}}
+      ### Secondary Users
+      {{#if is_memory_bank_mode}}
+      - **User Type**: {{secondary_user_type}}
+      - **Needs**: {{secondary_user_needs}}
+      {{else}}
+      {{secondary_user_description}}
+      {{/if}}
+      {{/if}}
+
+  - id: goals-objectives
+    title: Goals & Objectives
+    instruction: Define primary goals and measurable success criteria
+    template: |
+      ### Primary Goals
+      {{#each primary_goals}}
+      {{@index + 1}}. {{this}}
+      {{/each}}
+
+      ### Success Criteria
+      {{#each success_criteria}}
+      - [ ] {{this}}
+      {{/each}}
+
+      {{#if is_comprehensive_mode}}
+      ### Key Performance Indicators (KPIs)
+      {{#each kpis}}
+      - {{this}}
+      {{/each}}
+      {{/if}}
+
+  - id: scope
+    title: Scope
+    instruction: Clearly define what's in and out of scope
+    template: |
+      ### In Scope
+      {{#each in_scope}}
+      - {{this}}
+      {{/each}}
+
+      ### Out of Scope
+      {{#each out_scope}}
+      - {{this}}
+      {{/each}}
+
+      {{#if is_comprehensive_mode}}
+      ### MVP Scope
+      {{#each mvp_scope}}
+      - {{this}}
+      {{/each}}
+      {{/if}}
+
+  - id: constraints
+    title: Constraints
+    instruction: Document constraints affecting the project
+    template: |
+      ### Technical Constraints
+      {{#each technical_constraints}}
+      - {{this}}
+      {{/each}}
+
+      ### Business Constraints
+      {{#each business_constraints}}
+      - {{this}}
+      {{/each}}
+
+      {{#if regulatory_constraints}}
+      ### Regulatory/Compliance
+      {{#each regulatory_constraints}}
+      - {{this}}
+      {{/each}}
+      {{/if}}
+
+  - id: requirements
+    title: Key Requirements
+    condition: "mode != 'rapid'"
+    instruction: List functional and non-functional requirements
+    template: |
+      ### Functional Requirements
+      {{#each functional_requirements}}
+      {{@index + 1}}. {{this}}
+      {{/each}}
+
+      ### Non-Functional Requirements
+      - **Performance**: {{performance_requirements}}
+      - **Security**: {{security_requirements}}
+      - **Scalability**: {{scalability_requirements}}
+      - **Reliability**: {{reliability_requirements}}
+
+  - id: stakeholders
+    title: Stakeholders
+    condition: "mode == 'memory_bank' || mode == 'comprehensive'"
+    instruction: Identify stakeholders and decision makers
+    template: |
+      ### Primary Stakeholders
+      {{#each stakeholders}}
+      - **{{this.role}}**: {{this.name}} - {{this.interest}}
+      {{/each}}
+
+      ### Key Decision Makers
+      {{#each decision_makers}}
+      - **{{this.role}}**: {{this.name}} - {{this.decisions}}
+      {{/each}}
+
+  - id: timeline
+    title: Timeline & Milestones
+    condition: "mode != 'rapid'"
+    instruction: Define timeline and major milestones
+    template: |
+      ### Major Milestones
+      | Milestone | Target Date | Description |
+      |-----------|-------------|-------------|
+      {{#each milestones}}
+      | {{this.name}} | {{this.date}} | {{this.description}} |
+      {{/each}}
+
+      ### Current Phase
+      {{current_phase_description}}
+
+  - id: technology-considerations
+    title: Technology Considerations
+    condition: "mode == 'comprehensive'"
+    instruction: Document technology stack preferences and constraints
+    template: |
+      ### Technology Preferences
+      {{#each tech_preferences}}
+      - **{{this.category}}**: {{this.preference}} - {{this.rationale}}
+      {{/each}}
+
+      ### Technical Architecture
+      {{technical_architecture_notes}}
+
+  - id: risks-assumptions
+    title: Risks & Assumptions
+    condition: "mode == 'comprehensive'"
+    instruction: Document key risks and assumptions
+    template: |
+      ### Key Assumptions
+      {{#each assumptions}}
+      {{@index + 1}}. {{this}}
+      {{/each}}
+
+      ### Primary Risks
+      {{#each risks}}
+      - **Risk**: {{this.risk}}
+      - **Impact**: {{this.impact}}
+      - **Mitigation**: {{this.mitigation}}
+      {{/each}}
+
+  - id: post-mvp
+    title: Post-MVP Planning
+    condition: "mode == 'comprehensive'"
+    instruction: Plan beyond MVP for future development
+    template: |
+      ### Phase 2 Features
+      {{#each phase2_features}}
+      - {{this}}
+      {{/each}}
+
+      ### Long-term Vision
+      {{long_term_vision}}
+
+  - id: references
+    title: References
+    condition: "mode != 'rapid'"
+    instruction: Link to supporting documentation
+    template: |
+      {{#each references}}
+      - {{this}}
+      {{/each}}
+
+  - id: appendices
+    title: Appendices
+    condition: "mode == 'comprehensive'"
+    instruction: Include supporting research and analysis
+    template: |
+      {{#if research_summary}}
+      ### Research Summary
+      {{research_summary}}
+      {{/if}}
+
+      {{#if competitive_analysis}}
+      ### Competitive Analysis
+      {{competitive_analysis}}
+      {{/if}}
+
+validation:
+  required_fields:
+    - project_name
+    - core_purpose_description
+    - primary_goals
+    - in_scope
+    - primary_user_type
+  comprehensive_required:
+    - executive_summary_content
+    - detailed_problem_description
+    - solution_description
+    - mvp_scope
+  memory_bank_required:
+    - stakeholders
+    - milestones
+    - current_phase_description
+
+prompts:
+  # Core prompts (all modes)
+  project_name: "What is the project name?"
+  core_purpose_description: "Describe in one paragraph what this project is and why it exists"
+  primary_goals: "List 3-5 primary goals for this project"
+  success_criteria: "Define 3-5 measurable success criteria"
+  in_scope: "What is IN scope for this project?"
+  out_scope: "What is explicitly OUT of scope?"
+
+  # User-related prompts
+  primary_user_type: "Describe the primary user type"
+  primary_user_needs: "What do primary users need from this system?"
+  primary_user_volume: "Expected number of primary users"
+  primary_user_description: "Detailed description of primary users (comprehensive mode)"
+  secondary_user_type: "Describe secondary user types (if any)"
+  secondary_user_needs: "What do secondary users need?"
+  secondary_user_description: "Detailed description of secondary users"
+
+  # Comprehensive mode prompts
+  executive_summary_content: "Create executive summary (product concept, problem, target market, value proposition)"
+  detailed_problem_description: "Detailed problem statement with evidence and impact"
+  solution_description: "Describe the solution approach and key differentiators"
+  mvp_scope: "Define MVP scope - what's the minimum viable product?"
+  kpis: "List key performance indicators"
+
+  # Technical prompts
+  technical_constraints: "List technical constraints"
+  business_constraints: "List business constraints"
+  regulatory_constraints: "List regulatory/compliance requirements"
+  functional_requirements: "List core functional requirements"
+  performance_requirements: "Define performance targets"
+  security_requirements: "Define security requirements"
+  scalability_requirements: "Define scalability expectations"
+  reliability_requirements: "Define reliability/uptime requirements"
+
+  # Stakeholder prompts (memory bank mode)
+  stakeholders: "List primary stakeholders with roles and interests"
+  decision_makers: "List key decision makers and what they decide"
+  milestones: "Define major milestones with dates and descriptions"
+  current_phase_description: "Describe the current project phase"
+
+  # Risk and planning prompts (comprehensive mode)
+  assumptions: "List key assumptions"
+  risks: "List primary risks with impact and mitigation"
+  tech_preferences: "List technology preferences by category"
+  technical_architecture_notes: "Technical architecture considerations"
+  phase2_features: "Features planned for Phase 2"
+  long_term_vision: "Long-term vision for the product"
+
+  # Support prompts
+  references: "List links to supporting documentation"
+  research_summary: "Summary of research conducted"
+  competitive_analysis: "Competitive analysis findings"
+
+  # Mode selection
+  workflow_mode: "Choose workflow mode: comprehensive, memory_bank, or rapid"
+  output_path: "Output file path (auto-set based on mode if not specified)"
+==================== END: .bmad-core/templates/project-brief-tmpl.yaml ====================
+
+==================== START: .bmad-core/templates/productContext-tmpl.yaml ====================
+template:
+  id: memory-bank-productcontext-v1
+  name: Memory Bank - Product Context
+  version: 1.0
+  output:
+    format: markdown
+    filename: docs/memory-bank/productContext.md
+    title: "Product Context"
+  description: |
+    The "why" behind the project - problems, solutions, and user experience.
+    This document explains why the project exists and what success looks like from a user perspective.
+
+workflow:
+  mode: guided
+  instruction: |
+    Focus on understanding the problem space, solution approach, and expected outcomes.
+    Draw from user research, market analysis, and stakeholder interviews.
+
+sections:
+  - id: problem-statement
+    title: Problem Statement
+    instruction: Clearly articulate the problem being solved
+    template: |
+      ### Core Problem
+      {{core_problem_description}}
+
+      ### Current State
+      - **How it's done today**: {{current_approach}}
+      - **Pain points**: {{pain_points}}
+      - **Impact**: {{problem_impact}}
+
+      ### Root Causes
+      {{#each root_causes}}
+      {{@index + 1}}. {{this}}
+      {{/each}}
+
+  - id: solution-approach
+    title: Solution Approach
+    instruction: Describe how we're solving the problem
+    template: |
+      ### Our Solution
+      {{solution_description}}
+
+      ### Why This Approach
+      {{#each approach_reasons}}
+      - {{this}}
+      {{/each}}
+
+      ### Key Innovations
+      {{#each innovations}}
+      - {{this}}
+      {{/each}}
+
+  - id: user-experience
+    title: User Experience Vision
+    instruction: Define the user journey and design principles
+    template: |
+      ### User Journey
+      1. **Discovery**: {{discovery_phase}}
+      2. **Onboarding**: {{onboarding_phase}}
+      3. **Core Usage**: {{core_usage_phase}}
+      4. **Value Realization**: {{value_realization_phase}}
+
+      ### Design Principles
+      {{#each design_principles}}
+      - **{{this.principle}}**: {{this.description}}
+      {{/each}}
+
+      ### Success Metrics
+      - **User Satisfaction**: {{user_satisfaction_metric}}
+      - **Adoption Rate**: {{adoption_rate_metric}}
+      - **Task Completion**: {{task_completion_metric}}
+
+  - id: expected-outcomes
+    title: Expected Outcomes
+    instruction: Define short, medium, and long-term outcomes
+    template: |
+      ### Short-term (3 months)
+      {{#each short_term_outcomes}}
+      - {{this}}
+      {{/each}}
+
+      ### Medium-term (6-12 months)
+      {{#each medium_term_outcomes}}
+      - {{this}}
+      {{/each}}
+
+      ### Long-term (1+ years)
+      {{#each long_term_outcomes}}
+      - {{this}}
+      {{/each}}
+
+  - id: user-personas
+    title: User Personas
+    instruction: Define primary and secondary personas
+    template: |
+      ### Primary Persona: {{primary_persona_name}}
+      - **Role**: {{primary_persona_role}}
+      - **Goals**: {{primary_persona_goals}}
+      - **Frustrations**: {{primary_persona_frustrations}}
+      - **Needs**: {{primary_persona_needs}}
+      - **Technical Level**: {{primary_persona_tech_level}}
+
+      ### Secondary Persona: {{secondary_persona_name}}
+      - **Role**: {{secondary_persona_role}}
+      - **Goals**: {{secondary_persona_goals}}
+      - **Needs**: {{secondary_persona_needs}}
+
+  - id: competitive-landscape
+    title: Competitive Landscape
+    instruction: Analyze existing solutions and our differentiation
+    template: |
+      ### Existing Solutions
+      | Solution | Strengths | Weaknesses | Our Differentiation |
+      |----------|-----------|------------|-------------------|
+      {{#each competitors}}
+      | {{this.name}} | {{this.strengths}} | {{this.weaknesses}} | {{this.differentiation}} |
+      {{/each}}
+
+      ### Market Opportunity
+      {{market_opportunity}}
+
+  - id: assumptions-risks
+    title: Assumptions and Risks
+    instruction: Document key assumptions and validation plans
+    template: |
+      ### Key Assumptions
+      {{#each assumptions}}
+      {{@index + 1}}. {{this}}
+      {{/each}}
+
+      ### Validation Plans
+      {{#each validation_plans}}
+      - {{this}}
+      {{/each}}
+
+  - id: ecosystem-integration
+    title: Integration with Ecosystem
+    instruction: Define how this fits into the larger ecosystem
+    template: |
+      ### Upstream Dependencies
+      {{#each upstream_dependencies}}
+      - {{this}}
+      {{/each}}
+
+      ### Downstream Impact
+      {{#each downstream_impacts}}
+      - {{this}}
+      {{/each}}
+
+      ### Partner Integrations
+      {{#each partner_integrations}}
+      - {{this}}
+      {{/each}}
+
+prompts:
+  core_problem_description: "Clearly describe the main problem this project solves"
+  current_approach: "How is this problem currently addressed (workarounds, manual processes)?"
+  pain_points: "What specific pain points do users face?"
+  problem_impact: "What is the cost/consequence of not solving this problem?"
+  root_causes: "List 3-5 underlying causes of the problem"
+  solution_description: "Describe our solution approach in one paragraph"
+  approach_reasons: "Why is this the right approach? (list 3-4 reasons)"
+  innovations: "What's new or different about our approach?"
+  discovery_phase: "How will users find/access the solution?"
+  onboarding_phase: "Describe the initial user experience"
+  core_usage_phase: "Describe primary interaction patterns"
+  value_realization_phase: "When/how will users see benefits?"
+  design_principles: "List 3 design principles with descriptions"
+  user_satisfaction_metric: "How will user satisfaction be measured?"
+  adoption_rate_metric: "What are the target adoption metrics?"
+  task_completion_metric: "What efficiency gains are expected?"
+  short_term_outcomes: "List immediate benefits (3 months)"
+  medium_term_outcomes: "List broader impacts (6-12 months)"
+  long_term_outcomes: "List strategic outcomes (1+ years)"
+  primary_persona_name: "Name for primary user persona"
+  primary_persona_role: "Primary persona's job title/function"
+  primary_persona_goals: "What they want to achieve"
+  primary_persona_frustrations: "Current pain points"
+  primary_persona_needs: "What would help them succeed"
+  primary_persona_tech_level: "Technical expertise level"
+  secondary_persona_name: "Name for secondary persona"
+  secondary_persona_role: "Secondary persona's role"
+  secondary_persona_goals: "What they want to achieve"
+  secondary_persona_needs: "What would help them"
+  competitors: "List existing solutions with analysis"
+  market_opportunity: "Why is now the right time for this solution?"
+  assumptions: "List key assumptions about users/market/technology"
+  validation_plans: "How will each assumption be tested?"
+  upstream_dependencies: "What systems/processes feed into ours?"
+  downstream_impacts: "What systems/processes are affected by our solution?"
+  partner_integrations: "What third-party services/APIs are needed?"
+==================== END: .bmad-core/templates/productContext-tmpl.yaml ====================
 
 ==================== START: .bmad-core/data/bmad-kb.md ====================
 # BMad Knowledge Base
@@ -2312,7 +3459,7 @@ You are the "Vibe CEO" - thinking like a CEO with unlimited resources and a sing
 ### Core Development Team
 
 | Agent       | Role               | Primary Functions                       | When to Use                            |
-| ----------- | ------------------ | --------------------------------------- | -------------------------------------- |
+|-------------|--------------------|-----------------------------------------|----------------------------------------|
 | `analyst`   | Business Analyst   | Market research, requirements gathering | Project planning, competitive analysis |
 | `pm`        | Product Manager    | PRD creation, feature prioritization    | Strategic planning, roadmaps           |
 | `architect` | Solution Architect | System design, technical architecture   | Complex systems, scalability planning  |
@@ -2325,7 +3472,7 @@ You are the "Vibe CEO" - thinking like a CEO with unlimited resources and a sing
 ### Meta Agents
 
 | Agent               | Role             | Primary Functions                     | When to Use                       |
-| ------------------- | ---------------- | ------------------------------------- | --------------------------------- |
+|---------------------|------------------|---------------------------------------|-----------------------------------|
 | `bmad-orchestrator` | Team Coordinator | Multi-agent workflows, role switching | Complex multi-role tasks          |
 | `bmad-master`       | Universal Expert | All capabilities without switching    | Single-session comprehensive work |
 
@@ -2388,6 +3535,104 @@ You are the "Vibe CEO" - thinking like a CEO with unlimited resources and a sing
 - **Use Case**: Backend services, APIs, system development
 - **Bundle**: `team-no-ui.txt`
 
+## Recent Enhancements (Quad Damage)
+
+### Memory Bank Pattern
+
+The Memory Bank provides persistent context across AI sessions, ensuring continuity when AI memory resets:
+
+**Core Files** (in `docs/memory-bank/`):
+- `projectbrief.md` - Project foundation and goals
+- `productContext.md` - Problem space and user needs  
+- `systemPatterns.md` - Architecture and technical decisions
+- `techContext.md` - Technology stack and constraints
+- `activeContext.md` - Current work and priorities
+- `progress.md` - Features completed and status
+
+**Key Features**:
+- Session initialization with `session-kickoff` task
+- Automatic updates through `update-memory-bank` task
+- Integration with dev journals and ADRs
+- All agents have Memory Bank awareness
+
+### Architectural Decision Records (ADRs)
+
+Formal documentation of significant architectural decisions:
+
+**Features**:
+- Michael Nygard format in `docs/adr/`
+- Numbered sequence (0001, 0002, etc.)
+- Comprehensive template with alternatives analysis
+- Integration with architect agent
+- Triggers documented for when to create ADRs
+
+### Development Journals
+
+Session documentation for knowledge sharing:
+
+**Features**:
+- Daily entries in `docs/devJournal/`
+- Comprehensive session narratives
+- Work stream tracking
+- Technical decision documentation
+- Anti-tunnel vision mechanisms
+
+### Enhanced Commit and PR Workflows
+
+Professional git workflows with comprehensive context:
+
+**Features**:
+- Multi-stream commit synthesis
+- Conventional Commits 1.0 standard
+- Anti-tunnel vision checks
+- Comprehensive PR descriptions
+- Cross-reference integration
+
+### Technical Principles Integration
+
+Three sets of architectural and coding principles:
+
+**1. Coding Standards** (`data/coding-standards.md`):
+- Core principles with tags ([SF], [DRY], etc.)
+- Security best practices
+- Testing standards
+- Commit conventions
+
+**2. Twelve-Factor Principles** (`data/twelve-factor-principles.md`):
+- Cloud-native application design
+- Environment parity
+- Stateless processes
+- Configuration management
+
+**3. Microservice Patterns** (`data/microservice-patterns.md`):
+- Service decomposition strategies
+- Communication patterns
+- Data management approaches
+- Testing and deployment patterns
+
+### Session Kickoff Protocol
+
+Universal initialization for all agents:
+
+**Process**:
+1. Memory Bank review
+2. Architecture documentation scan
+3. Dev journal history check
+4. ADR review
+5. Current state assessment
+6. Consistency validation
+7. Next steps recommendation
+
+**Usage**: Run `*session-kickoff` at start of any agent session
+
+### Integration Points
+
+All enhancements work together:
+- Memory Bank ← Dev Journals ← ADRs ← Code Changes
+- Session Kickoff → Memory Bank → Agent Context
+- Technical Principles → Architecture Decisions → ADRs
+- Commit/PR Workflows → Dev Journals → Memory Bank
+
 ## Core Architecture
 
 ### System Overview
@@ -2420,7 +3665,7 @@ The BMad-Method is built around a modular architecture centered on the `bmad-cor
 - **Templates** (`bmad-core/templates/`): Markdown templates for PRDs, architecture specs, user stories
 - **Tasks** (`bmad-core/tasks/`): Instructions for specific repeatable actions like "shard-doc" or "create-next-story"
 - **Checklists** (`bmad-core/checklists/`): Quality assurance checklists for validation and review
-- **Data** (`bmad-core/data/`): Core knowledge base and technical preferences
+- **Data** (`bmad-core/data/`): Core knowledge base, technical preferences, and project scaffolding guidelines
 
 ### Dual Environment Architecture
 
@@ -2448,12 +3693,19 @@ BMad employs a sophisticated template system with three key components:
 
 ### Technical Preferences Integration
 
-The `technical-preferences.md` file serves as a persistent technical profile that:
+The framework includes two key preference files:
 
+**`technical-preferences.md`** - Technology choices and patterns:
 - Ensures consistency across all agents and projects
 - Eliminates repetitive technology specification
 - Provides personalized recommendations aligned with user preferences
 - Evolves over time with lessons learned
+
+**`project-scaffolding-preference.md`** - Project structure and organization:
+- Defines standard directory structure for all projects
+- Provides technology-agnostic scaffolding guidelines
+- Ensures consistency in documentation organization
+- Supports BMAD-specific structures (Memory Bank, ADRs, Dev Journals)
 
 ### Build and Delivery Process
 
@@ -2880,3 +4132,270 @@ Use the **expansion-creator** pack to build your own:
 19. **Metaphor Mapping**: Use extended metaphors to explore solutions
 20. **Question Storming**: Generate questions instead of answers first
 ==================== END: .bmad-core/data/brainstorming-techniques.md ====================
+
+==================== START: .bmad-core/data/project-scaffolding-preference.md ====================
+# Project Scaffolding Preferences
+
+This document defines generic, technology-agnostic project scaffolding preferences that can be applied to any software project. These preferences promote consistency, maintainability, and best practices across different technology stacks.
+
+## Documentation Structure
+
+### Core Documentation
+- **README**: Primary project documentation with setup instructions, architecture overview, and contribution guidelines
+- **CHANGELOG**: Maintain detailed changelog following semantic versioning principles
+- **LICENSE**: Clear licensing information for the project
+- **Contributing Guidelines**: How to contribute, code standards, and review process
+
+### BMAD Documentation Structure
+- **Product Requirements Document (PRD)**:
+  - Single source file: `docs/prd.md`
+  - Can be sharded into `docs/prd/` directory by level 2 sections
+  - Contains epics, stories, requirements
+  
+- **Architecture Documentation**:
+  - Single source file: `docs/architecture.md` or `docs/brownfield-architecture.md`
+  - Can be sharded into `docs/architecture/` directory
+  - For brownfield: Document actual state including technical debt
+  
+- **Memory Bank** (AI Context Persistence):
+  - Location: `docs/memory-bank/`
+  - Core files: projectbrief.md, productContext.md, systemPatterns.md, techContext.md, activeContext.md, progress.md
+  - Provides persistent context across AI sessions
+
+### Architectural Documentation
+- **Architecture Decision Records (ADRs)**: Document significant architectural decisions
+  - Location: `docs/adr/`
+  - When to create: Major dependency changes, pattern changes, integration approaches, schema modifications
+  - Follow consistent ADR template (e.g., Michael Nygard format)
+  - Number sequentially (e.g., adr-0001.md)
+  - Maintain an index
+  
+### Development Documentation
+- **Development Journals**: Track daily/session work, decisions, and challenges
+  - Location: `docs/devJournal/`
+  - Named with date format: `YYYYMMDD-NN.md`
+  - Include work completed, decisions made, blockers encountered
+  - Reference relevant ADRs and feature documentation
+  - Create after significant work sessions
+
+### Feature Documentation
+- **Roadmap**: High-level project direction and planned features
+  - Location: `docs/roadmap/`
+  - Feature details in `docs/roadmap/features/`
+- **Epics and Stories**:
+  - Epics extracted from PRD to `docs/epics/`
+  - Stories created from epics to `docs/stories/`
+  - Follow naming: `epic-N-story-M.md`
+
+## Source Code Organization
+
+### Separation of Concerns
+- **Frontend/UI**: Dedicated location for user interface components
+- **Backend/API**: Separate backend logic and API implementations
+- **Shared Utilities**: Common functionality used across layers
+- **Configuration**: Centralized configuration management
+- **Scripts**: Automation and utility scripts
+
+### Testing Structure
+- **Unit Tests**: Close to source code or in dedicated test directories
+- **Integration Tests**: Test component interactions
+- **End-to-End Tests**: Full workflow testing
+- **Test Utilities**: Shared test helpers and fixtures
+- **Test Documentation**: How to run tests, test strategies
+
+## Project Root Structure
+
+### Essential Files
+- Version control ignore files (e.g., .gitignore)
+- Editor/IDE configuration files
+- Dependency management files
+- Build/deployment configuration
+- Environment configuration templates (never commit actual secrets)
+
+### Standard Directories
+```
+/docs
+  /adr           # Architecture Decision Records
+  /devJournal    # Development journals  
+  /memory-bank   # Persistent AI context (BMAD-specific)
+  /prd           # Sharded Product Requirements Documents
+  /architecture  # Sharded Architecture Documents
+  /stories       # User stories (from epics)
+  /epics         # Epic documents
+  /api           # API documentation
+  /roadmap       # Project roadmap and features
+
+/src
+  /[frontend]    # UI/frontend code
+  /[backend]     # Backend/API code
+  /[shared]      # Shared utilities
+  /[config]      # Configuration
+
+/tests
+  /unit          # Unit tests
+  /integration   # Integration tests
+  /e2e           # End-to-end tests
+
+/scripts         # Build, deployment, utility scripts
+/tools           # Development tools and utilities
+/.bmad          # BMAD-specific configuration and overrides
+```
+
+## Development Practices
+
+### Code Organization
+- Keep files focused and manageable (typically under 300 lines)
+- Prefer composition over inheritance
+- Avoid code duplication - check for existing implementations
+- Use clear, consistent naming conventions throughout
+- Document complex logic and non-obvious decisions
+
+### Documentation Discipline
+- Update documentation alongside code changes
+- Document the "why" not just the "what"
+- Keep examples current and working
+- Review documentation in code reviews
+- Maintain templates for consistency
+
+### Security Considerations
+- Never commit secrets or credentials
+- Use environment variables for configuration
+- Implement proper input validation
+- Manage resources appropriately (close connections, free memory)
+- Follow principle of least privilege
+- Document security considerations
+
+### Quality Standards
+- All code must pass linting and formatting checks
+- Automated testing at multiple levels
+- Code review required before merging
+- Continuous integration for all changes
+- Regular dependency updates
+
+## Accessibility & Inclusion
+
+### Universal Design
+- Consider accessibility from the start
+- Follow established accessibility standards (e.g., WCAG)
+- Ensure keyboard navigation support
+- Provide appropriate text alternatives
+- Test with assistive technologies
+
+### Inclusive Practices
+- Use clear, inclusive language in documentation
+- Consider diverse user needs and contexts
+- Document accessibility requirements
+- Include accessibility in testing
+
+## Database/Data Management
+
+### Schema Management
+- Version control all schema changes
+- Use migration tools for consistency
+- Document schema decisions in ADRs
+- Maintain data dictionary
+- Never make manual production changes
+
+### Data Documentation
+- Maintain current entity relationship diagrams
+- Document data flows and dependencies
+- Explain business rules and constraints
+- Keep sample data separate from production
+
+## Environment Management
+
+### Environment Parity
+- Development, test, and production should be as similar as possible
+- Use same deployment process across environments
+- Configuration through environment variables
+- Document environment-specific settings
+- Automate environment setup
+
+### Local Development
+- Provide scripted setup process
+- Document all prerequisites
+- Include reset/cleanup scripts
+- Maintain environment templates
+- Support multiple development environments
+
+## Branching & Release Strategy
+
+### Version Control
+- Define clear branching strategy
+- Use semantic versioning
+- Tag all releases
+- Maintain release notes
+- Document hotfix procedures
+
+### Release Process
+- Automated build and deployment
+- Staged rollout capabilities
+- Rollback procedures documented
+- Release communication plan
+- Post-release verification
+
+## Incident Management
+
+### Incident Response
+- Maintain incident log
+- Document root cause analyses
+- Update runbooks based on incidents
+- Conduct retrospectives
+- Share learnings across team
+
+### Monitoring & Observability
+- Define key metrics
+- Implement appropriate logging
+- Set up alerting thresholds
+- Document troubleshooting guides
+- Regular review of metrics
+
+## Compliance & Governance
+
+### Data Privacy
+- Document data handling practices
+- Implement privacy by design
+- Regular compliance reviews
+- Clear data retention policies
+- User consent management
+
+### Audit Trail
+- Maintain change history
+- Document decision rationale
+- Track access and modifications
+- Regular security reviews
+- Compliance documentation
+
+## BMAD-Specific Considerations
+
+### Session Management
+- **Session Kickoff**: Always start new AI sessions with proper context initialization
+- **Memory Bank Maintenance**: Keep context files current throughout development
+- **Dev Journal Creation**: Document significant work sessions
+- **Sprint Reviews**: Regular quality and progress assessments
+
+### Document Sharding
+- **When to Shard**: Large PRDs and architecture documents (>1000 lines)
+- **How to Shard**: By level 2 sections, maintaining index.md
+- **Naming Convention**: Convert section headings to lowercase-dash-case
+- **Tool Support**: Use markdown-tree-parser when available
+
+### Brownfield vs Greenfield
+- **Greenfield**: Start with PRD → Architecture → Implementation
+- **Brownfield**: Document existing → Create focused PRD → Enhance
+- **Documentation Focus**: Brownfield docs capture actual state, not ideal
+- **Technical Debt**: Always document workarounds and constraints
+
+## Best Practices Summary
+
+1. **Simplicity First**: Choose the simplest solution that works
+2. **Documentation as Code**: Treat documentation with same rigor as code
+3. **Automate Everything**: If it's done twice, automate it
+4. **Security by Default**: Consider security implications in every decision
+5. **Test Early and Often**: Multiple levels of testing for confidence
+6. **Continuous Improvement**: Regular retrospectives and improvements
+7. **Accessibility Always**: Build inclusive solutions from the start
+8. **Clean as You Go**: Maintain code quality continuously
+9. **Context Persistence**: Maintain Memory Bank for AI continuity
+10. **Reality Over Ideals**: Document what exists, not what should be
+==================== END: .bmad-core/data/project-scaffolding-preference.md ====================

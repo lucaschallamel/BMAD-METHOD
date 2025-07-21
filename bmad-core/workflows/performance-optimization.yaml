@@ -1,0 +1,300 @@
+workflow:
+  id: performance-optimization
+  name: Performance Optimization Workflow
+  description: >-
+    Agent workflow for systematic performance improvements. Focuses on identifying
+    bottlenecks, implementing optimizations, and validating improvements through
+    benchmarking and monitoring.
+  type: optimization
+  project_types:
+    - performance-tuning
+    - scalability-improvement
+    - response-time-optimization
+    - resource-optimization
+    - throughput-enhancement
+
+  sequence:
+    - step: session_initialization
+      agent: bmad-master
+      action: session_kickoff
+      uses: session-kickoff
+      notes: |
+        Performance-focused initialization:
+        - Review Memory Bank for known issues
+        - Check previous optimization efforts
+        - Review performance requirements
+        - Understand system architecture
+        - Check monitoring setup
+
+    - agent: architect
+      action: performance_assessment
+      creates: performance-baseline.md
+      notes: |
+        Establish performance baseline:
+        - Current performance metrics
+        - Resource utilization patterns
+        - Response time distribution
+        - Throughput measurements
+        - Error rates
+        - User experience metrics
+
+    - agent: analyst
+      action: bottleneck_analysis
+      creates: bottleneck-analysis.md
+      requires: performance-baseline.md
+      notes: |
+        Identify performance bottlenecks:
+        - Profile application code
+        - Analyze database queries
+        - Review network latency
+        - Check resource constraints
+        - Identify hot paths
+        - Memory leak detection
+
+    - agent: architect
+      action: optimization_strategy
+      creates: optimization-strategy.md
+      requires: bottleneck-analysis.md
+      notes: |
+        Design optimization approach:
+        - Quick wins identification
+        - Architectural improvements
+        - Caching strategies
+        - Query optimization plans
+        - Resource scaling options
+        - Code optimization targets
+
+    - agent: pm
+      creates: optimization-plan.md
+      action: prioritize_optimizations
+      requires: optimization-strategy.md
+      notes: |
+        Create optimization plan:
+        - Impact vs effort matrix
+        - Implementation sequence
+        - Performance targets
+        - Risk assessment
+        - Testing requirements
+        - Rollback procedures
+
+    - agent: po
+      validates: optimization_plan
+      notes: |
+        Validate approach:
+        - Confirm performance goals
+        - Approve resource usage
+        - Accept risk levels
+        - Sign off on timeline
+
+    - agent: dev
+      action: setup_benchmarks
+      creates: benchmark-suite/
+      notes: |
+        Create benchmark suite:
+        - Micro-benchmarks for hot paths
+        - Load testing scenarios
+        - Real-world usage patterns
+        - Stress test configurations
+        - Monitoring dashboards
+        - Automated performance tests
+
+    - optimization_cycle:
+      repeats: for_each_optimization
+      sequence:
+        - agent: dev
+          action: implement_optimization
+          updates: optimized_code
+          notes: |
+            Careful implementation:
+            - Apply optimization
+            - Maintain functionality
+            - Add performance tests
+            - Document changes
+            - Update monitoring
+
+        - agent: qa
+          action: performance_testing
+          validates: optimization_impact
+          notes: |
+            Comprehensive testing:
+            - Run benchmark suite
+            - Load testing
+            - Stress testing
+            - Regression testing
+            - Real-world scenarios
+            - Monitor resource usage
+
+        - agent: analyst
+          action: measure_improvement
+          creates: improvement-metrics.md
+          notes: |
+            Quantify improvements:
+            - Before/after comparison
+            - Statistical significance
+            - Resource usage delta
+            - Cost analysis
+            - User impact assessment
+
+        - agent: architect
+          creates: adr.md
+          action: document_optimization
+          condition: significant_change
+          notes: |
+            Document decisions:
+            - Optimization rationale
+            - Trade-offs made
+            - Implementation details
+            - Performance gains
+            - Side effects
+
+    - agent: dev
+      action: production_monitoring
+      updates: monitoring_configuration
+      notes: |
+        Enhanced monitoring:
+        - Add performance metrics
+        - Set up alerts
+        - Create dashboards
+        - Configure profiling
+        - Enable tracing
+        - Set SLO targets
+
+    - agent: dev
+      creates: dev_journal_entry
+      action: document_optimizations
+      uses: create-dev-journal
+      notes: |
+        Document optimization work:
+        - Optimizations applied
+        - Performance improvements
+        - Lessons learned
+        - Monitoring setup
+        - Update Memory Bank
+
+    - agent: analyst
+      action: final_performance_report
+      creates: performance-report.md
+      notes: |
+        Comprehensive performance report:
+        - Overall improvements
+        - Individual optimization impacts
+        - Resource usage changes
+        - Cost implications
+        - User experience improvements
+        - Recommendations
+
+    - agent: sm
+      action: optimization_review
+      uses: conduct-sprint-review
+      creates: optimization-review.md
+      notes: |
+        Review optimization results:
+        - Present improvements
+        - Demonstrate benchmarks
+        - Show monitoring dashboards
+        - Discuss next steps
+        - Plan maintenance
+
+    - agent: architect
+      action: update_performance_docs
+      updates: architecture_documentation
+      notes: |
+        Update documentation:
+        - Performance characteristics
+        - Scaling guidelines
+        - Optimization patterns
+        - Monitoring requirements
+        - Troubleshooting guides
+
+    - workflow_end:
+      action: optimization_complete
+      notes: |
+        Performance optimization complete!
+        - Targets achieved
+        - Monitoring active
+        - Documentation updated
+        - Team trained
+        - Maintenance planned
+
+  flow_diagram: |
+    ```mermaid
+    graph TD
+        A[Start: Performance] --> B[bmad-master: session init]
+        B --> C[architect: baseline assessment]
+        C --> D[analyst: bottleneck analysis]
+        D --> E[architect: optimization strategy]
+        E --> F[pm: prioritize optimizations]
+        F --> G[po: validate plan]
+        
+        G --> H[dev: setup benchmarks]
+        H --> I[Optimization Cycle]
+        I --> J[dev: implement optimization]
+        J --> K[qa: performance testing]
+        K --> L[analyst: measure improvement]
+        L --> M{Significant change?}
+        M -->|Yes| N[architect: create ADR]
+        M -->|No| O{More optimizations?}
+        N --> O
+        O -->|Yes| I
+        O -->|No| P[dev: production monitoring]
+        
+        P --> Q[dev: document work]
+        Q --> R[analyst: final report]
+        R --> S[sm: optimization review]
+        S --> T[architect: update docs]
+        T --> U[Optimization Complete]
+
+        style U fill:#90EE90
+        style B fill:#DDA0DD
+        style C fill:#FFB6C1
+        style D fill:#FFB6C1
+        style L fill:#98FB98
+        style K fill:#FFA500
+        style R fill:#98FB98
+        style S fill:#ADD8E6
+    ```
+
+  decision_guidance:
+    when_to_use:
+      - User complaints about speed
+      - System not meeting SLOs
+      - Scaling issues
+      - High infrastructure costs
+      - Before major traffic events
+      - Regular performance maintenance
+
+  handoff_prompts:
+    baseline_complete: |
+      Performance baseline established:
+      - P95 response time: {{p95_response}}ms
+      - Throughput: {{throughput}} req/s
+      - Error rate: {{error_rate}}%
+      - Resource usage: CPU {{cpu}}%, Memory {{memory}}%
+
+    bottlenecks_found: |
+      Top bottlenecks identified:
+      1. {{bottleneck_1}}: {{impact_1}}% impact
+      2. {{bottleneck_2}}: {{impact_2}}% impact
+      3. {{bottleneck_3}}: {{impact_3}}% impact
+      Total optimization potential: {{total_potential}}%
+
+    optimization_complete: |
+      Optimization "{{optimization_name}}" complete:
+      - Performance gain: {{improvement}}%
+      - Response time: {{old_time}}ms → {{new_time}}ms
+      - Resource reduction: {{resource_saving}}%
+      - Tests passing: {{test_status}}
+
+    final_report: |
+      Performance optimization summary:
+      - Overall improvement: {{total_improvement}}%
+      - P95 reduced by: {{p95_reduction}}ms
+      - Throughput increased: {{throughput_increase}}%
+      - Cost savings: ${{monthly_savings}}/month
+
+    complete: |
+      Performance optimization complete!
+      - All targets met: {{targets_met}}
+      - SLO compliance: {{slo_compliance}}%
+      - Monitoring active: {{monitoring_status}}
+      - Next review: {{next_review_date}}

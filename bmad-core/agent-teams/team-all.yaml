@@ -4,7 +4,7 @@ bundle:
   description: Includes every core system agent.
 agents:
   - bmad-orchestrator
-  - '*'
+  - "*"
 workflows:
   - brownfield-fullstack.yaml
   - brownfield-service.yaml
@@ -12,3 +12,9 @@ workflows:
   - greenfield-fullstack.yaml
   - greenfield-service.yaml
   - greenfield-ui.yaml
+  - sprint-execution.yaml
+  - quick-fix.yaml
+  - technical-debt.yaml
+  - documentation-update.yaml
+  - system-migration.yaml
+  - performance-optimization.yaml

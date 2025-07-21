@@ -217,10 +217,12 @@ Tasks should be:
 
 Templates need:
 
-- Structured output format
-- Embedded LLM instructions
-- Placeholders for customization
-- Professional formatting
+- Structured output format using YAML specification
+- Embedded LLM instructions in `instruction` fields
+- Placeholders for customization using `{{variable}}` syntax
+- Professional formatting with clear section hierarchy
+- Integration with Memory Bank and ADR systems when applicable
+- Support for variable substitution and conditional sections
 
 ### Step 5: Test & Iterate
 
@@ -251,10 +253,12 @@ Imagine a future where:
 
 Expansion packs could enable:
 
-- Cross-pack agent collaboration
-- Industry-standard agent protocols
-- Interoperable AI workflows
-- Universal agent languages
+- Cross-pack agent collaboration with shared Memory Bank patterns
+- Industry-standard agent protocols with common ADR structures
+- Interoperable AI workflows using standardized project scaffolding
+- Universal agent languages with consistent template specifications
+- Context persistence across different domain expertise areas
+- Seamless knowledge transfer between specialized agent teams
 
 ### Democratizing Expertise
 

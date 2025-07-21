@@ -12,6 +12,18 @@ workflow:
     - frontend-enhancement
 
   sequence:
+    - step: session_initialization
+      agent: bmad-master
+      action: session_kickoff
+      uses: session-kickoff
+      notes: |
+        Initialize AI session context:
+        - Review Memory Bank if exists
+        - Understand project state and technical principles
+        - Check recent dev journals and ADRs
+        - Review sprint context if applicable
+        Required for new sessions or after 24+ hour gaps
+
     - step: ui_analysis
       agent: architect
       action: analyze existing project and use task document-project
@@ -47,6 +59,17 @@ workflow:
       updates: any_flagged_documents
       condition: po_checklist_issues
       notes: "If PO finds issues, return to relevant agent to fix and re-export updated documents to docs/ folder."
+
+    - step: sprint_planning_check
+      agent: sm
+      action: verify_sprint_context
+      condition: development_ready
+      notes: |
+        If part of sprint:
+        - Align with sprint goals
+        - Update sprint backlog
+        - Plan for sprint review
+        - Create ADRs for significant UI/UX decisions
 
     - agent: po
       action: shard_documents
@@ -112,6 +135,19 @@ workflow:
         - Dev Agent (New Chat): Address remaining items
         - Return to QA for final approval
 
+    - agent: dev
+      creates: dev_journal_entry
+      action: document_session_work
+      uses: create-dev-journal
+      condition: significant_work_completed
+      notes: |
+        Create dev journal for:
+        - Major UI component completion
+        - Complex frontend problem solutions
+        - UI/UX architectural decisions (trigger ADR creation)
+        - End of work session
+        Updates Memory Bank activeContext
+
     - repeat_development_cycle:
       action: continue_for_all_stories
       notes: |
@@ -129,26 +165,40 @@ workflow:
         - Validate epic was completed correctly
         - Document learnings and improvements
 
+    - agent: sm
+      action: conduct_sprint_review
+      uses: conduct-sprint-review
+      condition: sprint_boundary
+      notes: |
+        At sprint end:
+        - Review UI enhancement accomplishments using sprint-review-checklist
+        - Document UI/UX learnings and design decisions
+        - Update Memory Bank comprehensively
+        - Create sprint summary documentation
+        - Plan next sprint UI priorities
+
     - workflow_end:
       action: project_complete
       notes: |
         All stories implemented and reviewed!
         Project development phase complete.
-        
+
         Reference: {root}/data/bmad-kb.md#IDE Development Workflow
 
   flow_diagram: |
     ```mermaid
     graph TD
-        A[Start: UI Enhancement] --> B[analyst: analyze existing UI]
+        A[Start: UI Enhancement] --> A1[bmad-master: session kickoff]
+        A1 --> B[analyst: analyze existing UI]
         B --> C[pm: prd.md]
         C --> D[ux-expert: front-end-spec.md]
         D --> E[architect: architecture.md]
         E --> F[po: validate with po-master-checklist]
         F --> G{PO finds issues?}
         G -->|Yes| H[Return to relevant agent for fixes]
-        G -->|No| I[po: shard documents]
+        G -->|No| SP[sm: sprint planning]
         H --> F
+        SP --> I[po: shard documents]
         
         I --> J[sm: create story]
         J --> K{Review draft story?}
@@ -157,16 +207,20 @@ workflow:
         L --> M
         M --> N{QA review?}
         N -->|Yes| O[qa: review implementation]
-        N -->|No| P{More stories?}
+        N -->|No| DJ[dev: dev journal]
         O --> Q{QA found issues?}
         Q -->|Yes| R[dev: address QA feedback]
-        Q -->|No| P
+        Q -->|No| DJ
         R --> O
+        DJ --> P{More stories?}
         P -->|Yes| J
         P -->|No| S{Epic retrospective?}
         S -->|Yes| T[po: epic retrospective]
-        S -->|No| U[Project Complete]
-        T --> U
+        S -->|No| SR{Sprint boundary?}
+        T --> SR
+        SR -->|Yes| SRV[sm: sprint review]
+        SR -->|No| U[Project Complete]
+        SRV --> U
 
         style U fill:#90EE90
         style I fill:#ADD8E6
@@ -178,6 +232,10 @@ workflow:
         style L fill:#F0E68C
         style O fill:#F0E68C
         style T fill:#F0E68C
+        style A1 fill:#E6E6FA
+        style SP fill:#E6E6FA
+        style DJ fill:#E6E6FA
+        style SRV fill:#E6E6FA
     ```
 
   decision_guidance:

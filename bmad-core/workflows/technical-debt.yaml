@@ -1,0 +1,268 @@
+workflow:
+  id: technical-debt
+  name: Technical Debt Reduction Workflow
+  description: >-
+    Agent workflow for systematic technical debt reduction. Focuses on identifying,
+    prioritizing, and safely eliminating technical debt while maintaining system
+    stability and documenting improvements.
+  type: maintenance
+  project_types:
+    - debt-reduction
+    - code-cleanup
+    - refactoring
+    - modernization
+    - system-health
+
+  sequence:
+    - step: session_initialization
+      agent: bmad-master
+      action: session_kickoff
+      uses: session-kickoff
+      notes: |
+        Initialize with debt focus:
+        - Review Memory Bank for known debt
+        - Check previous debt reduction efforts
+        - Review system patterns and pain points
+        - Understand current technical principles
+        - Check ADRs for debt-inducing decisions
+
+    - agent: architect
+      action: debt_assessment
+      creates: debt-assessment.md
+      uses: document-project
+      notes: |
+        Comprehensive debt analysis:
+        - Code quality metrics analysis
+        - Dependency audit (outdated/vulnerable)
+        - Architecture anti-patterns
+        - Performance bottlenecks
+        - Security vulnerabilities
+        - Testing gaps
+        - Documentation debt
+
+    - agent: analyst
+      action: debt_prioritization
+      creates: debt-priorities.md
+      requires: debt-assessment.md
+      notes: |
+        Prioritize debt items:
+        - Risk assessment (security, stability)
+        - Business impact analysis
+        - Effort estimation
+        - Dependency mapping
+        - Quick wins identification
+        - Create debt backlog
+
+    - agent: pm
+      creates: debt-reduction-plan.md
+      action: create_debt_sprint_plan
+      requires: debt-priorities.md
+      notes: |
+        Plan debt reduction:
+        - Group related debt items
+        - Create epic for major debt areas
+        - Define success metrics
+        - Set realistic timelines
+        - Plan incremental improvements
+        - Balance with feature work
+
+    - agent: architect
+      creates: refactoring-strategy.md
+      action: design_refactoring_approach
+      requires: debt-reduction-plan.md
+      notes: |
+        Technical approach:
+        - Define refactoring patterns
+        - Plan migration strategies
+        - Design new architecture
+        - Create rollback plans
+        - Define testing strategy
+        - Document constraints
+
+    - agent: po
+      validates: debt_reduction_plan
+      uses: po-master-checklist
+      notes: |
+        Validate approach:
+        - Confirm business value
+        - Verify risk mitigation
+        - Approve timeline
+        - Sign off on approach
+
+    - agent: sm
+      action: create_debt_stories
+      creates: debt-stories/
+      uses: create-next-story
+      notes: |
+        Story creation:
+        - Break down into manageable stories
+        - Include refactoring in each story
+        - Add comprehensive test requirements
+        - Define clear acceptance criteria
+        - Include documentation updates
+
+    - development_cycle:
+      repeats: for_each_debt_story
+      sequence:
+        - agent: dev
+          action: implement_refactoring
+          updates: codebase
+          notes: |
+            Careful implementation:
+            - Follow Boy Scout Rule
+            - Maintain backward compatibility
+            - Add missing tests first
+            - Refactor incrementally
+            - Update documentation
+
+        - agent: qa
+          action: regression_testing
+          validates: refactored_code
+          notes: |
+            Thorough testing:
+            - Full regression suite
+            - Performance benchmarks
+            - Security scanning
+            - Integration tests
+            - Load testing if needed
+
+        - agent: architect
+          creates: adr.md
+          action: document_improvements
+          condition: significant_change
+          notes: |
+            Document decisions:
+            - Why refactoring was needed
+            - Approach taken
+            - Trade-offs made
+            - Patterns introduced
+            - Update Memory Bank
+
+    - agent: dev
+      creates: dev_journal_entry
+      action: document_debt_reduction
+      uses: create-dev-journal
+      condition: milestone_reached
+      notes: |
+        Document progress:
+        - Debt eliminated
+        - Patterns improved
+        - Metrics before/after
+        - Lessons learned
+        - Update Memory Bank
+
+    - agent: analyst
+      action: measure_improvement
+      creates: improvement-metrics.md
+      notes: |
+        Quantify improvements:
+        - Code quality metrics
+        - Performance improvements
+        - Test coverage increase
+        - Build time reduction
+        - Reduced vulnerabilities
+        - Developer productivity
+
+    - agent: sm
+      action: debt_sprint_review
+      uses: conduct-sprint-review
+      creates: debt-review-summary.md
+      notes: |
+        Review improvements:
+        - Present metrics
+        - Demonstrate improvements
+        - Show risk reduction
+        - Document remaining debt
+        - Plan next iteration
+
+    - agent: bmad-master
+      action: comprehensive_update
+      uses: update-memory-bank
+      notes: |
+        Update all documentation:
+        - New patterns to systemPatterns.md
+        - Progress to progress.md
+        - Remaining debt to activeContext.md
+        - Update technical context
+
+    - workflow_end:
+      action: debt_reduction_complete
+      notes: |
+        Debt reduction cycle complete!
+        - Metrics improved
+        - Documentation updated
+        - System more maintainable
+        - Team knowledge increased
+
+  flow_diagram: |
+    ```mermaid
+    graph TD
+        A[Start: Debt Reduction] --> B[bmad-master: session init]
+        B --> C[architect: assess debt]
+        C --> D[analyst: prioritize debt]
+        D --> E[pm: create plan]
+        E --> F[architect: refactoring strategy]
+        F --> G[po: validate approach]
+        
+        G --> H[sm: create stories]
+        H --> I[Development Cycle]
+        I --> J[dev: implement refactoring]
+        J --> K[qa: regression testing]
+        K --> L{Significant change?}
+        L -->|Yes| M[architect: create ADR]
+        L -->|No| N{More stories?}
+        M --> N
+        N -->|Yes| I
+        N -->|No| O[dev: document progress]
+        
+        O --> P[analyst: measure improvement]
+        P --> Q[sm: debt sprint review]
+        Q --> R[bmad-master: update Memory Bank]
+        R --> S[Debt Reduction Complete]
+
+        style S fill:#90EE90
+        style B fill:#DDA0DD
+        style C fill:#FFB6C1
+        style D fill:#FFB6C1
+        style P fill:#98FB98
+        style Q fill:#ADD8E6
+        style R fill:#DDA0DD
+    ```
+
+  decision_guidance:
+    when_to_use:
+      - System becoming hard to maintain
+      - Frequent bugs in certain areas
+      - Performance degradation
+      - Security vulnerabilities accumulating
+      - Developer velocity decreasing
+      - Before major feature additions
+
+  handoff_prompts:
+    assessment_complete: |
+      Debt assessment complete:
+      - Critical items: {{critical_count}}
+      - High priority: {{high_count}}
+      - Total debt items: {{total_count}}
+      - Estimated effort: {{total_effort}} hours
+
+    plan_ready: |
+      Debt reduction plan created:
+      - Sprint 1 focus: {{sprint1_focus}}
+      - Quick wins: {{quick_wins_count}}
+      - Risk reduction: {{risk_reduction_percentage}}%
+
+    story_complete: |
+      Debt story {{story_id}} complete:
+      - Code quality: {{before_score}} → {{after_score}}
+      - Test coverage: {{before_coverage}}% → {{after_coverage}}%
+      - Performance: {{improvement_percentage}}% faster
+
+    review_summary: |
+      Debt reduction sprint complete:
+      - Stories completed: {{completed_count}}
+      - Debt eliminated: {{debt_points}} points
+      - System health: {{health_improvement}}% better
+      - Remaining debt: {{remaining_debt}} items
+
+    complete: "Technical debt reduction cycle complete. System health improved by {{overall_improvement}}%."

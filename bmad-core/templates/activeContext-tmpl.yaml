@@ -1,0 +1,266 @@
+template:
+  id: memory-bank-activecontext-v1
+  name: Memory Bank - Active Context
+  version: 1.0
+  output:
+    format: markdown
+    filename: docs/memory-bank/activeContext.md
+    title: "Active Context"
+  description: |
+    Current work focus, recent changes, and immediate priorities.
+    This document is the most frequently updated. It represents the current state and immediate context needed to continue work effectively.
+
+workflow:
+  mode: guided
+  instruction: |
+    Document the current state of work, active decisions, and immediate next steps.
+    This file should be updated frequently to maintain accurate context.
+
+sections:
+  - id: current-sprint
+    title: Current Sprint/Iteration
+    instruction: Capture current sprint information
+    template: |
+      **Sprint**: {{sprint_name}}  
+      **Duration**: {{start_date}} - {{end_date}}  
+      **Theme**: {{sprint_theme}}  
+      **Status**: {{sprint_status}}
+
+  - id: active-work
+    title: Active Work Items
+    instruction: Document what's currently being worked on
+    template: |
+      ### In Progress
+      | Item | Type | Assignee | Status | Notes |
+      |------|------|----------|--------|-------|
+      {{#each in_progress_items}}
+      | {{this.id}}: {{this.title}} | {{this.type}} | {{this.assignee}} | {{this.completion}}% complete | {{this.notes}} |
+      {{/each}}
+
+      ### Up Next (Priority Order)
+      {{#each upcoming_items}}
+      {{@index + 1}}. **{{this.id}}: {{this.title}}** - {{this.description}}
+         - Dependencies: {{this.dependencies}}
+         - Estimate: {{this.estimate}}
+      {{/each}}
+
+      ### Recently Completed
+      | Item | Completed | Key Changes |
+      |------|-----------|-------------|
+      {{#each recent_completions}}
+      | {{this.id}}: {{this.title}} | {{this.date}} | {{this.changes}} |
+      {{/each}}
+
+  - id: recent-decisions
+    title: Recent Decisions
+    instruction: Document decisions made recently
+    template: |
+      {{#each recent_decisions}}
+      ### Decision {{@index + 1}}: {{this.title}}
+      - **Date**: {{this.date}}
+      - **Context**: {{this.context}}
+      - **Choice**: {{this.choice}}
+      - **Impact**: {{this.impact}}
+      {{#if this.adr_link}}
+      - **ADR**: {{this.adr_link}}
+      {{/if}}
+
+      {{/each}}
+
+  - id: technical-focus
+    title: Current Technical Focus
+    instruction: Document active development areas
+    template: |
+      ### Active Development Areas
+      {{#each active_areas}}
+      - **{{this.area}}**: {{this.description}}
+        - Changes: {{this.changes}}
+        - Approach: {{this.approach}}
+        - Progress: {{this.progress}}
+
+      {{/each}}
+
+      {{#if refactoring_work}}
+      ### Refactoring/Tech Debt
+      {{#each refactoring_work}}
+      - **Area**: {{this.area}}
+        - Reason: {{this.reason}}
+        - Scope: {{this.scope}}
+        - Status: {{this.status}}
+
+      {{/each}}
+      {{/if}}
+
+  - id: patterns-preferences
+    title: Important Patterns & Preferences
+    instruction: Document coding patterns and team preferences discovered
+    template: |
+      ### Coding Patterns
+      {{#each coding_patterns}}
+      - **{{this.pattern}}**: {{this.description}}
+        {{#if this.example}}
+        - Example: {{this.example}}
+        {{/if}}
+        - When to use: {{this.usage_guidance}}
+
+      {{/each}}
+
+      ### Team Preferences
+      - **Code Style**: {{code_style_preferences}}
+      - **PR Process**: {{pr_process}}
+      - **Communication**: {{communication_style}}
+      - **Documentation**: {{documentation_approach}}
+
+  - id: learnings-insights
+    title: Recent Learnings & Insights
+    instruction: Capture technical discoveries and process improvements
+    template: |
+      ### Technical Discoveries
+      {{#each technical_discoveries}}
+      {{@index + 1}}. **Learning**: {{this.learning}}
+         - Context: {{this.context}}
+         - Application: {{this.application}}
+
+      {{/each}}
+
+      {{#if process_improvements}}
+      ### Process Improvements
+      {{#each process_improvements}}
+      - **What Changed**: {{this.change}}
+      - **Why**: {{this.reason}}
+      - **Result**: {{this.result}}
+
+      {{/each}}
+      {{/if}}
+
+  - id: open-questions
+    title: Open Questions & Investigations
+    instruction: Document unresolved questions and ongoing investigations
+    template: |
+      ### Technical Questions
+      {{#each technical_questions}}
+      {{@index + 1}}. **Question**: {{this.question}}
+         - Context: {{this.context}}
+         - Options: {{this.options}}
+         - Timeline: {{this.timeline}}
+
+      {{/each}}
+
+      {{#if product_questions}}
+      ### Product Questions
+      {{#each product_questions}}
+      - **Clarification Needed**: {{this.clarification}}
+        - Impact: {{this.impact}}
+        - Who to ask: {{this.contact}}
+
+      {{/each}}
+      {{/if}}
+
+  - id: blockers-risks
+    title: Blockers & Risks
+    instruction: Document current blockers and active risks
+    template: |
+      ### Current Blockers
+      | Blocker | Impact | Owner | ETA |
+      |---------|--------|-------|-----|
+      {{#each blockers}}
+      | {{this.description}} | {{this.impact}} | {{this.owner}} | {{this.eta}} |
+      {{/each}}
+
+      ### Active Risks
+      | Risk | Probability | Impact | Mitigation |
+      |------|-------------|--------|------------|
+      {{#each risks}}
+      | {{this.description}} | {{this.probability}} | {{this.impact}} | {{this.mitigation}} |
+      {{/each}}
+
+  - id: environment-updates
+    title: Environment & Tool Updates
+    instruction: Document recent and pending environment changes
+    template: |
+      {{#if recent_changes}}
+      ### Recent Changes
+      {{#each recent_changes}}
+      - **{{this.change}}**: {{this.description}}
+        - Date: {{this.date}}
+        - Impact: {{this.impact}}
+        - Action: {{this.required_action}}
+
+      {{/each}}
+      {{/if}}
+
+      {{#if pending_updates}}
+      ### Pending Updates
+      {{#each pending_updates}}
+      - **{{this.update}}**: {{this.description}}
+        - Timeline: {{this.timeline}}
+        - Preparation: {{this.preparation}}
+
+      {{/each}}
+      {{/if}}
+
+  - id: next-session
+    title: Next Session Priorities
+    instruction: Set up context for the next work session
+    template: |
+      ### Immediate Next Steps
+      {{#each next_steps}}
+      {{@index + 1}}. {{this}}
+      {{/each}}
+
+      ### Context for Next Session
+      - **Where we left off**: {{current_state}}
+      - **Key files**: {{key_files}}
+      - **Gotchas**: {{gotchas}}
+      - **Dependencies**: {{dependencies_check}}
+
+  - id: communication-log
+    title: Communication Log
+    instruction: Track important messages and pending communications
+    template: |
+      {{#if recent_messages}}
+      ### Recent Important Messages
+      {{#each recent_messages}}
+      - **{{this.date}}**: {{this.message}}
+      {{/each}}
+      {{/if}}
+
+      {{#if pending_communications}}
+      ### Pending Communications
+      {{#each pending_communications}}
+      - **Need to inform**: {{this.recipient}} about {{this.topic}}
+      {{/each}}
+      {{/if}}
+
+prompts:
+  sprint_name: "Current sprint name/number"
+  start_date: "Sprint start date"
+  end_date: "Sprint end date"
+  sprint_theme: "Main focus of this sprint"
+  sprint_status: "Current sprint status (On Track/At Risk/Blocked)"
+  in_progress_items: "List items currently being worked on"
+  upcoming_items: "List prioritized upcoming items"
+  recent_completions: "List recently completed items"
+  recent_decisions: "List recent technical/product decisions"
+  active_areas: "What modules/components are being actively developed?"
+  refactoring_work: "Any refactoring or tech debt work in progress?"
+  coding_patterns: "Important coding patterns discovered/established"
+  code_style_preferences: "Key code style preferences beyond standards"
+  pr_process: "How the team handles pull requests"
+  communication_style: "How the team coordinates"
+  documentation_approach: "What gets documented and when"
+  technical_discoveries: "Recent technical learnings"
+  process_improvements: "Process changes made recently"
+  technical_questions: "Open technical questions"
+  product_questions: "Product clarifications needed"
+  blockers: "Current blocking issues"
+  risks: "Active risks to track"
+  recent_changes: "Recent environment/tool changes"
+  pending_updates: "Planned environment updates"
+  next_steps: "Immediate priorities for next session"
+  current_state: "Where work was left off"
+  key_files: "Important files to review"
+  gotchas: "Things to remember/watch out for"
+  dependencies_check: "What to verify first"
+  recent_messages: "Important recent communications"
+  pending_communications: "Who needs to be informed about what"

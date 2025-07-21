@@ -127,6 +127,116 @@ The file typically includes preferred technology stacks, design patterns, extern
 **Evolution Over Time:**
 Users are encouraged to continuously update this file with discoveries from projects, adding both positive preferences and technologies to avoid, creating a personalized knowledge base that improves agent recommendations over time.
 
+#### 3.4.3. Memory Bank Architecture
+
+BMad introduces a sophisticated Memory Bank pattern for persistent AI context management across development sessions. This addresses one of the most significant challenges in AI-assisted development: maintaining continuity and context between sessions.
+
+**Purpose and Benefits:**
+
+- **Context Persistence**: Maintains project understanding across multiple development sessions
+- **Knowledge Continuity**: Preserves architectural decisions, patterns, and project-specific knowledge
+- **Efficient Onboarding**: New team members or agents can quickly understand project state
+- **Decision Tracking**: Links to ADR system for comprehensive decision documentation
+
+**Memory Bank Structure:**
+The Memory Bank creates a standardized directory structure in `docs/memory-bank/` containing:
+
+- `projectContext.md`: Core project understanding and business context
+- `techContext.md`: Technical architecture and implementation details
+- `systemPatterns.md`: Established patterns and conventions
+- `activeContext.md`: Current development state and priorities
+- `progress.md`: Development milestones and completed work
+
+**Integration Points:**
+
+- Agents reference Memory Bank during session initialization
+- Development workflows update Memory Bank as work progresses
+- QA reviews validate Memory Bank accuracy during story reviews
+- Sprint reviews use Memory Bank for comprehensive project assessment
+
+#### 3.4.4. Architecture Decision Records (ADR) System
+
+BMad incorporates a comprehensive ADR system for tracking and documenting technical decisions throughout the project lifecycle.
+
+**Purpose and Benefits:**
+
+- **Decision Transparency**: Clear documentation of why technical choices were made
+- **Historical Context**: Understanding the reasoning behind past decisions
+- **Change Management**: Structured approach to evolving architectural decisions
+- **Knowledge Transfer**: Preserving institutional knowledge for team transitions
+
+**ADR Structure:**
+ADRs follow a standardized format covering:
+
+- Decision context and problem statement
+- Considered options and trade-offs
+- Final decision and rationale
+- Consequences and implications
+- Implementation notes and timeline
+
+**Integration Points:**
+
+- Architect agent creates ADRs for significant technical decisions
+- Development workflows reference relevant ADRs during implementation
+- Memory Bank system links to ADRs for comprehensive context
+- Sprint reviews evaluate ADR outcomes and lessons learned
+
+#### 3.4.5. Development Journal System
+
+The Development Journal system provides structured documentation for individual development sessions and overall project progress.
+
+**Purpose and Benefits:**
+
+- **Session Documentation**: Capturing work completed, decisions made, and issues encountered
+- **Progress Tracking**: Understanding velocity and identifying bottlenecks
+- **Knowledge Preservation**: Preventing loss of important insights and lessons learned
+- **Retrospective Support**: Providing detailed data for sprint reviews and process improvement
+
+**Journal Structure:**
+Development journals include:
+
+- Session objectives and planned work
+- Technical work completed with context
+- Decisions made and rationale
+- Challenges encountered and solutions
+- Next session priorities and blockers
+
+**Integration Points:**
+
+- Dev agent updates journals throughout development sessions
+- SM agent references journals when planning subsequent stories
+- Memory Bank incorporates journal insights into project context
+- Sprint reviews aggregate journal data for comprehensive assessment
+
+#### 3.4.6. Project Scaffolding Standards
+
+BMad now includes standardized project scaffolding preferences that establish consistent directory structures and organizational patterns across all projects.
+
+**Purpose and Benefits:**
+
+- **Standardization**: Consistent project organization across all BMad projects
+- **Efficiency**: Reduced setup time with established conventions
+- **Integration**: Seamless integration with Memory Bank, ADR, and journal systems
+- **Scalability**: Patterns that work for projects of varying complexity
+
+**Standard Directory Structure:**
+
+```
+/docs
+  /adr           # Architecture Decision Records
+  /devJournal    # Development journals
+  /memory-bank   # Persistent AI context
+  /prd           # Sharded Product Requirements Documents
+  /architecture  # Sharded Architecture Documents
+```
+
+**Integration Points:**
+
+- All agents reference scaffolding preferences during project initialization
+- Templates automatically create required directory structures
+- Memory Bank and ADR systems rely on standardized locations
+- Installation scripts ensure proper project structure setup
+
 ## 4. The Build & Delivery Process
 
 The framework is designed for two primary environments: local IDEs and web-based AI chat interfaces. The `web-builder.js` script is the key to supporting the latter.

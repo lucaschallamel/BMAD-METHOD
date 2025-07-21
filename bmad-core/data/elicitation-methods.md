@@ -1,5 +1,20 @@
 # Elicitation Methods Data
 
+## Context-Aware Elicitation
+
+**Memory Bank Integration**
+- Begin elicitation with Memory Bank context review
+- Reference `activeContext.md` for current state understanding
+- Check `systemPatterns.md` for established conventions
+- Validate against `progress.md` for completed work
+- Ensure consistency with historical decisions in ADRs
+
+**Session Kickoff Prerequisite**
+- Ensure `*session-kickoff` completed before deep elicitation
+- Load relevant Dev Journal entries for recent context
+- Review technical principles and coding standards
+- Establish shared understanding of project state
+
 ## Core Reflective Methods
 
 **Expand or Contract for Audience**
@@ -24,12 +39,20 @@
 - Check internal consistency and coherence
 - Identify and validate dependencies between elements
 - Confirm effective ordering and sequencing
+- Cross-reference with Memory Bank patterns for consistency
 
 **Assess Alignment with Overall Goals**
 - Evaluate content contribution to stated objectives
 - Identify any misalignments or gaps
 - Interpret alignment from specific role's perspective
 - Suggest adjustments to better serve goals
+- Validate against `projectbrief.md` for mission alignment
+
+**Memory Bank Pattern Validation**
+- Compare proposed approaches with documented patterns
+- Identify deviations from established conventions
+- Assess if new patterns should be documented
+- Update `systemPatterns.md` with validated approaches
 
 ## Risk and Challenge Methods
 
@@ -126,9 +149,36 @@
 - Identify minimum viable approach
 - Discover innovative workarounds and optimizations
 
+## Memory Bank Elicitation Methods
+
+**Historical Context Mining**
+- Extract insights from Dev Journal entries
+- Identify recurring patterns across sessions
+- Discover implicit knowledge in past decisions
+- Build on previous architectural choices
+
+**Progressive Context Building**
+- Start with `projectbrief.md` for foundation
+- Layer in `techContext.md` for technical constraints
+- Add `systemPatterns.md` for design conventions
+- Integrate `activeContext.md` for current state
+
+**ADR-Driven Discovery**
+- Review ADRs for decision rationale
+- Identify constraints from past choices
+- Understand trade-offs already considered
+- Build on established architectural principles
+
+**Sprint Context Elicitation**
+- Review sprint goals from planning documents
+- Check progress against sprint commitments
+- Identify blockers from Dev Journals
+- Align new work with sprint objectives
+
 ## Process Control
 
 **Proceed / No Further Actions**
 - Acknowledge choice to finalize current work
 - Accept output as-is or move to next step
 - Prepare to continue without additional elicitation
+- Update Memory Bank with elicitation outcomes
